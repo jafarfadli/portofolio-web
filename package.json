@@ -14,7 +14,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx --conditions=react-server src/db/migrate-cli.ts",
     "db:seed": "tsx --conditions=react-server src/db/seed-cli.ts",
-    "e2e:serve": "rm -rf .data-e2e && DATA_DIR=.data-e2e pnpm -s db:seed && next build && DATA_DIR=.data-e2e next start -p 3100"
+    "e2e:serve": "sh scripts/e2e-serve.sh"
   },
   "dependencies": {
     "@node-rs/argon2": "^2.2.2",
