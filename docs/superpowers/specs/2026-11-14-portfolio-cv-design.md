@@ -217,6 +217,7 @@ Rules:
 Plan 2 (`docs/superpowers/plans/2026-11-14-plan-2-admin.md`) changed these points. This section wins over the text above where they differ.
 
 - **No revalidate endpoint.** Public routes render per request and read SQLite directly, so the admin process does not call `/api/revalidate`, and `REVALIDATE_SECRET` is not used. If a public route is ever made static, it needs revalidation again.
+- **No session secret.** Sessions are random 256-bit tokens stored as sha256 digests in `sessions`, so `SESSION_SECRET` from section 8 is not used. Like `REVALIDATE_SECRET`, it does not exist.
 - **Migrations only from the CLI.** No process migrates at boot; `pnpm db:migrate` (and `pnpm db:seed`) do. The public role opens the existing file with `fileMustExist` and `PRAGMA query_only = ON`.
 - **Tailnet identity.** The admin role compares `Tailscale-User-Login` with `ADMIN_TAILSCALE_LOGIN`, case-insensitively, and fails closed when it is unset. `next dev` skips the header check.
 - **Reordering.** Uses Move up and Move down buttons, which are keyboard friendly and meet WCAG 2.2 SC 2.5.7. Drag can be added later on the same store call.

@@ -59,6 +59,6 @@ ROLE=admin pnpm dev -p 3001  # http://localhost:3001/admin
 - **First run.** `/admin` asks you to set a password (at least 12 characters).
 - **Locking.** Five wrong passwords in 15 minutes lock sign-in for 15 minutes.
 - **Sessions.** A session lasts 14 days from the last use.
-- **Forgot the password.** There is no email reset. On the Mac mini, run `sqlite3 "$DATA_DIR/portfolio.db" "delete from sessions; delete from admin_user;"`, then open `/admin` to set a new one.
-- **Uploads.** Images are re-encoded to WebP, with 480, 960 and 1600 px copies, under `DATA_DIR/uploads`. Location data is removed.
+- **Forgot the password.** There is no email reset. On the Mac mini, `DATA_DIR` lives in the launchd environment, not your shell. From the repo root (or with `DATA_DIR` set to the data folder), run `sqlite3 "${DATA_DIR:-./.data}/portfolio.db" "delete from sessions; delete from admin_user;"`, then open `/admin` to set a new one.
+- **Uploads.** Images are re-encoded to WebP, with resized copies at 480, 960 and 1600 px (only for widths smaller than the original), under `DATA_DIR/uploads`. Location data is removed.
 - **Saving.** A save shows on the public site on the next page load. Public pages read the database on every request.

@@ -50,6 +50,13 @@ The "Plan 3 (CV builder + PDF)" section now belongs to Plan 4.
 - **CV tests.** Add `getCvContent` tests for `summaryOverride`, a non-default slug, and the no-default-profile path.
 - **Hero seal.** The hero seal uses the first achievement with `sealText`. The spec says "top winner", so constrain it in the editor.
 
+## Plan 5 deploy checks (from Plan 2)
+
+- **Host forwarding.** `tailscale serve` must forward the browser's host with its port (`Host` or `X-Forwarded-Host` equal to `<node>.<tailnet>.ts.net:8443`). Otherwise both `sameOrigin` (`src/auth/admin.ts`) and Next's own server-action origin check refuse every action. Verify it on the Mac mini. If the port is dropped, set `serverActions.allowedOrigins` accordingly.
+- **Bind address.** Start the admin process with `-H 127.0.0.1`. Any local process can forge `Tailscale-User-Login`, so locally the password is the real barrier.
+- **Shared hostname.** Cookies ignore ports, so `pf_admin` is also sent to the Funnel-facing public process on :443 of the same hostname. That is harmless (the cookie is HttpOnly and the public role ignores it). Possible hardening: a separate admin hostname, or a `__Host-` cookie prefix.
+- **Rebuilds.** A rebuild or restart with a new build invalidates open editor tabs, because server action ids and bound-argument encryption are per build. Reload the tab after a deploy. Optionally set `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY` so bound arguments survive a rebuild.
+
 ## Polish (any later plan)
 
 - **Motion.**
@@ -69,4 +76,4 @@ The "Plan 3 (CV builder + PDF)" section now belongs to Plan 4.
 - **Seed data.**
   - The seed-data comment "by rank, then recency" does not match the order (AWS is placed second).
   - The seed test does not assert pick type, pick order, or `metricIsSample`.
-- **Native module.** `better-sqlite3` is pinned to ^12 because v13 crashes on Node 23.1. Move to Node LTS at deploy (Plan 4) and retry v13.
+- **Native module.** `better-sqlite3` is pinned to ^12 because v13 crashes on Node 23.1. Move to Node LTS at deploy (Plan 5) and retry v13.
