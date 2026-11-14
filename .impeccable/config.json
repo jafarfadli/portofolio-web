@@ -150,6 +150,15 @@
         ],
         "createdAt": "2026-11-14T14:11:04.644Z",
         "reason": "Sanctioned: one-page A4 CV summary runs the full 180mm measure at 9.6pt, standard for a resume and needed for the one-page fit"
+      },
+      {
+        "rule": "buried-raster",
+        "value": "*",
+        "files": [
+          "mockup/index.html"
+        ],
+        "createdAt": "2026-11-14T15:38:03.772Z",
+        "reason": "achievement passes cross-fade a stack of photos; the waiting photos sit at opacity 0 by design"
       }
     ]
   }

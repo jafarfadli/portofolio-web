@@ -173,7 +173,7 @@ main { position: relative; z-index: 1; }
 }
 
 /* ---------- Hero ---------- */
-.hero { position: relative; z-index: 2; height: 100vh; height: 100dvh; min-height: 720px; max-height: 1000px; overflow-x: clip; } /* y stays visible: the badge's shadow falls across the seam */
+.hero { --lede-fs: clamp(48px, min(5.8vw, 9.4vh), 92px); position: relative; z-index: 2; height: 100vh; height: 100dvh; min-height: 720px; max-height: 1000px; overflow-x: clip; } /* y stays visible: the badge's shadow falls across the seam */
 
 .pendulum {
   position: absolute; z-index: 3; left: 77%; top: -40px; width: 0; height: 0;
@@ -254,7 +254,16 @@ main { position: relative; z-index: 1; }
 
 /* stickers */
 .stickers { position: absolute; inset: 0; } /* no stacking context: a peeled sticker may lift over the badge */
-.slot-li { position: absolute; z-index: 2; }
+.slot-li { position: absolute; z-index: 2; translate: var(--px, 0px) var(--py, 0px); } /* --px/--py: mouse parallax, set by main.js */
+/* each sticker drifts on its own slow swell; it holds still while it is peeled or focused, so it never slides from under the cursor */
+.float { display: block; width: 100%; height: 100%; animation: float var(--float-t, 7s) ease-in-out var(--float-d, 0s) infinite alternate; }
+.slot-li:has(.is-peeled) .float, .slot-li:has(:focus-visible) .float { animation-play-state: paused; }
+@keyframes float {
+  from { transform: translate3d(calc(var(--float-x, 4px) * -1), calc(var(--float-y, 9px) * -1), 0) rotate(calc(var(--float-r, 1.2deg) * -1)); }
+  to { transform: translate3d(var(--float-x, 4px), var(--float-y, 9px), 0) rotate(var(--float-r, 1.2deg)); }
+}
+/* punched dust: a field of specks over the hero ground that leans toward the mouse, behind the type and the stickers */
+.hero-dust { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; pointer-events: none; }
 .stickers .slot-li:has(.is-peeled), .stickers .slot-li:has(:focus-visible) { z-index: 5; }
 .sticker {
   position: relative; width: 100%; height: 100%; display: block; background: #ffffff; padding: 7px; border-radius: var(--r-sticker);
@@ -276,13 +285,14 @@ main { position: relative; z-index: 1; }
 @media (hover: none) and (min-width: 861px) {
   .sticker .sticker-cap { opacity: 1; transform: translate(-50%, 0); font-size: 12.5px; padding: 7px 11px; }
 }
-/* every sticker lives on the left, under the statement; the lanyard hangs alone on the right */
-.s-ledgerly { left: 7%; top: 50%; width: clamp(220px, 19vw, 280px); aspect-ratio: 1.6; --rot: -4deg; }
-.s-rute { left: 27%; top: 46%; width: clamp(88px, 7vw, 104px); aspect-ratio: 0.47; --rot: 7deg; }
-.s-kanbo { left: 34%; top: 62%; width: clamp(200px, 17vw, 250px); aspect-ratio: 1.6; --rot: -3deg; }
-.s-pantau { left: 12%; top: 75%; width: clamp(160px, 13vw, 200px); aspect-ratio: 1.6; --rot: 3deg; }
+/* the stickers float in the room the statement leaves: the phone and the seal beside its short last line (placed in lede ems, so they
+   track the type), the three screens in a loose row along the bottom; the lanyard hangs alone on the right */
+.s-ledgerly { left: 7%; bottom: 7%; width: clamp(200px, 17vw, 260px); aspect-ratio: 1.6; --rot: -4deg; --float-t: 7.4s; --float-d: -1.2s; --float-y: 9px; --float-r: 1deg; }
+.s-rute { left: calc(var(--gutter) + 6.3 * var(--lede-fs)); top: calc(13% + 3.3 * var(--lede-fs)); width: clamp(80px, 6.4vw, 96px); aspect-ratio: 0.47; --rot: 7deg; --float-t: 6.2s; --float-d: -3.4s; --float-y: 11px; --float-r: 1.6deg; --float-x: 3px; }
+.s-kanbo { left: 27%; bottom: 3%; width: clamp(180px, 15vw, 230px); aspect-ratio: 1.6; --rot: -3deg; --float-t: 8.6s; --float-d: -5.1s; --float-y: 8px; --float-r: 0.8deg; --float-x: 6px; }
+.s-pantau { left: 47%; bottom: 11%; width: clamp(150px, 12vw, 185px); aspect-ratio: 1.6; --rot: 3deg; --float-t: 6.9s; --float-d: -2.3s; --float-y: 10px; --float-r: 1.3deg; }
 .s-pantau img { object-position: center 18%; }
-.s-award { left: 44%; top: 47%; width: clamp(100px, 8vw, 120px); aspect-ratio: 1; --rot: -8deg; }
+.s-award { left: calc(var(--gutter) + 7.8 * var(--lede-fs)); top: calc(13% + 3.6 * var(--lede-fs)); width: clamp(96px, 7.4vw, 112px); aspect-ratio: 1; --rot: -8deg; --float-t: 5.6s; --float-d: -0.6s; --float-y: 6px; --float-r: 2.4deg; --float-x: 2px; }
 .s-award .sticker { padding: 6px; border-radius: 50%; }
 .s-award .seal {
   width: 100%; height: 100%; border-radius: 50%; display: grid; place-items: center; text-align: center; color: var(--ink);
@@ -292,9 +302,24 @@ main { position: relative; z-index: 1; }
 .s-award .seal b { display: block; font-size: 30px; font-weight: 900; font-variation-settings: "wdth" 125; }
 .s-award .seal small { display: block; font-size: 11px; line-height: 1.15; font-weight: 750; letter-spacing: 0.06em; text-transform: uppercase; margin-top: 4px; font-variation-settings: "wdth" 80; }
 
-.statement { position: absolute; z-index: 2; left: var(--gutter); width: min(52vw, 740px); top: 18%; }
-.lede { font-size: clamp(38px, 3.9vw, 58px); line-height: 1.02; font-weight: 800; font-variation-settings: "wdth" 90; letter-spacing: -0.025em; text-wrap: balance; }
-.lede .line { display: block; overflow: hidden; padding-bottom: 0.06em; }
+.statement { position: absolute; z-index: 2; left: var(--gutter); width: min(62vw, 940px); top: 13%; }
+/* the statement is the loudest type on the page after the badge name: expanded black, set line by line */
+.lede { font-size: var(--lede-fs); line-height: 0.92; font-weight: 900; font-variation-settings: "wdth" 112; letter-spacing: -0.035em; }
+.lede .line { display: block; overflow: hidden; padding: 0.04em 0 0.08em; }
+/* icon stickers: a Phosphor Bold icon printed on a scrap of badge stock and slapped into the line, tilted */
+.ico-stk {
+  display: inline-grid; place-items: center; width: 0.78em; height: 0.78em; margin: 0 0.02em 0 0.06em; vertical-align: 0.08em;
+  border-radius: 0.16em; background: var(--stock); color: var(--navy); rotate: var(--r, -5deg);
+  box-shadow: 0 0.035em 0.08em rgba(10, 11, 18, 0.4);
+}
+.ico-stk svg { width: 0.54em; height: 0.54em; fill: currentColor; }
+.theme-light .ico-stk { background: #ffffff; box-shadow: 0 0.035em 0.08em rgba(17, 18, 22, 0.22); }
+.about-text .ico-stk { width: 0.9em; height: 0.9em; vertical-align: -0.02em; }
+.about-text em .ico-stk { color: var(--navy); } /* the icon keeps full strength inside the softer half of the sentence */
+/* the closing wave: the hand rocks from its wrist when the panel is hovered */
+.ico-stk.is-wave { transform-origin: 70% 90%; }
+.closing:hover .ico-stk.is-wave { animation: wave 1.2s var(--ease-out) 1; }
+@keyframes wave { 20% { transform: rotate(14deg); } 40% { transform: rotate(-8deg); } 60% { transform: rotate(10deg); } 80% { transform: rotate(-3deg); } }
 .lede .line > span { display: block; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
 
@@ -363,7 +388,8 @@ main { position: relative; z-index: 1; }
 /* runs from the right edge to the page cord, and the passes slip away behind the cord (on phones, where there is no cord, edge to edge) */
 .reel { position: relative; margin: 0 calc(-1 * var(--gutter-r)) 0 calc(var(--cord-x) + 3px - var(--gutter)); overflow: hidden; padding-bottom: 40px; }
 .reel-track { display: flex; width: max-content; animation: reel var(--reel-dur, 70s) linear infinite; }
-.reel:hover .reel-track, .reel:focus-within .reel-track, .reel.is-paused .reel-track, .reel.is-offscreen .reel-track { animation-play-state: paused; }
+/* hover only slows it (main.js eases the playback rate); keyboard focus and leaving the screen stop it */
+.reel:focus-within .reel-track, .reel.is-offscreen .reel-track { animation-play-state: paused; }
 @keyframes reel { to { transform: translateX(-50%); } }
 .ach { --ach-gap: clamp(24px, 2.6vw, 40px); position: relative; flex: none; width: clamp(260px, 24vw, 340px); margin-right: var(--ach-gap); padding-top: 56px; }
 /* each pass carries its own length of the strap, so the two copies join without a seam */
@@ -389,7 +415,13 @@ main { position: relative; z-index: 1; }
   background-size: 100% 100%, 16px 16px;
   box-shadow: inset 2px 0 0 rgba(255, 255, 255, 0.12), inset -3px 0 0 rgba(0, 0, 0, 0.25), 0 2px 3px rgba(10, 11, 18, 0.3);
 }
-.ach-photo { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: calc(var(--r-sticker) - 6px); background: var(--concrete-deep); }
+/* a pass holds one or more photos stacked in one frame; they cross-fade a few seconds apart, the pill-shaped dot says which */
+.ach-photos { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: calc(var(--r-sticker) - 6px); background: var(--concrete-deep); }
+.ach-photo { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0; scale: 1.04; transition: opacity 900ms var(--ease-out), scale 1600ms var(--ease-out); }
+.ach-photo.is-on { opacity: 1; scale: 1; }
+.ach-dots { position: absolute; right: 8px; bottom: 8px; display: flex; align-items: center; gap: 4px; padding: 5px 6px; border-radius: var(--r-pill); background: rgba(17, 18, 22, 0.55); }
+.ach-dots i { width: 6px; height: 6px; border-radius: 3px; background: rgba(242, 242, 238, 0.5); transition: width 320ms var(--ease-out), background-color 320ms var(--ease-out); }
+.ach-dots i.is-on { width: 14px; background: var(--stock); }
 .ach-body { padding: 14px 10px 4px; }
 .ach-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 /* rank reads by cut, never by colour alone: winner notched, finalist outlined, award plain */
@@ -402,10 +434,6 @@ main { position: relative; z-index: 1; }
 .ach-year { font-size: 15px; font-weight: 800; color: var(--ink-2); white-space: nowrap; font-feature-settings: "tnum" 1; }
 .ach-card h3 { margin-top: 12px; font-size: 24px; line-height: 1.05; font-weight: 850; font-variation-settings: "wdth" 115; letter-spacing: -0.02em; text-wrap: balance; }
 .ach-body > p:last-child { margin-top: 6px; font-size: 15px; line-height: 1.4; font-weight: 550; color: var(--ink-2); }
-.reel-controls { display: flex; align-items: center; gap: 16px; margin-top: 4px; }
-.round-btn { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; border: 2px solid var(--line-strong); background: none; cursor: pointer; transition: background-color 180ms var(--ease-out), color 180ms var(--ease-out); }
-.round-btn:hover { background: var(--on-ground); color: var(--ground); }
-.round-btn:disabled { opacity: 0.35; cursor: default; background: none; color: var(--on-ground); }
 
 /* ---------- Activities: the agenda ---------- */
 .agenda { border-top: 2px solid var(--line-strong); }
@@ -463,8 +491,7 @@ main { position: relative; z-index: 1; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1100px) {
-  .statement { width: 56vw; }
-  .s-rute { left: 28%; }
+  .statement { width: 60vw; }
 }
 @media (max-width: 860px) {
   .nav-links { display: none; }
@@ -480,6 +507,7 @@ main { position: relative; z-index: 1; }
   .s-pantau { display: none; }
   .s-award { left: auto; right: 4px; top: 420px; width: 104px; }
   .statement { position: relative; left: auto; right: auto; top: auto; width: auto; margin-top: 8px; }
+  .hero { --lede-fs: clamp(28px, calc((100vw - 80px) / 9.2), 64px); } /* the longest line is about 9em: each line stays one line */
   .project.is-half { grid-column: span 12; }
   .project-body { grid-template-columns: 1fr; }
   .project-field { aspect-ratio: 4 / 3.2; }
@@ -499,7 +527,8 @@ main { position: relative; z-index: 1; }
   .ach { scroll-snap-align: start; scroll-margin-left: var(--gutter); }
   .ach:first-child { margin-left: calc(var(--gutter) - var(--cord-x) - 3px); }
   .ach:first-child::before { left: calc(var(--cord-x) + 3px - var(--gutter)); } /* the strap still runs from the cord */
-  .ach.is-clone, .reel-controls { display: none; }
+  .ach.is-clone, .ach-dots { display: none; } /* the first photo of each pass stands still */
+  .float { animation: none !important; }
   *, *::before, *::after { transition-duration: 1ms !important; animation-duration: 1ms !important; scroll-behavior: auto !important; }
   .badge-inner { transition: none; }
   .face { transition: opacity 180ms linear !important; }
