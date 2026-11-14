@@ -45,6 +45,8 @@ export function initHomeMotion(doc: Document): () => void {
       });
     fit();
     on(win, "resize", fit);
+    // Archivo swaps in after first paint (display: swap); the fitted size must be measured with the real face.
+    doc.fonts?.ready.then(() => { if (!ac.signal.aborted) fit(); });
 
     /* ---------- Smooth scroll + in-page anchors ---------- */
     if (!reduce) {
@@ -200,6 +202,9 @@ export function initHomeMotion(doc: Document): () => void {
     });
 
     /* ---------- First viewport: the one authored entrance ---------- */
+    // Release the CSS start state (html.motion-pending) in this same task, before the from() tweens read their
+    // end values from computed style: they must see the real resting state, and no frame paints in between.
+    doc.documentElement.classList.remove("motion-pending");
     if (!reduce) {
       gsap
         .timeline({ delay: 0.12, defaults: { ease: "expo.out" } })
@@ -368,6 +373,7 @@ export function initHomeMotion(doc: Document): () => void {
   try {
     ctx.add(body);
   } catch (err) {
+    doc.documentElement.classList.remove("motion-pending");
     teardown();
     throw err;
   }

@@ -33,6 +33,20 @@ test("stepping to the end of the fan keeps keyboard focus on a live button", asy
   await expect(page.getByRole("button", { name: "Previous achievement" })).toBeFocused();
 });
 
+test("entrance releases the pre-paint hold and ends with the hero visible", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("html")).not.toHaveClass(/motion-pending/);
+  await expect(page.locator(".lede .line > span").first()).toBeVisible();
+  await expect(page.locator("[data-badge]")).toBeVisible();
+  await expect(page.locator(".lede .line > span").first()).toHaveCSS("transform", "none");
+  await expect(page.locator("[data-nav]")).toHaveCSS("opacity", "1");
+});
+
+test("the CV page never gets the entrance hold", async ({ page }) => {
+  await page.goto("/cv");
+  await expect(page.locator("html")).not.toHaveClass(/motion-pending/);
+});
+
 test.describe("reduced motion", () => {
   test.use({ reducedMotion: "reduce" });
 

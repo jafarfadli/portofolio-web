@@ -11,6 +11,7 @@ export function HomeMotion() {
     } catch (err) {
       // The server-rendered page is complete without motion; a failed init must not take it down.
       console.error("[HomeMotion] init failed", err);
+      document.documentElement.classList.remove("motion-pending");
       return () => {};
     }
   }, []);
