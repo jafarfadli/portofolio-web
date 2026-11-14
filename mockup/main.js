@@ -343,7 +343,14 @@
   rows.forEach((r) => { const im = new Image(); im.src = r.dataset.photo; });
   const xTo = gsap.quickTo(preview, "x", { duration: reduce ? 0 : 0.55, ease: "power3" });
   const yTo = gsap.quickTo(preview, "y", { duration: reduce ? 0 : 0.55, ease: "power3" });
-  const show = (row) => {
+  // where the cursor is, known page-wide: after a reload the first row can arrive under a still cursor by scrolling,
+  // before any move inside the agenda
+  let px = -1, py = -1;
+  window.addEventListener("pointermove", (e) => { px = e.clientX; py = e.clientY; }, { passive: true });
+  const show = (row, e) => {
+    if (e && e.clientX !== undefined) { px = e.clientX; py = e.clientY; }
+    // a hidden preview appears at the cursor, not tweening in from wherever it last was (at first load: the top left)
+    if (gsap.getProperty(preview, "opacity") < 0.05 && px >= 0) gsap.set(preview, { x: px + 28, y: py - preview.offsetHeight / 2 });
     rows.forEach((r) => r.classList.toggle("is-active", r === row));
     agenda.classList.add("is-hovering");
     if (pimg.getAttribute("src") !== row.dataset.photo) pimg.src = row.dataset.photo;
@@ -355,7 +362,7 @@
     gsap.to(preview, { opacity: 0, scale: 0.85, duration: reduce ? 0 : 0.25, ease: "power2.in", overwrite: "auto" });
   };
   rows.forEach((r) => {
-    r.addEventListener("pointerenter", () => show(r));
+    r.addEventListener("pointerenter", (e) => show(r, e));
     r.addEventListener("focus", () => {
       const b = r.getBoundingClientRect();
       xTo(Math.min(b.right - preview.offsetWidth - 180, window.innerWidth - preview.offsetWidth - 24));
@@ -364,8 +371,7 @@
     });
     r.addEventListener("blur", hide);
   });
-  let px = -1, py = -1;
-  agenda.addEventListener("pointermove", (e) => { px = e.clientX; py = e.clientY; xTo(px + 28); yTo(py - preview.offsetHeight / 2); });
+  agenda.addEventListener("pointermove", (e) => { xTo(e.clientX + 28); yTo(e.clientY - preview.offsetHeight / 2); });
   agenda.addEventListener("pointerleave", hide);
   // the page moves under a still cursor while scrolling: re-check what is under it
   const recheck = () => {

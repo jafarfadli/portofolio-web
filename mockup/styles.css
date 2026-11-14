@@ -254,7 +254,7 @@ main { position: relative; z-index: 1; }
 
 /* stickers */
 .stickers { position: absolute; inset: 0; } /* no stacking context: a peeled sticker may lift over the badge */
-.slot-li { position: absolute; z-index: 2; translate: var(--px, 0px) var(--py, 0px); } /* --px/--py: mouse parallax, set by main.js */
+.slot-li { position: absolute; z-index: 3; translate: var(--px, 0px) var(--py, 0px); } /* above the statement (z 2), whose wide box reaches over the phone and the seal */ /* --px/--py: mouse parallax, set by main.js */
 /* each sticker drifts on its own slow swell; it holds still while it is peeled or focused, so it never slides from under the cursor */
 .float { display: block; width: 100%; height: 100%; animation: float var(--float-t, 7s) ease-in-out var(--float-d, 0s) infinite alternate; }
 .slot-li:has(.is-peeled) .float, .slot-li:has(:focus-visible) .float { animation-play-state: paused; }
