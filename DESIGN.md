@@ -451,7 +451,7 @@ components:
     backgroundColor: "{colors.webbing-navy}"
     height: "3mm"
   cv-photo:
-    height: "34mm"
+    height: "31mm"
   cv-section-tab:
     backgroundColor: "{colors.webbing-navy}"
     textColor: "{colors.badge-stock}"
@@ -886,7 +886,7 @@ The hero object, hung alone on the right half of the navy hero. A pendulum (stra
 The badge's paper twin: the same pass, printed on A4.
 - **Screen:** sticky toolbar on `webbing-navy-deep` at 0.94 ("Back to the site", a note, stock "Download CV" pill that prints), over a navy twill ground; the A4 sheet (210mm x 297mm min, white, padding `0 15mm 6.5mm`) centred with the CV sheet shadow. Under 860px the sheet keeps its A4 width and scrolls sideways.
 - **Strap:** a 6mm band of navy twill across the top of the sheet (full bleed) and a 3mm band at the foot, the two ends of the strap. A 17x3mm punched slot in `webbing-navy-deep` sits under the top band, 3mm down.
-- **Header:** a two-column grid (the text, then a 24mm portrait column, gap 8mm, bottom-aligned) over a 2.5pt navy rule. Left: the full name in CV name on one line; the role (CV role); a wrapping contact list (location, email, domain, GitHub, LinkedIn), each item led by a 3.3mm Phosphor icon in navy. Right: the owner's **cut-out portrait**, 34mm tall, background removed, in the same navy duotone as the badge, standing on the header rule and rising into the space under the strap band.
+- **Header:** a two-column grid (the text, then a 24mm portrait column, gap 8mm, bottom-aligned) over a 2.5pt navy rule. Left: the full name in CV name on one line; the role (CV role); a wrapping contact list (location, email, domain, GitHub, LinkedIn), each item led by a 3.3mm Phosphor icon in navy. Right: the owner's **cut-out portrait**, 31mm tall (the owner asked for it small), background removed, in the same navy duotone as the badge, lifted 4mm toward the strap band; the torso fades to the paper over its lowest 28% so the lift reads as a vignette. Never enlarge it to make it touch the rule: at 34mm it is wider than its column and overruns the rule's end.
 - **Cord:** a 1.6pt navy cord runs down the left margin of the body (7mm gutter). Every section label carries a `metal-mid` clip mark on the cord; every experience and education entry is a knot on the cord (see Shapes).
 - **Section labels:** a navy tab printed with the label in stock (CV section label tier), followed by a 0.6pt hairline (`#d9d9d4`) to the right margin.
 - **Entries:** a row with the bold title and soft-ink organisation on the left and the date (CV date tier) right-aligned on the baseline; bullet points 14px indent with `metal-mid` markers. Key figures are CV metrics: bold navy tabular figures, so the numbers read first.

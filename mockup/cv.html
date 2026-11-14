@@ -43,8 +43,9 @@
     header.cv .contact li { display: inline-flex; align-items: center; gap: 1.4mm; }
     header.cv .contact svg { width: 3.3mm; height: 3.3mm; fill: var(--navy); flex: none; }
     /* the portrait stands in front of the strap band, cut out from its background */
-    .cv-photo { position: relative; margin: -12mm 0 -3mm; height: 34mm; display: flex; align-items: flex-end; justify-content: center; }
-    .cv-photo img { display: block; height: 100%; width: auto; }
+    /* small, and lifted 4mm as the owner asked; the torso fades into the paper so the lift reads as a vignette, not a pasted box */
+    .cv-photo { position: relative; margin: -9mm 0 -3mm; height: 31mm; transform: translateY(-4mm); display: flex; align-items: flex-end; justify-content: center; }
+    .cv-photo img { display: block; height: 100%; width: auto; -webkit-mask-image: linear-gradient(#000 72%, transparent); mask-image: linear-gradient(#000 72%, transparent); }
 
     /* ---------- body: one cord down the left margin; every section clips onto it ---------- */
     .cv-body { position: relative; padding-left: 7mm; }
