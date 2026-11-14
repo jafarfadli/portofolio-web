@@ -7,6 +7,7 @@ const kindOf = (s: MediaFormState) => (s.error ? "error" : s.done ? "saved" : "i
 
 export function UploadForm() {
   const [state, action, pending] = useActionState<MediaFormState, FormData>(uploadMedia, {});
+  const kind = state.kind ?? "screenshot";
   return (
     <form action={action} className="adm-upload">
       <div className="adm-field">
@@ -19,7 +20,7 @@ export function UploadForm() {
       </div>
       <div className="adm-field">
         <label htmlFor="up-kind">Kind</label>
-        <select className="adm-input" id="up-kind" name="kind" defaultValue="screenshot">
+        <select className="adm-input" id="up-kind" name="kind" key={kind} defaultValue={kind}>
           <option value="screenshot">Screenshot</option>
           <option value="photo">Photo</option>
           <option value="logo">Logo</option>
@@ -27,7 +28,7 @@ export function UploadForm() {
       </div>
       <div className="adm-field adm-wide">
         <label htmlFor="up-alt">Alt text</label>
-        <input className="adm-input" id="up-alt" name="alt" aria-describedby="up-alt-help" />
+        <input className="adm-input" id="up-alt" name="alt" defaultValue={state.alt ?? ""} aria-describedby="up-alt-help" />
         <p className="adm-help" id="up-alt-help">What the image shows, for people using screen readers.</p>
       </div>
       <div className="adm-actions adm-wide">
@@ -46,7 +47,7 @@ export function AltForm({ id, alt }: { id: number; alt: string }) {
     <form action={action} className="adm-form">
       <div className="adm-field">
         <label htmlFor={`alt-${id}`}>Alt text<span className="sr-only"> for image {id}</span></label>
-        <input className="adm-input" id={`alt-${id}`} name="alt" defaultValue={alt} />
+        <input className="adm-input" id={`alt-${id}`} name="alt" defaultValue={state.alt ?? alt} />
       </div>
       <div className="adm-actions">
         <button className="adm-mini" type="submit" disabled={pending}>Save alt text<span className="sr-only"> for image {id}</span></button>

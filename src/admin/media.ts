@@ -12,7 +12,13 @@ import type { MediaKind } from "./fields";
 export const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
 export const VARIANT_WIDTHS = [480, 960, 1600] as const;
 const MASTER_MAX_WIDTH = 2400;
-const ACCEPTED_FORMATS = new Set(["jpeg", "png", "webp", "avif"]);
+const ACCEPTED_FORMATS = new Set(["jpeg", "png", "webp"]);
+
+/** sharp reports AVIF as format "heif" with compression "av1". HEIC (compression "hevc") stays refused. */
+function acceptedFormat(meta: { format?: string; compression?: string }): boolean {
+  if (meta.format === "heif") return meta.compression === "av1";
+  return meta.format !== undefined && ACCEPTED_FORMATS.has(meta.format);
+}
 export const KIND_DIRS: Record<MediaKind, string> = { screenshot: "screens", photo: "photos", logo: "logos" };
 
 export class UploadError extends Error {}
@@ -31,8 +37,7 @@ export async function processUpload(input: Buffer, kind: MediaKind, uploadsDir: 
   let master: { data: Buffer; info: OutputInfo };
   const encoded: { width: number; height: number; data: Buffer }[] = [];
   try {
-    const { format } = await sharp(input).metadata();
-    if (!format || !ACCEPTED_FORMATS.has(format)) throw new UploadError("Upload a JPEG, PNG, WebP or AVIF image.");
+    if (!acceptedFormat(await sharp(input).metadata())) throw new UploadError("Upload a JPEG, PNG, WebP or AVIF image.");
     master = await sharp(input)
       .rotate()
       .resize({ width: MASTER_MAX_WIDTH, withoutEnlargement: true })

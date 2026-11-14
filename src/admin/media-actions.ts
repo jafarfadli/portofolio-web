@@ -8,7 +8,8 @@ import { uploadsDir } from "@/lib/env";
 import { LONG_DASH, LONG_DASH_ERROR, type MediaKind } from "./fields";
 import { createMedia, deleteMedia, KIND_DIRS, MAX_UPLOAD_BYTES, processUpload, updateAlt, UploadError } from "./media";
 
-export type MediaFormState = { error?: string; done?: boolean; notice?: string };
+/** On an error the actions echo `kind` and `alt` back, because React resets the form after every action. */
+export type MediaFormState = { error?: string; done?: boolean; notice?: string; kind?: string; alt?: string };
 
 function altProblem(alt: string): string | null {
   if (LONG_DASH.test(alt)) return LONG_DASH_ERROR;
@@ -26,11 +27,12 @@ export async function uploadMedia(_prev: MediaFormState, form: FormData): Promis
   const file = form.get("file");
   const kind = String(form.get("kind") ?? "");
   const alt = String(form.get("alt") ?? "").trim();
-  if (!(file instanceof File) || file.size === 0) return { error: "Choose a file to upload." };
-  if (file.size > MAX_UPLOAD_BYTES) return { error: "Files can be up to 15 MB." };
-  if (!Object.hasOwn(KIND_DIRS, kind)) return { error: "Pick what kind of image this is." };
+  const refuse = (error: string): MediaFormState => ({ error, kind, alt });
+  if (!(file instanceof File) || file.size === 0) return refuse("Choose a file to upload.");
+  if (file.size > MAX_UPLOAD_BYTES) return refuse("Files can be up to 15 MB.");
+  if (!Object.hasOwn(KIND_DIRS, kind)) return refuse("Pick what kind of image this is.");
   const problem = altProblem(alt);
-  if (problem) return { error: problem };
+  if (problem) return refuse(problem);
   let existed: boolean;
   try {
     const upload = await processUpload(Buffer.from(await file.arrayBuffer()), kind as MediaKind, uploadsDir());
@@ -40,7 +42,7 @@ export async function uploadMedia(_prev: MediaFormState, form: FormData): Promis
       provenance: `Uploaded in the editor on ${new Date().toISOString().slice(0, 10)}.`,
     }));
   } catch (e) {
-    if (e instanceof UploadError) return { error: e.message };
+    if (e instanceof UploadError) return refuse(e.message);
     throw e;
   }
   revalidatePath("/admin/media");
@@ -52,7 +54,7 @@ export async function saveAlt(id: number, _prev: MediaFormState, form: FormData)
   await assertAdminAction();
   const alt = String(form.get("alt") ?? "").trim();
   const problem = altProblem(alt);
-  if (problem) return { error: problem };
+  if (problem) return { error: problem, alt };
   updateAlt(getDb(), idFrom(id), alt);
   revalidatePath("/admin/media");
   return { done: true };

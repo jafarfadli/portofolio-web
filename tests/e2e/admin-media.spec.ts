@@ -21,10 +21,28 @@ test("an uploaded screenshot gets resized copies and appears in the project pick
   await expect(page.getByLabel("Screenshot").locator("option", { hasText: "Invoice detail uploaded in e2e" })).toHaveCount(1);
 });
 
-test("a file that is not an image is refused", async ({ page }) => {
+test("a file that is not an image is refused, and the kind and alt text you chose stay", async ({ page }) => {
   await signIn(page);
   await page.goto("/admin/media");
   await page.getByLabel("Image", { exact: true }).setInputFiles({ name: "notes.png", mimeType: "image/png", buffer: Buffer.from("not an image") });
+  await page.getByLabel("Kind").selectOption("photo");
+  await page.getByLabel("Alt text", { exact: true }).fill("Kept after the error");
   await page.getByRole("button", { name: "Upload" }).click();
   await expect(page.locator("#upload-status")).toHaveText("That file is not an image.");
+  await expect(page.getByLabel("Kind")).toHaveValue("photo");
+  await expect(page.getByLabel("Alt text", { exact: true })).toHaveValue("Kept after the error");
+});
+
+test("a refused alt text stays typed in the library row", async ({ page }) => {
+  await signIn(page);
+  await page.goto("/admin/media");
+  const alt = page.locator('input[id^="alt-"]').first();
+  const original = await alt.inputValue();
+  const typed = "Too fancy \u2014 refused";
+  await alt.fill(typed);
+  await page.getByRole("button", { name: /^Save alt text/ }).first().click();
+  await expect(page.getByRole("status").filter({ hasText: /long dash/ })).toHaveCount(1);
+  await expect(page.locator('input[id^="alt-"]').first()).toHaveValue(typed);
+  await page.reload();
+  await expect(page.locator('input[id^="alt-"]').first()).toHaveValue(original);
 });

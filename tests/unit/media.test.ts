@@ -49,6 +49,27 @@ describe("processUpload", () => {
     await expect(processUpload(gif, "photo", dir)).rejects.toThrow("Upload a JPEG, PNG, WebP or AVIF image.");
   });
 
+  it("accepts AVIF (sharp reports it as heif with av1) and stores a WebP master", async () => {
+    const avif = await image(1000, 600).avif().toBuffer();
+    const meta = await sharp(avif).metadata();
+    expect([meta.format, meta.compression]).toEqual(["heif", "av1"]);
+    const dir = tmp();
+    const out = await processUpload(avif, "photo", dir);
+    expect(out.path).toMatch(/^photos\/[0-9a-f]{12}\.webp$/);
+    expect([out.width, out.height]).toEqual([1000, 600]);
+    expect((await sharp(path.join(dir, out.path)).metadata()).format).toBe("webp");
+  });
+
+  it("keeps refusing HEIC (heif with hevc)", async ({ skip }) => {
+    let heic: Buffer;
+    try {
+      heic = await image(100, 100).heif({ compression: "hevc" }).toBuffer();
+    } catch {
+      return skip("this sharp build has no HEVC encoder, so there is nothing to feed the check");
+    }
+    await expect(processUpload(heic, "photo", tmp())).rejects.toThrow("Upload a JPEG, PNG, WebP or AVIF image.");
+  });
+
   it("refuses to write through a symlinked folder", async () => {
     const dir = tmp();
     fs.symlinkSync(tmp(), path.join(dir, "photos"));
