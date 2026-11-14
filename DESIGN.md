@@ -671,7 +671,7 @@ Each project card's screenshot field takes a `--field` colour from that project'
 - **Meta** (600, 14.5px): project year/role line; tags 13px/650.
 - **Button** (700, 16px, +0.005em; 15px in nav and project links).
 - **Brand** (800, wdth 118, 17px, nowrap); **Nav link** (600, 15px).
-- **Printed label** (800, wdth 85, 12.5 to 13px, +0.14 to 0.16em, uppercase): role tags, ribbon bands. Itinerary list labels use 15px, wdth 80. Seal small print 10px/750, lh 1.15, wdth 80, +0.08em, on two lines.
+- **Printed label** (800, wdth 85, 12.5 to 13px, +0.14 to 0.16em, uppercase): role tags, ribbon bands. Itinerary list labels use 15px, wdth 80. Seal small print 11px/750 (the functional-text floor), lh 1.15, wdth 80, +0.06em, on two lines.
 - **Strap print** (800, wdth 125, 11px, +0.3em, vertical-rl, full navy on the concrete webbing): the owner's name repeated on each strap length, the two lengths offset (70px and 150px from the top) so the names never line up.
 
 Case study tiers (`/projects/[slug]`):
@@ -851,7 +851,7 @@ The hero object, hung alone on the right half of the navy hero. A pendulum (stra
 - White kiss-cut border (7px), sticker radius, sticker shadow, each at its `--rot`. Each is a link to its project card (`#p-slug`) or to `#achievements` (the seal).
 - **Peek:** on pointer enter or focus, the sticker peels (`rotate(rot * 0.3) translateY(-8px) scale(1.04)`, lift shadow, 420ms) and the others step back (opacity 0.38, `saturate(0.6)`). Leaving restores all.
 - **Caption pill:** ink pill below the sticker: "Name: one-line outcome" plus an arrow-up-right icon, 14px/650; fades and slides 6px in (220ms opacity, 320ms transform). No caption shows at rest: captions appear only on hover (peel) or keyboard focus. On touch-only wide screens all captions are visible, since there is no hover. Under 860px the stickers themselves are gone.
-- **Seal sticker:** circular, 6px white border, flat ink disc with stock ring: rank ("1st", 900, wdth 125, 30px) over the event short name and year on two lines (10px condensed caps).
+- **Seal sticker:** circular, 6px white border, flat ink disc with stock ring: rank ("1st", 900, wdth 125, 30px) over the event short name and year on two lines (11px condensed caps).
 
 ### Metric pins + leader lines
 - One pin per project, carrying one real metric (metric role) and a one-line explanation. Stock pin by default; **ink pin** on light fields (its leader stroke switches to ink and the explanation to metal). **Big** pins for full-width cards.
