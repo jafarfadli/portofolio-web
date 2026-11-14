@@ -60,11 +60,11 @@ test("a changed select keeps its value after saving, and the next save does not 
 test("invalid input is refused next to its field and kept for fixing", async ({ page }) => {
   await page.goto("/admin/achievements/new");
   const title = page.getByLabel("Title", { exact: true });
-  await title.fill("Best app — 2026");
+  await title.fill("Best app \u2014 2026");
   await page.getByRole("button", { name: "Add achievement" }).click();
   await expect(page.getByRole("status")).toHaveText(/^Fix \d+ fields? below\.$/);
   await expect(title).toHaveAttribute("aria-invalid", "true");
-  await expect(title).toHaveValue("Best app — 2026");
+  await expect(title).toHaveValue("Best app \u2014 2026");
   await expect(page.locator("#f-title-error")).toHaveText("Use a comma, colon or full stop instead of a long dash.");
 });
 
