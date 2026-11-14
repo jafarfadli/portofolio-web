@@ -19,3 +19,5 @@ playwright-report/
 .DS_Store
 # macOS folder icon file (name ends with two carriage returns)
 Icon
+# superpowers execution scratch
+.superpowers/
