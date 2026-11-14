@@ -10,7 +10,7 @@ export function Achievements({ items }: { items: Achievement[] }) {
     <section className="section" id="achievements" aria-labelledby="ach-h">
       <SectionHead id="ach-h" title="Achievements" lead="Competitions, certifications, and academic awards. Drag or use the arrows to browse." />
       <div className="fan-wrap">
-        <ol className="fan" data-fan data-active={active} aria-label="Achievements, use the buttons below to browse">
+        <ol className="fan" tabIndex={0} data-fan data-active={active} aria-label="Achievements, use the buttons below to browse">
           {items.map((a) => (
             <li key={a.id} className="fan-item" data-title={a.caption} data-what={a.story}>
               <div className="stub" aria-hidden="true" />
