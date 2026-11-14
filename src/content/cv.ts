@@ -31,8 +31,10 @@ export function groupSkills(rows: Skill[]): SkillGroup[] {
   return [...groups].map(([group, names]) => ({ group, names }));
 }
 
-/** No slug: the default CV profile (or plain fallback if none exists). Unknown slug: null. */
+/** No slug: the default CV profile (or plain fallback if none exists). Unknown slug or no profile yet: null. */
 export function getCvContent(db: Db, slug?: string): CvContent | null {
+  const p = getProfile(db);
+  if (!p) return null;
   const cvProfile = slug
     ? db.select().from(cvProfiles).where(eq(cvProfiles.slug, slug)).get()
     : db.select().from(cvProfiles).where(eq(cvProfiles.isDefault, true)).get();
@@ -41,7 +43,6 @@ export function getCvContent(db: Db, slug?: string): CvContent | null {
   const picks: CvPick[] = cvProfile
     ? db.select().from(cvProfileItems).where(eq(cvProfileItems.profileId, cvProfile.id)).all()
     : [];
-  const p = getProfile(db);
 
   return {
     profile: p,

@@ -29,19 +29,20 @@ export function mediaUrl(relPath: string): string {
 const onSite = <T extends { showOnSite: boolean; sortOrder: number }>(rows: T[]): T[] =>
   rows.filter((r) => r.showOnSite).sort((a, b) => a.sortOrder - b.sortOrder);
 
-export function getProfile(db: Db): Profile {
-  const p = db.select().from(profile).get();
-  if (!p) throw new Error("No profile found. Run `pnpm db:seed` first.");
-  return p;
+export function getProfile(db: Db): Profile | null {
+  return db.select().from(profile).get() ?? null;
 }
 
-export function getHomeContent(db: Db): HomeContent {
+/** null before the owner has saved a profile; the home page then shows the first-run placeholder. */
+export function getHomeContent(db: Db): HomeContent | null {
+  const p = getProfile(db);
+  if (!p) return null;
   const refs = new Map<number, MediaRef>(
     db.select().from(media).all().map((m) => [m.id, { url: mediaUrl(m.path), width: m.width, height: m.height, alt: m.alt }]),
   );
   const ref = (id: number | null) => (id == null ? null : (refs.get(id) ?? null));
   return {
-    profile: getProfile(db),
+    profile: p,
     projects: onSite(db.select().from(projects).all())
       .filter((p) => p.featured)
       .slice(0, 4)

@@ -512,3 +512,12 @@ html.motion-pending .pendulum { transform: translateY(-100vh); }
   .nav-actions > .btn-stock { display: none; }
 }
 @media (min-width: 861px) { .menu-sheet { display: none !important; } }
+
+/* ---------- First run: before the owner has saved a profile ---------- */
+.first-run { min-height: 100dvh; display: grid; place-items: center; padding: 24px; }
+.first-run-card {
+  width: min(100%, 520px); background: var(--stock); color: var(--ink); border-radius: var(--r-card);
+  box-shadow: var(--shadow-hang); padding: clamp(28px, 4vw, 48px);
+}
+.first-run-card h1 { font-size: clamp(30px, 2.9vw, 44px); line-height: 1.05; font-weight: 850; font-variation-settings: "wdth" 112; letter-spacing: -0.02em; }
+.first-run-card p { margin-top: 12px; color: var(--ink-2); }

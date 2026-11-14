@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { CvDocument } from "@/components/cv/CvDocument";
 import { PrintButton } from "@/components/cv/PrintButton";
 import { Icon } from "@/components/Icon";
@@ -10,12 +11,13 @@ import "./cv.css";
 export const dynamic = "force-dynamic";
 
 export function generateMetadata(): Metadata {
-  const cv = getCvContent(getDb())!;
-  return { title: `${cv.profile.firstName} ${cv.profile.lastName}, CV` };
+  const cv = getCvContent(getDb());
+  return { title: cv ? `${cv.profile.firstName} ${cv.profile.lastName}, CV` : "CV" };
 }
 
 export default function CvPage() {
-  const cv = getCvContent(getDb())!;
+  const cv = getCvContent(getDb());
+  if (!cv) notFound();
   return (
     <div className="cv-page">
       <div className="cv-bar">

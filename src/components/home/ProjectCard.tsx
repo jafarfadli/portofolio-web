@@ -3,7 +3,7 @@ import { Icon } from "@/components/Icon";
 import { Inline } from "@/components/Inline";
 import type { HomeProject } from "@/content/home";
 
-export function ProjectCard({ project: pr }: { project: HomeProject }) {
+export function ProjectCard({ project: pr, layout }: { project: HomeProject; layout: "wide" | "half" }) {
   const { print, leader, pin } = pr.cardArt;
   const pinClass = ["pin", pin.big && "is-big", pin.ink && "is-ink", pin.side === "r" && "points-r"].filter(Boolean).join(" ");
   const printStyle = {
@@ -12,7 +12,7 @@ export function ProjectCard({ project: pr }: { project: HomeProject }) {
 
   return (
     <article
-      className={`project${pr.layout === "half" ? " is-half" : ""}`}
+      className={`project${layout === "half" ? " is-half" : ""}`}
       id={`p-${pr.slug}`}
       style={{ "--field": pr.fieldColor } as CSSProperties}
     >

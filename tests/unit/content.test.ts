@@ -1,7 +1,9 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import type { Db } from "@/db/client";
-import { seededDb } from "./helpers";
-import { getHomeContent, mediaUrl } from "@/content/home";
+import { eq } from "drizzle-orm";
+import { achievements, activities, education, experiences, projects, skills } from "@/db/schema";
+import { minimalProject, seededDb, testDb } from "./helpers";
+import { getHomeContent, getProfile, mediaUrl } from "@/content/home";
 import { getCvContent } from "@/content/cv";
 
 let db: Db;
@@ -17,7 +19,7 @@ describe("mediaUrl", () => {
 
 describe("getHomeContent", () => {
   it("returns featured projects in order with screenshot refs", () => {
-    const c = getHomeContent(db);
+    const c = getHomeContent(db)!;
     expect(c.profile.firstName).toBe("Dimas");
     expect(c.projects.map((p) => p.slug)).toEqual(["ledgerly", "rute", "kanbo", "pantau"]);
     expect(c.projects[0].screenshot?.url).toMatch(/^\/media\/screens\/ledgerly-[0-9a-f]{10}\.png$/);
@@ -25,7 +27,7 @@ describe("getHomeContent", () => {
   });
 
   it("keeps site order and site visibility", () => {
-    const c = getHomeContent(db);
+    const c = getHomeContent(db)!;
     expect(c.achievements.map((a) => a.title)[2]).toBe("Nusantara Code Cup");
     expect(c.activities).toHaveLength(6);
     expect(c.activities[0].photo?.url).toMatch(/^\/media\/photos\/act-talk-/);
@@ -49,5 +51,54 @@ describe("getCvContent", () => {
 
   it("returns null for an unknown profile slug", () => {
     expect(getCvContent(db, "nope")).toBeNull();
+  });
+});
+
+describe("first run", () => {
+  it("has no profile, home or CV content before the owner saves a profile", () => {
+    const empty = testDb();
+    expect(getProfile(empty)).toBeNull();
+    expect(getHomeContent(empty)).toBeNull();
+    expect(getCvContent(empty)).toBeNull();
+  });
+});
+
+describe("home lists", () => {
+  it("shows at most four featured projects, in sort order", () => {
+    const db = seededDb();
+    db.insert(projects).values({ ...minimalProject("extra"), featured: true, sortOrder: -1 }).run();
+    db.insert(projects).values({ ...minimalProject("not-featured"), featured: false, sortOrder: -2 }).run();
+    const list = getHomeContent(db)!.projects;
+    expect(list).toHaveLength(4);
+    expect(list[0].slug).toBe("extra");
+    expect(list.map((p) => p.slug)).not.toContain("not-featured");
+  });
+
+  it("leaves out rows hidden from the site, in every list", () => {
+    const db = seededDb();
+    const before = getHomeContent(db)!;
+    const hidden = {
+      project: before.projects[0].id,
+      achievement: before.achievements[0].id,
+      activity: before.activities[0].id,
+      experience: before.experiences[0].id,
+      education: before.education[0].id,
+      skill: before.skills[0].id,
+    };
+    db.update(projects).set({ showOnSite: false }).where(eq(projects.id, hidden.project)).run();
+    db.update(achievements).set({ showOnSite: false }).where(eq(achievements.id, hidden.achievement)).run();
+    db.update(activities).set({ showOnSite: false }).where(eq(activities.id, hidden.activity)).run();
+    db.update(experiences).set({ showOnSite: false }).where(eq(experiences.id, hidden.experience)).run();
+    db.update(education).set({ showOnSite: false }).where(eq(education.id, hidden.education)).run();
+    db.update(skills).set({ showOnSite: false }).where(eq(skills.id, hidden.skill)).run();
+
+    const after = getHomeContent(db)!;
+    expect(after.projects.map((r) => r.id)).not.toContain(hidden.project);
+    expect(after.achievements.map((r) => r.id)).not.toContain(hidden.achievement);
+    expect(after.activities.map((r) => r.id)).not.toContain(hidden.activity);
+    expect(after.experiences.map((r) => r.id)).not.toContain(hidden.experience);
+    expect(after.education.map((r) => r.id)).not.toContain(hidden.education);
+    expect(after.skills.map((r) => r.id)).not.toContain(hidden.skill);
+    expect(after.achievements).toHaveLength(before.achievements.length - 1);
   });
 });
