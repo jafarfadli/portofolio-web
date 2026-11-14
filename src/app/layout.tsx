@@ -1,4 +1,5 @@
 import type { Viewport } from "next";
+import { headers } from "next/headers";
 import localFont from "next/font/local";
 import "./site.css";
 
@@ -19,11 +20,12 @@ const MOTION_PENDING =
 
 export const viewport: Viewport = { themeColor: "#2132d6" };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   return (
     <html lang="en" className={archivo.variable} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: MOTION_PENDING }} />
+        <script nonce={nonce} suppressHydrationWarning dangerouslySetInnerHTML={{ __html: MOTION_PENDING }} />
       </head>
       <body>{children}</body>
     </html>
