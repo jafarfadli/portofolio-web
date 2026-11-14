@@ -26,15 +26,18 @@ export function ResourceForm({ fields, initial, action, media, submitLabel, just
   });
   const values = state.values ?? initial;
   const fieldErrors = Object.keys(state.errors).filter((k) => k !== "_form").length;
-  const message =
-    state.status === "saved"
+  // While a submit runs, the previous result would be stale, so the status line stays empty until the new one lands.
+  const kind = pending ? "idle" : state.status;
+  const message = pending
+    ? ""
+    : state.status === "saved"
       ? "Saved."
       : state.status === "error"
         ? (state.message ?? `Fix ${fieldErrors} ${fieldErrors === 1 ? "field" : "fields"} below.`)
         : "";
   return (
     <form action={formAction} className="adm-form" noValidate>
-      <p className="adm-status" data-kind={state.status} role="status">{message}</p>
+      <p className="adm-status" data-kind={kind} role="status">{message}</p>
       {fields.map((f) => (
         <FieldInput key={f.name} field={f} value={values[f.name] ?? ""} error={state.errors[f.name]} media={media} />
       ))}

@@ -21,7 +21,10 @@ test("a saved project headline shows on the public site at once", async ({ page 
 
   await headline.fill(original); // leave the shared e2e data as seeded
   await page.getByRole("button", { name: "Save changes" }).click();
+  await expect(page.getByRole("status")).toHaveText(""); // the stale "Saved." clears while the save runs
   await expect(page.getByRole("status")).toHaveText("Saved.");
+  await pub.reload();
+  await expect(pub.getByRole("heading", { name: /edited in e2e/ })).toHaveCount(0);
 });
 
 test("invalid input is refused next to its field and kept for fixing", async ({ page }) => {
