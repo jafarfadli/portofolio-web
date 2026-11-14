@@ -6,13 +6,14 @@ import { PrintButton } from "@/components/cv/PrintButton";
 import { Icon } from "@/components/Icon";
 import { getCvContent } from "@/content/cv";
 import { getDb } from "@/db/client";
+import { fullName } from "@/lib/name";
 import "./cv.css";
 
 export const dynamic = "force-dynamic";
 
 export function generateMetadata(): Metadata {
   const cv = getCvContent(getDb());
-  return { title: cv ? `${cv.profile.firstName} ${cv.profile.lastName}, CV` : "CV" };
+  return { title: cv ? `${fullName(cv.profile)}, CV` : "CV" };
 }
 
 export default function CvPage() {

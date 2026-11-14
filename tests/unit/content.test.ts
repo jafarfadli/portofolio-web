@@ -20,7 +20,8 @@ describe("mediaUrl", () => {
 describe("getHomeContent", () => {
   it("returns featured projects in order with screenshot refs", () => {
     const c = getHomeContent(db)!;
-    expect(c.profile.firstName).toBe("Dimas");
+    expect(c.profile.firstName).toBe("Jafar");
+    expect(c.photo?.url).toMatch(/^\/media\/photos\/owner-badge-[0-9a-f]{10}\.jpg$/);
     expect(c.projects.map((p) => p.slug)).toEqual(["ledgerly", "rute", "kanbo", "pantau"]);
     expect(c.projects[0].screenshot?.url).toMatch(/^\/media\/screens\/ledgerly-[0-9a-f]{10}\.png$/);
     expect(c.projects[1].screenshot?.height).toBe(1688);
@@ -47,6 +48,7 @@ describe("getCvContent", () => {
     ]);
     expect(cv.skillGroups[0]).toEqual({ group: "Languages", names: ["TypeScript", "Go", "SQL", "Python"] });
     expect(cv.summary).toBe(cv.profile.cvSummary);
+    expect(cv.photo?.url).toMatch(/^\/media\/photos\/owner-cutout-[0-9a-f]{10}\.png$/);
   });
 
   it("returns null for an unknown profile slug", () => {

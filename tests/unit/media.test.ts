@@ -6,7 +6,7 @@ import sharp from "sharp";
 import { eq } from "drizzle-orm";
 import { createMedia, deleteMedia, MAX_UPLOAD_BYTES, mediaUsage, processUpload } from "@/admin/media";
 import { toMediaRef } from "@/content/home";
-import { media, projects } from "@/db/schema";
+import { media, profile, projects } from "@/db/schema";
 import { seededDb } from "./helpers";
 
 const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), "uploads-"));
@@ -99,6 +99,13 @@ describe("media rows", () => {
     expect(await deleteMedia(db, id, dir)).toEqual({ ok: true });
     expect(fs.existsSync(path.join(dir, upload.path))).toBe(false);
     expect(fs.existsSync(path.join(dir, upload.variants[0].path))).toBe(false);
+  });
+
+  it("reports the profile photos as used by the profile", () => {
+    const db = seededDb();
+    const p = db.select().from(profile).get()!;
+    expect(mediaUsage(db, p.photoId!)).toEqual(["Profile, badge photo"]);
+    expect(mediaUsage(db, p.cvPhotoId!)).toEqual(["Profile, CV photo"]);
   });
 
   it("builds a srcset from the variants, widest last", () => {

@@ -94,7 +94,7 @@ test("hiding an activity removes it from the public agenda; order buttons reorde
 
 test("the profile saves and the list pages link to every editor", async ({ page }) => {
   await page.goto("/admin/profile");
-  await expect(page.getByLabel("First name")).toHaveValue("Dimas");
+  await expect(page.getByLabel("First name")).toHaveValue("Jafar");
   await page.getByRole("button", { name: "Save changes" }).click();
   await expect(page.getByRole("status")).toHaveText("Saved.");
   for (const [href, heading] of [

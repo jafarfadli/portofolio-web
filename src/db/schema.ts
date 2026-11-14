@@ -35,8 +35,12 @@ export const profile = sqliteTable("profile", {
   id: integer("id").primaryKey(),
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
+  /** Shown on the CV, in titles and in alt text. Null: first and last name. */
+  fullName: text("full_name"),
   role: text("role").notNull(),
   stackLine: text("stack_line").notNull(),
+  photoId: integer("photo_id").references(() => media.id),
+  cvPhotoId: integer("cv_photo_id").references(() => media.id),
   location: text("location").notNull(),
   availabilityNote: text("availability_note").notNull(),
   openToWork: integer("open_to_work", { mode: "boolean" }).notNull().default(true),

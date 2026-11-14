@@ -4,7 +4,7 @@ test.use({ reducedMotion: "reduce" });
 
 test("home renders every section from the database", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Dimas\s+Arkana/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Jafar\s+Fadli/);
   await expect(page.locator("[data-stickers] .slot-li")).toHaveCount(5);
   await expect(page.locator("article.project")).toHaveCount(4);
   await expect(page.locator("article.project").first()).toContainText("Ledgerly");
@@ -15,7 +15,7 @@ test("home renders every section from the database", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Let's talk." })).toBeVisible();
   await expect(page.locator(".qr img")).toHaveAttribute("src", /^data:image\/svg\+xml/);
   const ld = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent())!);
-  expect(ld).toMatchObject({ "@type": "Person", name: "Dimas Arkana", jobTitle: "Full-stack Engineer" });
+  expect(ld).toMatchObject({ "@type": "Person", name: "Muhammad Jafar Fadli", jobTitle: "Full-stack Engineer" });
 });
 
 test("copy has no em or en dashes", async ({ page }) => {

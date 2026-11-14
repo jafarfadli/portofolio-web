@@ -13,6 +13,8 @@ type SeedMedia = {
 const SCREEN = "Synthetic sample screenshot rendered from mockup/assets-src/screens. Replace with a real screenshot.";
 const PHOTO = "Unsplash photo (see mockup/assets/photos/SOURCES.txt), Unsplash License. Replace with your own event photo.";
 
+const OWNER = "The owner's own portrait, duotoned in the theme navy (see mockup/assets/photos/SOURCES.txt). Replace when the portrait changes.";
+
 export const seedMedia: SeedMedia[] = [
   { key: "ledgerly", file: "screens/ledgerly.png", kind: "screenshot", width: 1440, height: 900, alt: "Ledgerly overview: outstanding balance, payments per week, top customers", provenance: SCREEN },
   { key: "rute", file: "screens/rute.png", kind: "screenshot", width: 780, height: 1688, alt: "Rute bottom sheet listing live bus arrivals at Harmoni Central", provenance: SCREEN },
@@ -24,21 +26,24 @@ export const seedMedia: SeedMedia[] = [
   { key: "act-workshop", file: "photos/act-workshop.jpg", kind: "photo", width: 900, height: 675, alt: "A group working on laptops around a shared table", provenance: PHOTO },
   { key: "act-conf", file: "photos/act-conf.jpg", kind: "photo", width: 900, height: 675, alt: "A conference audience in a dark hall", provenance: PHOTO },
   { key: "act-stage", file: "photos/act-stage.jpg", kind: "photo", width: 900, height: 675, alt: "A speaker on stage in front of a large screen", provenance: PHOTO },
+  { key: "owner-badge", file: "photos/owner-badge.jpg", kind: "photo", width: 400, height: 500, alt: "Portrait of Muhammad Jafar Fadli in a navy suit", provenance: OWNER },
+  { key: "owner-cutout", file: "photos/owner-cutout.png", kind: "photo", width: 400, height: 505, alt: "Portrait of Muhammad Jafar Fadli", provenance: OWNER },
 ];
 
 export const seedProfile = {
-  firstName: "Dimas",
-  lastName: "Arkana",
+  firstName: "Jafar",
+  lastName: "Fadli",
+  fullName: "Muhammad Jafar Fadli",
   role: "Full-stack Engineer",
   stackLine: "TypeScript, Next.js, Go, PostgreSQL",
   location: "Jakarta",
-  availabilityNote: "Jakarta or remote",
+  availabilityNote: "Jakarta",
   openToWork: true,
   openToWorkLabel: "Open to full-time roles",
-  email: "hello@dimasarkana.example",
-  siteUrl: "https://dimasarkana.example",
-  githubUrl: "https://github.example/dimasarkana",
-  linkedinUrl: "https://linkedin.example/in/dimasarkana",
+  email: "hello@jafarfadli.example",
+  siteUrl: "https://jafarfadli.example",
+  githubUrl: "https://github.com/jafarfadli",
+  linkedinUrl: "https://linkedin.example/in/jafarfadli",
   statementLine1: "Web products, end to end.",
   statementLine2: "From schema to pixel.",
   aboutText:
@@ -67,8 +72,8 @@ export const seedProjects: SeedProject[] = [
       pin: { x: 74, y: 44, side: "l", big: true },
     },
     layout: "wide", metricValue: "9.4 days", metricLabel: "average time to get paid, down from 13.1",
-    liveUrl: "https://ledgerly.example", codeUrl: "https://code.example/dimasarkana/ledgerly",
-    cvTitle: "invoicing for small shops", cvLine: "Used by 1,200 shops; average time to get paid dropped from 13.1 to 9.4 days.",
+    liveUrl: "https://ledgerly.example", codeUrl: "https://code.example/jafarfadli/ledgerly",
+    cvTitle: "invoicing for small shops", cvLine: "Used by **1,200** shops; average time to get paid dropped from **13.1 to 9.4 days**.",
   },
   {
     slug: "rute", name: "Rute",
@@ -81,8 +86,8 @@ export const seedProjects: SeedProject[] = [
       pin: { x: 54, y: 46, side: "l" },
     },
     layout: "half", metricValue: "Every 15 s", metricLabel: "live arrival refresh from GPS feeds",
-    liveUrl: null, codeUrl: "https://code.example/dimasarkana/rute",
-    cvTitle: "live bus arrivals for Jakarta commuters", cvLine: "Arrival times refresh every 15 seconds from GPS feeds.",
+    liveUrl: null, codeUrl: "https://code.example/jafarfadli/rute",
+    cvTitle: "live bus arrivals for Jakarta commuters", cvLine: "Arrival times refresh every **15 seconds** from GPS feeds.",
   },
   {
     slug: "kanbo", name: "Kanbo",
@@ -96,7 +101,7 @@ export const seedProjects: SeedProject[] = [
     },
     layout: "half", metricValue: "<120 ms", metricLabel: "presence updates between teammates",
     liveUrl: "https://kanbo.example", codeUrl: null,
-    cvTitle: "realtime team boards", cvLine: "Presence updates under 120 ms for teams of 3 to 30.",
+    cvTitle: "realtime team boards", cvLine: "Presence updates under **120 ms** for teams of 3 to 30.",
   },
   {
     slug: "pantau", name: "Pantau",
@@ -105,12 +110,12 @@ export const seedProjects: SeedProject[] = [
     fieldColor: "#16161D", screenshot: "pantau", stickerCaption: "Pantau: open-source uptime monitor",
     cardArt: {
       print: { left: 30, top: 16, width: 60, height: 84, rot: 1.5, objectPosition: "center top" },
-      leader: { d: "M 36 52 C 28 52, 26 40, 22 36", dot: { x: 36, y: 52 } },
-      pin: { x: 22, y: 36, side: "r", big: true },
+      leader: { d: "M 36 52 C 31 52, 30 40, 27 36", dot: { x: 36, y: 52 } },
+      pin: { x: 27, y: 36, side: "r", big: true },
     },
     layout: "wide", metricValue: "640 stars", metricLabel: "on GitHub, 31 contributors",
-    liveUrl: null, codeUrl: "https://code.example/dimasarkana/pantau",
-    cvTitle: "open-source uptime monitor and status page", cvLine: "Single-binary deploy; 640 GitHub stars and 31 contributors.",
+    liveUrl: null, codeUrl: "https://code.example/jafarfadli/pantau",
+    cvTitle: "open-source uptime monitor and status page", cvLine: "Single-binary deploy; **640** GitHub stars and **31** contributors.",
   },
 ];
 
@@ -121,11 +126,11 @@ type SeedAchievement = {
 
 /** Site order (fan): chronological with the winner in the middle. */
 export const seedAchievements: SeedAchievement[] = [
-  { title: "Hackathon Jakarta Pintar", rank: "finalist", rankLabel: "Finalist", description: "Hackathon, team of 4. Top 10 of 214 teams.", year: "2023", sealText: null, sealCaption: null, caption: "Finalist, Hackathon Jakarta Pintar 2023", story: "Top 10 of 214 teams with a flood-report app for RT heads.", cvLine: "**Finalist**, Hackathon Jakarta Pintar (top 10 of 214)", cvYear: "2023" },
-  { title: "Regional Programming Contest", rank: "award", rankLabel: "Honorable mention", description: "Team of 3. Solved 7 of 12 problems.", year: "2023", sealText: null, sealCaption: null, caption: "Honorable mention, Regional Programming Contest 2023", story: "Solved 7 of 12 problems in five hours, team of three.", cvLine: "Honorable mention, Regional Programming Contest", cvYear: "2023" },
-  { title: "Nusantara Code Cup", rank: "winner", rankLabel: "Winner", description: "Software development. First of 96 finalist teams.", year: "2024", sealText: "1st", sealCaption: "Code Cup 2024", caption: "Winner, Nusantara Code Cup 2024, software development", story: "Built an offline-first clinic queue system; first of 96 finalist teams.", cvLine: "**Winner**, Nusantara Code Cup, software development", cvYear: "2024" },
+  { title: "Hackathon Jakarta Pintar", rank: "finalist", rankLabel: "Finalist", description: "Hackathon, team of 4. Top 10 of 214 teams.", year: "2023", sealText: null, sealCaption: null, caption: "Finalist, Hackathon Jakarta Pintar 2023", story: "Top 10 of 214 teams with a flood-report app for RT heads.", cvLine: "Hackathon Jakarta Pintar (top 10 of 214)", cvYear: "2023" },
+  { title: "Regional Programming Contest", rank: "award", rankLabel: "Honorable mention", description: "Team of 3. Solved 7 of 12 problems.", year: "2023", sealText: null, sealCaption: null, caption: "Honorable mention, Regional Programming Contest 2023", story: "Solved 7 of 12 problems in five hours, team of three.", cvLine: "Regional Programming Contest", cvYear: "2023" },
+  { title: "Nusantara Code Cup", rank: "winner", rankLabel: "Winner", description: "Software development. First of 96 finalist teams.", year: "2024", sealText: "1st", sealCaption: "Code Cup 2024", caption: "Winner, Nusantara Code Cup 2024, software development", story: "Built an offline-first clinic queue system; first of 96 finalist teams.", cvLine: "Nusantara Code Cup, software development", cvYear: "2024" },
   { title: "AWS Certified Developer", rank: "award", rankLabel: "Certified", description: "Cloud certification, associate level.", year: "2025", sealText: null, sealCaption: null, caption: "AWS Certified Developer, Associate, 2025", story: "Certification covering serverless, IAM, and deployment pipelines.", cvLine: "AWS Certified Developer, Associate", cvYear: "2025" },
-  { title: "Dean's List", rank: "award", rankLabel: "Dean's list", description: "Five semesters, Institut Teknologi Nusantara.", year: "2023", sealText: null, sealCaption: null, caption: "Dean's List, 2021 to 2023", story: "Five consecutive semesters, Institut Teknologi Nusantara.", cvLine: "Dean's List, five semesters", cvYear: "2021 to 2023" },
+  { title: "Dean's List", rank: "award", rankLabel: "Dean's list", description: "Five semesters, Institut Teknologi Nusantara.", year: "2023", sealText: null, sealCaption: null, caption: "Dean's List, 2021 to 2023", story: "Five consecutive semesters, Institut Teknologi Nusantara.", cvLine: "Five semesters, Institut Teknologi Nusantara", cvYear: "2021 to 2023" },
 ];
 
 /** Default CV order for achievements: by rank, then recency. Titles reference seedAchievements. */
@@ -143,22 +148,22 @@ type SeedActivity = {
 };
 
 export const seedActivities: SeedActivity[] = [
-  { title: "JakWeb Meetup #42", subtitle: "Talk: self-hosting Next.js on a Mac mini", role: "speaker", roleLabel: "Speaker", year: "2025", photo: "act-talk", showInCv: true, cvLine: "Speaker, JakWeb Meetup #42" },
-  { title: "Ruang Kode Hackathon", subtitle: "48 hours, 300 participants, 3 sponsor tracks", role: "organizer", roleLabel: "Organizer", year: "2024", photo: "act-hackathon", showInCv: true, cvLine: "Organizer, Ruang Kode Hackathon (300 participants)" },
-  { title: "Campus Code Camp", subtitle: "Mentored 18 first-year students through their first web app", role: "mentor", roleLabel: "Mentor", year: "2024", photo: "act-mentor", showInCv: true, cvLine: "Mentor, Campus Code Camp" },
-  { title: "Open Source Saturday", subtitle: "Monthly session helping people land their first pull request", role: "organizer", roleLabel: "Host", year: "2023", photo: "act-workshop", showInCv: true, cvLine: "Host, Open Source Saturday" },
-  { title: "DevDays Indonesia", subtitle: "Ran the registration desk and speaker room", role: "volunteer", roleLabel: "Volunteer", year: "2023", photo: "act-conf", showInCv: false, cvLine: "Volunteer, DevDays Indonesia" },
-  { title: "HMIF Tech Talk", subtitle: "Hosted a 400-seat evening on careers in software", role: "organizer", roleLabel: "Organizer", year: "2022", photo: "act-stage", showInCv: false, cvLine: "Organizer, HMIF Tech Talk" },
+  { title: "JakWeb Meetup #42", subtitle: "Talk: self-hosting Next.js on a Mac mini", role: "speaker", roleLabel: "Speaker", year: "2025", photo: "act-talk", showInCv: true, cvLine: "JakWeb Meetup #42" },
+  { title: "Ruang Kode Hackathon", subtitle: "48 hours, 300 participants, 3 sponsor tracks", role: "organizer", roleLabel: "Organizer", year: "2024", photo: "act-hackathon", showInCv: true, cvLine: "Ruang Kode Hackathon (300 participants)" },
+  { title: "Campus Code Camp", subtitle: "Mentored 18 first-year students through their first web app", role: "mentor", roleLabel: "Mentor", year: "2024", photo: "act-mentor", showInCv: true, cvLine: "Campus Code Camp" },
+  { title: "Open Source Saturday", subtitle: "Monthly session helping people land their first pull request", role: "organizer", roleLabel: "Host", year: "2023", photo: "act-workshop", showInCv: true, cvLine: "Open Source Saturday" },
+  { title: "DevDays Indonesia", subtitle: "Ran the registration desk and speaker room", role: "volunteer", roleLabel: "Volunteer", year: "2023", photo: "act-conf", showInCv: false, cvLine: "DevDays Indonesia" },
+  { title: "HMIF Tech Talk", subtitle: "Hosted a 400-seat evening on careers in software", role: "organizer", roleLabel: "Organizer", year: "2022", photo: "act-stage", showInCv: false, cvLine: "HMIF Tech Talk" },
 ];
 
 export const seedExperiences = [
-  { role: "Software Engineer", org: "Arunika Labs", location: "Jakarta", period: "Feb 2025 to now", cvPeriod: "Feb 2025 to present", summary: "Built the billing service in Go and the customer dashboard in Next.js. Cut p95 API latency from **840 ms to 210 ms**.", cvBullets: ["Built the billing service in Go and the customer dashboard in Next.js for 3,000 business accounts.", "Cut p95 API latency from 840 ms to 210 ms by reshaping queries and adding a Redis read-through cache."] },
-  { role: "Software Engineer Intern", org: "Lumbung Data", location: "remote", period: "Jun to Dec 2024", cvPeriod: "Jun 2024 to Dec 2024", summary: "Shipped a CSV import pipeline with column mapping, now used by **40 enterprise clients**.", cvBullets: ["Shipped a CSV import pipeline with column mapping and validation, now used by 40 enterprise clients."] },
-  { role: "Teaching Assistant, Web Programming", org: "Institut Teknologi Nusantara", location: "", period: "Jul 2023 to May 2024", cvPeriod: "Jul 2023 to May 2024", summary: "Ran weekly labs for **120 students** and rewrote the grading scripts.", cvBullets: ["Ran weekly labs for 120 students and rewrote the automated grading scripts."] },
+  { role: "Software Engineer", org: "Arunika Labs", location: "Jakarta", period: "Feb 2025 to now", cvPeriod: "Feb 2025 to present", summary: "Built the billing service in Go and the customer dashboard in Next.js. Cut p95 API latency from **840 ms to 210 ms**.", cvBullets: ["Built the billing service in Go and the customer dashboard in Next.js for **3,000** business accounts.", "Cut p95 API latency from **840 ms to 210 ms** by reshaping queries and adding a Redis read-through cache."] },
+  { role: "Software Engineer Intern", org: "Lumbung Data", location: "remote", period: "Jun to Dec 2024", cvPeriod: "Jun 2024 to Dec 2024", summary: "Shipped a CSV import pipeline with column mapping, now used by **40 enterprise clients**.", cvBullets: ["Shipped a CSV import pipeline with column mapping and validation, now used by **40** enterprise clients."] },
+  { role: "Teaching Assistant, Web Programming", org: "Institut Teknologi Nusantara", location: "", period: "Jul 2023 to May 2024", cvPeriod: "Jul 2023 to May 2024", summary: "Ran weekly labs for **120 students** and rewrote the grading scripts.", cvBullets: ["Ran weekly labs for **120** students and rewrote the automated grading scripts."] },
 ];
 
 export const seedEducation = [
-  { degree: "B.Sc. Computer Science", institution: "Institut Teknologi Nusantara", period: "2020 to 2024", note: "GPA **3.71 / 4.00**. Thesis on offline-first sync for field data apps.", cvNote: "Institut Teknologi Nusantara, GPA 3.71 / 4.00" },
+  { degree: "B.Sc. Computer Science", institution: "Institut Teknologi Nusantara", period: "2020 to 2024", note: "GPA **3.71 / 4.00**. Thesis on offline-first sync for field data apps.", cvNote: "GPA **3.71 / 4.00**. Thesis on offline-first sync for field data apps." },
 ];
 
 /** sortOrder = array index + 1. Site chips show in this order; CV groups by first appearance. */

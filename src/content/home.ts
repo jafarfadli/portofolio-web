@@ -14,6 +14,8 @@ export type HomeProject = Project & { screenshot: MediaRef | null };
 export type HomeActivity = Activity & { photo: MediaRef | null };
 export type HomeContent = {
   profile: Profile;
+  /** The badge photo. */
+  photo: MediaRef | null;
   projects: HomeProject[];
   achievements: Achievement[];
   activities: HomeActivity[];
@@ -51,6 +53,7 @@ export function getHomeContent(db: Db): HomeContent | null {
   const ref = (id: number | null) => (id == null ? null : (refs.get(id) ?? null));
   return {
     profile: p,
+    photo: ref(p.photoId),
     projects: onSite(db.select().from(projects).all())
       .filter((p) => p.featured)
       .slice(0, 4)

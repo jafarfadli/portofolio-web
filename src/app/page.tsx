@@ -4,12 +4,13 @@ import { FirstRun } from "@/components/home/FirstRun";
 import { HomePage } from "@/components/home/HomePage";
 import { getHomeContent, getProfile } from "@/content/home";
 import { getDb } from "@/db/client";
+import { fullName } from "@/lib/name";
 
 export const dynamic = "force-dynamic";
 
 export function generateMetadata(): Metadata {
   const p = getProfile(getDb());
-  return p ? { title: `${p.firstName} ${p.lastName}, ${p.role}`, description: p.cvSummary } : { title: "Portfolio" };
+  return p ? { title: `${fullName(p)}, ${p.role}`, description: p.cvSummary } : { title: "Portfolio" };
 }
 
 export default async function Page() {
@@ -25,7 +26,7 @@ export default async function Page() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: `${p.firstName} ${p.lastName}`,
+    name: fullName(p),
     jobTitle: p.role,
     email: `mailto:${p.email}`,
     url: p.siteUrl,

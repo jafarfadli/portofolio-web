@@ -5,9 +5,9 @@ test("CV lists sections in order, ranks achievements, and prints to one A4 page"
   await expect(page.locator(".cv-sec h2")).toHaveText([
     "Summary", "Experience", "Selected projects", "Achievements", "Activities", "Education", "Skills",
   ]);
-  await expect(page.locator(".cv-sheet h1")).toHaveText("Dimas Arkana");
+  await expect(page.locator(".cv-sheet h1")).toHaveText("Muhammad Jafar Fadli");
   const achievements = page.locator(".cv-sec", { has: page.locator("h2", { hasText: "Achievements" }) });
-  await expect(achievements.locator("li").first()).toContainText("Winner, Nusantara Code Cup");
+  await expect(achievements.locator("li").first()).toContainText(/Winner\s+Nusantara Code Cup/);
   await expect(page.locator(".cv-sheet")).not.toContainText("DevDays");
 
   // Global site.css rules (.role pill, .back badge face) must not leak into the CV.

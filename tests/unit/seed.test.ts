@@ -12,14 +12,18 @@ describe("seed", () => {
     const uploads = fs.mkdtempSync(path.join(os.tmpdir(), "uploads-"));
     seed(db, { assetsDir: path.resolve("mockup/assets"), uploadsDir: uploads });
 
-    expect(db.select().from(profile).get()!.firstName).toBe("Dimas");
+    const p = db.select().from(profile).get()!;
+    expect(p.firstName).toBe("Jafar");
+    expect(p.fullName).toBe("Muhammad Jafar Fadli");
+    expect(p.photoId).not.toBeNull();
+    expect(p.cvPhotoId).not.toBeNull();
     expect(db.select().from(projects).all()).toHaveLength(4);
     expect(db.select().from(achievements).all()).toHaveLength(5);
     expect(db.select().from(activities).all()).toHaveLength(6);
     expect(db.select().from(skills).all()).toHaveLength(12);
 
     const files = db.select().from(media).all();
-    expect(files).toHaveLength(10);
+    expect(files).toHaveLength(12);
     for (const f of files) {
       expect(f.path).toMatch(/^(screens|photos)\/[a-z-]+-[0-9a-f]{10}\.(png|jpg)$/);
       expect(fs.existsSync(path.join(uploads, f.path))).toBe(true);

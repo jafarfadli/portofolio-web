@@ -1,5 +1,6 @@
 import { Inline } from "@/components/Inline";
 import type { CvContent } from "@/content/cv";
+import { fullName } from "@/lib/name";
 import { displayUrl } from "@/lib/url";
 
 export function CvDocument({ cv }: { cv: CvContent }) {
@@ -7,7 +8,7 @@ export function CvDocument({ cv }: { cv: CvContent }) {
   return (
     <article className="cv-sheet" aria-label="Curriculum vitae">
       <header className="cv-head">
-        <h1>{p.firstName} {p.lastName}</h1>
+        <h1>{fullName(p)}</h1>
         <p className="cv-role">{p.role}</p>
         <ul className="contact">
           <li>{p.cvLocationLine}</li>
@@ -33,7 +34,7 @@ export function CvDocument({ cv }: { cv: CvContent }) {
                 <span className="when">{e.cvPeriod}</span>
               </div>
               {e.cvBullets.length > 0 ? (
-                <ul className="cv-points">{e.cvBullets.map((b, i) => <li key={i}>{b}</li>)}</ul>
+                <ul className="cv-points">{e.cvBullets.map((b, i) => <li key={i}><Inline text={b} /></li>)}</ul>
               ) : null}
             </div>
           ))}
@@ -50,7 +51,7 @@ export function CvDocument({ cv }: { cv: CvContent }) {
                 <span className="when">{pr.period}</span>
               </div>
               <ul className="cv-points">
-                <li>{pr.cvLine} <span className="cv-stack">{pr.tags.join(", ")}</span></li>
+                <li><Inline text={pr.cvLine} /> <span className="cv-stack">{pr.tags.join(", ")}</span></li>
               </ul>
             </div>
           ))}
@@ -62,7 +63,7 @@ export function CvDocument({ cv }: { cv: CvContent }) {
           <h2>Achievements</h2>
           <ul className="cv-lines">
             {cv.achievements.map((a) => (
-              <li key={a.id}><span><Inline text={a.cvLine} /></span><span className="when">{a.cvYear}</span></li>
+              <li key={a.id}><span>{a.rankLabel} <Inline text={a.cvLine} /></span><span className="when">{a.cvYear}</span></li>
             ))}
           </ul>
         </section>
@@ -73,7 +74,7 @@ export function CvDocument({ cv }: { cv: CvContent }) {
           <h2>Activities</h2>
           <ul className="cv-lines">
             {cv.activities.map((a) => (
-              <li key={a.id}><span>{a.cvLine}</span><span className="when">{a.year}</span></li>
+              <li key={a.id}><span>{a.roleLabel} <Inline text={a.cvLine} /></span><span className="when">{a.year}</span></li>
             ))}
           </ul>
         </section>
@@ -85,7 +86,7 @@ export function CvDocument({ cv }: { cv: CvContent }) {
           {cv.education.map((e) => (
             <div key={e.id} className="cv-entry">
               <div className="cv-row"><span><b>{e.degree}</b></span><span className="when">{e.period}</span></div>
-              <div>{e.cvNote}</div>
+              <div><Inline text={e.cvNote} /></div>
             </div>
           ))}
         </section>

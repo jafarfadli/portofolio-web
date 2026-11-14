@@ -1,5 +1,6 @@
 import { Icon } from "@/components/Icon";
 import type { Profile } from "@/content/home";
+import { fullName } from "@/lib/name";
 import { SectionHead } from "./SectionHead";
 
 export function Closing({ profile: p }: { profile: Profile }) {
@@ -17,7 +18,7 @@ export function Closing({ profile: p }: { profile: Profile }) {
         <a href={`mailto:${p.email}`}><Icon name="mail" /><span>{p.email}</span></a>
       </div>
       <footer className="footer">
-        <span>{p.firstName} {p.lastName}, {new Date().getFullYear()}</span>
+        <span>{fullName(p)}, {new Date().getFullYear()}</span>
         <span>Built with Next.js, served from a Mac mini</span>
       </footer>
     </section>

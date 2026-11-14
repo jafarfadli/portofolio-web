@@ -53,7 +53,9 @@ export function seed(db: Db, opts: { assetsDir: string; uploadsDir: string }): v
   };
 
   db.transaction((tx) => {
-    tx.insert(profile).values({ id: 1, ...seedProfile }).run();
+    tx.insert(profile)
+      .values({ id: 1, ...seedProfile, photoId: mediaId("owner-badge"), cvPhotoId: mediaId("owner-cutout") })
+      .run();
 
     seedProjects.forEach((p, i) => {
       const { screenshot, ...rest } = p;
