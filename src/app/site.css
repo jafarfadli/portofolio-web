@@ -104,6 +104,7 @@ button { font: inherit; color: inherit; }
 .btn-ink-line:hover { background: var(--ink); color: var(--stock); }
 
 /* ---------- Nav ---------- */
+html { scroll-padding-top: 88px; }
 .nav {
   position: fixed; z-index: 50; top: 0; left: 0; right: 0; height: 72px;
   display: flex; align-items: center; justify-content: space-between; gap: 24px;
@@ -112,6 +113,9 @@ button { font: inherit; color: inherit; }
 }
 .nav.is-solid { background: rgba(26, 39, 173, 0.92); backdrop-filter: saturate(140%) blur(10px); -webkit-backdrop-filter: saturate(140%) blur(10px); }
 .nav.is-hidden { transform: translateY(-100%); }
+/* WCAG 2.4.11: a focused nav link, or an open menu, must never sit under a hidden nav. */
+.nav:focus-within { transform: none; }
+.nav:has(.menu-sheet:not([hidden])) { transform: none; }
 .brand { font-weight: 800; font-variation-settings: "wdth" 118; font-size: 17px; text-decoration: none; letter-spacing: 0.01em; }
 .nav-links { display: flex; gap: clamp(16px, 2.4vw, 36px); }
 .nav-links a { text-decoration: none; font-weight: 600; font-size: 15px; color: var(--on-ground); padding: 8px 0; position: relative; }
@@ -388,7 +392,7 @@ main { position: relative; z-index: 1; }
 .itinerary ol:last-child { margin-bottom: 0; }
 .stop { display: grid; grid-template-columns: clamp(130px, 14vw, 200px) minmax(0, 1.1fr) minmax(0, 1.4fr); gap: 8px 32px; padding: 20px 0; border-bottom: 1px solid rgba(17, 18, 22, 0.14); }
 .stop:last-child { border-bottom: 0; }
-.stop time { font-size: 15px; font-weight: 700; font-feature-settings: "tnum" 1; color: var(--ink-2); padding-top: 4px; }
+.stop .when { font-size: 15px; font-weight: 700; font-feature-settings: "tnum" 1; color: var(--ink-2); padding-top: 4px; }
 .stop .who { font-size: clamp(20px, 1.7vw, 25px); line-height: 1.2; font-weight: 800; font-variation-settings: "wdth" 104; letter-spacing: -0.01em; }
 .stop .who span { display: block; margin-top: 2px; font-size: 16px; font-weight: 550; font-variation-settings: "wdth" 100; color: var(--ink-2); letter-spacing: 0; }
 .stop p { font-size: 16.5px; line-height: 1.5; color: var(--ink); max-width: 60ch; }
@@ -435,6 +439,20 @@ main { position: relative; z-index: 1; }
   .agenda .thumb { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; border: 6px solid #fff; }
   .preview { display: none; }
 }
+
+/* ---------- First-load entrance: hold the start state until the island runs ----------
+   A script in <head> adds .motion-pending on "/" when motion is allowed; initHomeMotion removes it in the same task
+   in which GSAP applies the same start values, so the server-painted hero never shows, vanishes, then drops in.
+   Only the entrance targets are hidden. If the script never runs, the keyframes below restore everything after 2.5s. */
+html.motion-pending .nav,
+html.motion-pending .stickers .slot-li,
+html.motion-pending .statement .hero-actions .btn { opacity: 0; animation: motion-pending-fade 0.01s linear 2.5s forwards; }
+html.motion-pending .lede .line > span,
+html.motion-pending .pendulum { animation: motion-pending-place 0.01s linear 2.5s forwards; }
+html.motion-pending .lede .line > span { transform: translateY(108%); }
+html.motion-pending .pendulum { transform: translateY(-100vh); }
+@keyframes motion-pending-fade { to { opacity: 1; } }
+@keyframes motion-pending-place { to { transform: none; } }
 
 /* ---------- Reduced motion: final, readable state ---------- */
 @media (prefers-reduced-motion: reduce) {
