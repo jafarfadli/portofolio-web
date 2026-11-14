@@ -555,12 +555,12 @@
       },
       {
         "name": "sticker-parallax",
-        "value": "fine pointer only; hero pointer -1..1; target 16px*depth x, 11px*depth y; ease 0.08 per tick; depth s-a 1.3, s-b 0.7, s-c 1, s-d 0.55, seal 1.6; written as --px/--py and applied via the individual translate property on li.slot-li (never transform, which GSAP owns for the entrance); ticker removes itself at rest; hero pointerleave eases home",
+        "value": "fine pointer only; pointer across the VIEWPORT (not the hero) -1..1, viewport size read on resize, not per move; target 16px*depth x, 11px*depth y; ease 0.08 per tick; depth s-a 1.3, s-b 0.7, s-c 1, s-d 0.55, seal 1.6; written as --px/--py and applied via the individual translate property on li.slot-li (never transform, which GSAP owns for the entrance); starts only when the entrance timeline completes, since GSAP writes translate: none on the slots while their from() runs, so translate and transform never fight; ticker removes itself at rest; hero pointerleave eases home, and at rest at home the inline --px/--py are dropped",
         "purpose": "Stickers lean toward the cursor by depth."
       },
       {
         "name": "hero-dust",
-        "value": "canvas.hero-dust inset 0, z 1, aria-hidden; specks count min(300, (w+300)*(h+180)/7200); depth z 0.15..1, radius 0.6+1.5z, alpha 0.18+0.42z, wander up to 3px/s; 12% chads 6.4x2px r1 spinning; inks 242,242,238 (x2), 229,228,223, chad 201,204,214; lean 150px*z x and 90px*z y toward the pointer, eased 2.2/s; frame loop dt cap 50ms, no frames while hero off screen or tab hidden; dpr cap 2; reduced motion: one still draw, redrawn on resize",
+        "value": "canvas.hero-dust inset 0, z 1, aria-hidden; specks count min(300, (w+300)*(h+180)/7200); depth z 0.15..1, radius 0.6+1.5z, alpha 0.18+0.42z, wander up to 3px/s; 12% chads 6.4x2px r1 spinning; inks 242,242,238 (x2), 229,228,223, chad 201,204,214; lean 150px*z x and 90px*z y toward the pointer, eased 2.2/s; frame loop dt cap 50ms, no frames while hero off screen or tab hidden; dpr cap 2; hero page box cached with its size and compared with the pointer's page position, so no pointer move forces a layout; chads use roundRect, or rect where it is missing (Firefox before 112, Safari before 16); guarded: a throw leaves the canvas empty and the rest of the home motion runs on; reduced motion: one still draw, redrawn on resize",
         "purpose": "Field of punched dust behind the hero type and stickers."
       },
       {
@@ -595,7 +595,7 @@
       },
       {
         "name": "entrance",
-        "value": "delay .12, defaults expo.out: nav opacity 0.6s@0; pendulum from y -95vh 0.78s power3.in @0.05 then kick 58; stickers from opacity 0 scale 1.22 rot 9, 0.5s back.out(1.5) stagger .075 @0.62; lede lines yPercent 108 0.9s stagger .09 @0.78; hero buttons y 14 opacity 0 0.6s stagger .07 @1.0",
+        "value": "delay .12, defaults expo.out: nav opacity 0.6s@0; pendulum from y -95vh 0.78s power3.in @0.05 then kick 58; stickers from opacity 0 scale 1.22 rot 9, 0.5s back.out(1.5) stagger .075 @0.62; lede lines yPercent 108 0.9s stagger .09 @0.78; hero buttons y 14 opacity 0 0.6s stagger .07 @1.0; its onComplete starts the sticker lean",
         "purpose": "The one authored first-viewport entrance."
       },
       {
@@ -615,13 +615,13 @@
       },
       {
         "name": "ach-photo-turn",
-        "value": "up to 4 photos per pass stacked in one 4:3 frame; opacity 900ms ease-out and scale 1.04 to 1 over 1600ms; one turn every 3600ms, first at 1200ms + 750ms*pass index; pass and clone together; skipped while reel off screen or tab hidden; dots: 6px, active 14px stock, 320ms; none under reduced motion (first photo, dots hidden)",
+        "value": "up to 4 photos per pass stacked in one 4:3 frame; opacity 900ms ease-out and scale 1.04 to 1 over 1600ms; one turn every 3600ms, first at 1200ms + 750ms*pass index; pass and clone together; skipped while the reel has focus within (its keyboard stop), is off screen, or the tab is hidden; dots: 6px, active 14px stock, 320ms; none under reduced motion (first photo, dots hidden)",
         "purpose": "Achievement photos take turns."
       },
       {
         "name": "agenda-preview",
-        "value": "quickTo x/y 0.55s power3, offset +28px x; show 0.4s expo.out random rot -4..4; hide 0.25s power2.in to scale .85; first hover (preview hidden) sets x = pointer+28, y = pointer - half height before fading in, so it opens at the cursor",
-        "purpose": "Cursor-trailing activity photo; opens at the cursor on first hover."
+        "value": "quickTo x/y 0.55s power3, offset +28px x; show 0.4s expo.out random rot -4..4; hide 0.25s power2.in to scale .85; every pointer entry (a row entered from outside the agenda, or a row arriving under a still cursor while scrolling) restarts both quickTo tweens at the cursor, passing x = pointer+28, y = pointer - half height as start and end, so the next move resumes from there (a plain set would hold only until the next move); row to row inside the agenda it keeps trailing; keyboard focus aims it at the row (min(row right - width - 180, viewport - width - 24), centred on the row), never at a stale pointer",
+        "purpose": "Cursor-trailing activity photo; restarts at the cursor on every pointer entry."
       },
       {
         "name": "cord-draw",
@@ -673,7 +673,12 @@
       {
         "name": "wide-hero-tune",
         "value": "max-width: 1100px",
-        "purpose": "Statement block is 60vw wide."
+        "purpose": "Statement block is 60vw wide; the seal drops below the action row, under Download CV (left gutter + 250px, top 13% + 4.16 lede-fs + 104px)."
+      },
+      {
+        "name": "narrow-desktop",
+        "value": "max-width: 900px",
+        "purpose": "The phone drops below the action row too (left gutter + 250px, top 13% + 4.16 lede-fs + 104px), the seal on its corner (+1.5 lede-fs across, +0.3 lede-fs down)."
       },
       {
         "name": "compact",
@@ -825,7 +830,7 @@
         "name": "icon-stickers",
         "source": "src/components/IconSticker.tsx (Phosphor Bold, MIT, 256 grid)",
         "generator": "Same paths as the mockup i-b-* symbols; set of 8: browsers, database, cursor, pin, loading, team, rocket, wave",
-        "display": "Opt-in :name: tokens in owner copy (statement, About, closing); never on the CV. Hero 0.78em scrap (glyph 0.54em, radius 0.16em, stock on navy, white on concrete); About 0.9em; tilt cycle -7, 5, -4, 6, -5, 7deg continuing across statement lines."
+        "display": "Opt-in :name: tokens in owner copy, in the statement and About only (the closing wave is fixed in Closing.tsx, not owner copy); never on the CV; no surface prints that copy as plain text. Hero 0.78em scrap (glyph 0.54em, radius 0.16em, stock on navy, white on concrete); About 0.9em; tilt cycle -7, 5, -4, 6, -5, 7deg continuing across statement lines."
       }
     ],
     "fonts": [
@@ -942,7 +947,7 @@
       "name": "Sticker with Caption",
       "kind": "custom",
       "refersTo": "sticker",
-      "description": "Die-cut screenshot sticker with white kiss-cut border; peels on hover/focus and only then shows an ink caption pill. Sits in a li.slot-li (z 3) with an inner span.float; the three screens along the bottom edge (s-a, s-c, s-d) carry cap-top captions that open above.",
+      "description": "Die-cut screenshot sticker with white kiss-cut border; peels on hover/focus and only then shows an ink caption pill. Sits in a li.slot-li (z 3) with an inner span.float; the three screens along the bottom edge (s-a, s-c, s-d) carry cap-top captions that open above. No sticker covers the hero action row: the phone and the seal sit in lede ems with a px floor (phone left max(gutter + 6.3 lede-fs, gutter + 390px), seal 1.5 lede-fs further), and drop below the row under 1100px (the seal) and 900px (both).",
       "html": "<div class=\"ds-ground\"><a class=\"ds-sticker\" href=\"#\" style=\"--rot:-7deg\"><span class=\"ds-shot\"></span><span class=\"ds-cap\">Ledgerly: invoicing for 1,200 small shops</span></a></div>",
       "css": ":host{--ground:#1d2640;--ground-deep:#151c31;--stock:#f2f2ee;--ink:#111216;--ink-2:#45474d;--metal:#c9ccd6;--ease-out:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-ground{background:var(--ground);padding:40px 40px 80px;}.ds-sticker{position:relative;display:block;width:240px;aspect-ratio:1.6;background:#fff;padding:7px;border-radius:16px;box-shadow:0 14px 28px -10px rgba(10,11,18,.55),0 2px 4px rgba(10,11,18,.25);transform:rotate(var(--rot));transition:transform 420ms var(--ease-out),box-shadow 420ms var(--ease-out);text-decoration:none;}.ds-shot{display:block;width:100%;height:100%;border-radius:10px;background:#e9e9e4;}.ds-cap{position:absolute;left:50%;top:calc(100% + 14px);transform:translate(-50%,-6px);opacity:0;white-space:nowrap;background:var(--ink);color:var(--stock);border-radius:999px;padding:9px 14px;font-size:14px;font-weight:650;transition:opacity 220ms var(--ease-out),transform 320ms var(--ease-out);}.ds-sticker:hover,.ds-sticker:focus-visible{transform:rotate(calc(var(--rot)*.3)) translateY(-8px) scale(1.04);box-shadow:0 30px 50px -16px rgba(10,11,18,.7),0 6px 12px -4px rgba(10,11,18,.35);outline:none;}.ds-sticker:hover .ds-cap,.ds-sticker:focus-visible .ds-cap{opacity:1;transform:translate(-50%,0);}"
     },
@@ -1100,7 +1105,7 @@
       "- **Do** use a mid-flow frame of the demo recording as its poster, and keep its provenance next to the video.",
       "- **Do** autoplay a demo only muted, looping, while at least half visible, and with motion allowed; pause it when it leaves view and let a user pause stick.",
       "- **Do** draw lines (architecture cords) with `cubic-bezier(0.65, 0, 0.35, 1)`, the CSS twin of the leader lines' `power2.inOut`.",
-      "- **Do** keep the achievements photos turning in step and out of step: 3600ms per pass, first turn at 1200ms plus 750ms per pass, pass and clone together."
+      "- **Do** keep the achievements photos turning in step and out of step: 3600ms per pass, first turn at 1200ms plus 750ms per pass, pass and clone together, and none while the reel has focus, is off screen, or the tab is hidden."
     ],
     "donts": [
       "- **Don't** put eyebrow or kicker labels (small uppercase tracked text) above section headings or titles; printed labels live only on physical objects (rank tags, role tags, strap, seals, itinerary list labels).",
@@ -1117,8 +1122,9 @@
       "- **Don't** give the strap, cord, or hardware their own per-panel colour; they are one material that crosses both colourways.",
       "- **Don't** render any copy in canvas, WebGL, or images; all text is DOM text.",
       "- **Don't** add hero stickers beyond the five slots or let them cross into the lanyard's half of the hero; the badge hangs alone on the right.",
+      "- **Don't** let a hero sticker cover the action row. The row is sized in px and the phone and the seal in lede ems, so their places carry a px floor and drop below the row on narrow windows; check any new placement at a narrow desktop (900x800) and a short laptop (1366x600) as well as the usual sizes.",
       "- **Don't** show a sticker caption at rest; captions appear on hover or focus only (touch-only wide screens excepted).",
-      "- **Don't** reintroduce leader lines, hero stickers, sticker captions, the cursor preview, the cord, or clip marks under 860px (The dust canvas and the icon stickers do stay on phones.)",
+      "- **Don't** reintroduce leader lines, hero stickers, sticker captions, the cursor preview, the cord, or clip marks under 860px. (The dust canvas and the icon stickers do stay on phones.)",
       "- **Don't** add a second column, a sidebar, skill bars or meters, or any colour beyond navy, ink, metal, and white to the CV, and never let it run past one A4 page. Icons on the CV are the small navy contact icons only.",
       "- **Don't** strike through before values or show change as struck-out text.",
       "- **Don't** repeat a screenshot within one page.",
@@ -1129,7 +1135,8 @@
       "- **Don't** show the \"Reading\" tag anywhere except the current index row on wide screens.",
       "- **Don't** let the dust, the floating stickers, or the icon stickers carry meaning or copy: dust is canvas decoration only, a sticker still reads and links without its drift, and an icon sticker sits beside words, never replacing them.",
       "- **Don't** drive sticker parallax or the float through `transform` on the slot; the slot's `transform` belongs to GSAP's entrance. Parallax goes through `translate` and the drift through the inner `float` span.",
-      "- **Don't** add icon stickers outside the closed set of eight, or print them in the CV; they appear only where the owner writes a `:name:` token in the statement, About, or closing copy."
+      "- **Don't** add icon stickers outside the closed set of eight, or print them in the CV; they appear only where the owner writes a `:name:` token in the statement or About copy, plus the fixed closing wave.",
+      "- **Don't** read the hero's ambient motion as a missing stop. The sticker float and the dust wander have no stop on the page: they rely on `prefers-reduced-motion`, which stills both fully, and the dust loop also stops while the hero is off screen. This is a deliberate exception to WCAG 2.2.2 for decorative motion, chosen by the owner (decision 2026-11-14), and changing it is the owner's call. If strict conformance is needed, the fallback is to let both settle a few seconds after load and after the last pointer move over the hero, keeping the pointer lean."
     ],
     "detectorExceptions": [
       "Nested cards: architecture booths are cards inside the twill field inside a stock page; the nesting is physical (objects on fabric on a sheet).",

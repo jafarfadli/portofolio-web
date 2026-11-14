@@ -167,6 +167,7 @@ Rules:
 - Accessibility:
   - WCAG 2.2 AA.
   - Keyboard covers the agenda rows on focus and the sticker links. The achievements reel is itself a focusable region, and keyboard focus inside it stops it; there is no pause button (owner's decision, 2026-11-14). The reel never stops for hover, it slows to a quarter speed. It also stops when off screen, and under `prefers-reduced-motion` it does not move at all. The badge flip is pointer-only by the owner's decision (a short press, no flip button); everything on its back (Download CV, email, GitHub) is repeated elsewhere on the page.
+  - The decorative hero motion, the sticker float and the dust wander, has no on-page stop. This is a deliberate exception to WCAG 2.2.2 for decorative motion, chosen by the owner (decision 2026-11-14). It relies on `prefers-reduced-motion`, which stills it fully, and the dust loop also stops while the hero is off screen. If strict conformance is needed, the fallback is to let both settle a few seconds after load and after the last pointer move over the hero.
   - `prefers-reduced-motion` renders final states, as the mockup does.
 - Content replaced at launch: every sample name, metric, screenshot, photo, and the QR target (the list is in DESIGN.md).
 
@@ -222,7 +223,7 @@ Plan 2 (`docs/superpowers/plans/2026-11-14-plan-2-admin.md`) changed these point
 - **Tailnet identity.** The admin role compares `Tailscale-User-Login` with `ADMIN_TAILSCALE_LOGIN`, case-insensitively, and fails closed when it is unset. `next dev` skips the header check.
 - **Reordering.** Uses Move up and Move down buttons, which are keyboard friendly and meet WCAG 2.2 SC 2.5.7. Drag can be added later on the same store call.
 - **Selected work layout.** Follows position (wide, half, half, wide); `projects.layout` is stored but not edited.
-- **Deferred columns.** `profile.remoteOk`, `achievements.category`, `achievements.mediaId` and `admin_user.totpSecret` wait until a surface uses them.
+- **Deferred columns.** `profile.remoteOk`, `achievements.category` and `admin_user.totpSecret` wait until a surface uses them.
 - **Case study content.** It is structured in the approved mockup (`mockup/project.html`), so its fields, editor and `/projects/[slug]` are built together in Plan 3. `caseStudyMd` is not edited in Plan 2.
 - **Uploads.** They use a server action. `serverActions.bodySizeLimit` and `proxyClientMaxBodySize` are both `16mb`.
 - **Security headers.**
