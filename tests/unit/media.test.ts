@@ -41,6 +41,10 @@ describe("processUpload", () => {
     await expect(processUpload(Buffer.alloc(0), "photo", dir)).rejects.toThrow("Choose a file to upload.");
     await expect(processUpload(Buffer.alloc(MAX_UPLOAD_BYTES + 1), "photo", dir)).rejects.toThrow("Files can be up to 15 MB.");
     await expect(processUpload(Buffer.from("hello"), "photo", dir)).rejects.toThrow("That file is not an image.");
+    const jpeg = await image(800, 600).jpeg().toBuffer();
+    await expect(processUpload(jpeg.subarray(0, Math.floor(jpeg.length / 2)), "photo", dir)).rejects.toThrow(
+      "That file is not an image.",
+    );
     const gif = await image(10, 10).gif().toBuffer();
     await expect(processUpload(gif, "photo", dir)).rejects.toThrow("Upload a JPEG, PNG, WebP or AVIF image.");
   });
@@ -60,8 +64,10 @@ describe("media rows", () => {
     const dir = tmp();
     const upload = await processUpload(await image(1200, 800).png().toBuffer(), "screenshot", dir);
     const meta = { kind: "screenshot" as const, alt: "Invoice", provenance: "test" };
-    const id = createMedia(db, upload, meta);
-    expect(createMedia(db, upload, meta)).toBe(id);
+    const first = createMedia(db, upload, meta);
+    const id = first.id;
+    expect(first.existed).toBe(false);
+    expect(createMedia(db, upload, meta)).toEqual({ id, existed: true });
     expect(db.select().from(media).where(eq(media.id, id)).get()!.variants).toHaveLength(2);
 
     db.update(projects).set({ screenshotId: id }).where(eq(projects.slug, "ledgerly")).run();

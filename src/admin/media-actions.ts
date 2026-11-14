@@ -8,7 +8,7 @@ import { uploadsDir } from "@/lib/env";
 import { LONG_DASH, LONG_DASH_ERROR, type MediaKind } from "./fields";
 import { createMedia, deleteMedia, KIND_DIRS, MAX_UPLOAD_BYTES, processUpload, updateAlt, UploadError } from "./media";
 
-export type MediaFormState = { error?: string; done?: boolean };
+export type MediaFormState = { error?: string; done?: boolean; notice?: string };
 
 function altProblem(alt: string): string | null {
   if (LONG_DASH.test(alt)) return LONG_DASH_ERROR;
@@ -31,18 +31,20 @@ export async function uploadMedia(_prev: MediaFormState, form: FormData): Promis
   if (!Object.hasOwn(KIND_DIRS, kind)) return { error: "Pick what kind of image this is." };
   const problem = altProblem(alt);
   if (problem) return { error: problem };
+  let existed: boolean;
   try {
     const upload = await processUpload(Buffer.from(await file.arrayBuffer()), kind as MediaKind, uploadsDir());
-    createMedia(getDb(), upload, {
+    ({ existed } = createMedia(getDb(), upload, {
       kind: kind as MediaKind,
       alt,
       provenance: `Uploaded in the editor on ${new Date().toISOString().slice(0, 10)}.`,
-    });
+    }));
   } catch (e) {
     if (e instanceof UploadError) return { error: e.message };
     throw e;
   }
   revalidatePath("/admin/media");
+  if (existed) return { done: true, notice: "That image is already in the library. Edit its alt text below." };
   return { done: true };
 }
 

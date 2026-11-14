@@ -3,7 +3,7 @@ import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { desc, eq } from "drizzle-orm";
-import sharp from "sharp";
+import sharp, { type OutputInfo } from "sharp";
 import type { Db } from "@/db/client";
 import { activities, media, projects, type MediaVariant } from "@/db/schema";
 import { safeJoin } from "@/lib/safe-path";
@@ -25,19 +25,29 @@ export type ProcessedUpload = { path: string; width: number; height: number; var
 export async function processUpload(input: Buffer, kind: MediaKind, uploadsDir: string): Promise<ProcessedUpload> {
   if (input.byteLength === 0) throw new UploadError("Choose a file to upload.");
   if (input.byteLength > MAX_UPLOAD_BYTES) throw new UploadError("Files can be up to 15 MB.");
-  let format: string | undefined;
+  const NOT_AN_IMAGE = "That file is not an image.";
+  // Every sharp step can fail on a truncated or corrupt file (metadata only reads the header), so all of them
+  // map to one friendly error. Nothing is written until every encode has succeeded.
+  let master: { data: Buffer; info: OutputInfo };
+  const encoded: { width: number; height: number; data: Buffer }[] = [];
   try {
-    format = (await sharp(input).metadata()).format;
-  } catch {
-    throw new UploadError("That file is not an image.");
+    const { format } = await sharp(input).metadata();
+    if (!format || !ACCEPTED_FORMATS.has(format)) throw new UploadError("Upload a JPEG, PNG, WebP or AVIF image.");
+    master = await sharp(input)
+      .rotate()
+      .resize({ width: MASTER_MAX_WIDTH, withoutEnlargement: true })
+      .webp({ quality: 86 })
+      .toBuffer({ resolveWithObject: true });
+    for (const width of VARIANT_WIDTHS) {
+      if (width >= master.info.width) continue;
+      const v = await sharp(master.data).resize({ width }).webp({ quality: 82 }).toBuffer({ resolveWithObject: true });
+      encoded.push({ width: v.info.width, height: v.info.height, data: v.data });
+    }
+  } catch (e) {
+    if (e instanceof UploadError) throw e;
+    throw new UploadError(NOT_AN_IMAGE);
   }
-  if (!format || !ACCEPTED_FORMATS.has(format)) throw new UploadError("Upload a JPEG, PNG, WebP or AVIF image.");
 
-  const master = await sharp(input)
-    .rotate()
-    .resize({ width: MASTER_MAX_WIDTH, withoutEnlargement: true })
-    .webp({ quality: 86 })
-    .toBuffer({ resolveWithObject: true });
   const hash = crypto.createHash("sha256").update(master.data).digest("hex").slice(0, 12);
   const dir = KIND_DIRS[kind];
   await ensurePlainDir(path.join(uploadsDir, dir));
@@ -45,12 +55,10 @@ export async function processUpload(input: Buffer, kind: MediaKind, uploadsDir: 
   await writeNoFollow(path.join(uploadsDir, rel), master.data);
 
   const variants: MediaVariant[] = [];
-  for (const width of VARIANT_WIDTHS) {
-    if (width >= master.info.width) continue;
-    const v = await sharp(master.data).resize({ width }).webp({ quality: 82 }).toBuffer({ resolveWithObject: true });
-    const vrel = `${dir}/${hash}-${width}.webp`;
+  for (const v of encoded) {
+    const vrel = `${dir}/${hash}-${v.width}.webp`;
     await writeNoFollow(path.join(uploadsDir, vrel), v.data);
-    variants.push({ width: v.info.width, height: v.info.height, path: vrel });
+    variants.push({ width: v.width, height: v.height, path: vrel });
   }
   return { path: rel, width: master.info.width, height: master.info.height, variants };
 }
@@ -71,11 +79,11 @@ async function writeNoFollow(file: string, data: Buffer): Promise<void> {
   }
 }
 
-/** The same image uploaded twice hashes to the same files, so the existing row is reused. */
-export function createMedia(db: Db, upload: ProcessedUpload, meta: { kind: MediaKind; alt: string; provenance: string }): number {
+/** The same image uploaded twice hashes to the same files, so the existing row is reused (its alt text is kept). */
+export function createMedia(db: Db, upload: ProcessedUpload, meta: { kind: MediaKind; alt: string; provenance: string }): { id: number; existed: boolean } {
   const existing = db.select({ id: media.id }).from(media).where(eq(media.path, upload.path)).get();
-  if (existing) return existing.id;
-  return db
+  if (existing) return { id: existing.id, existed: true };
+  const id = db
     .insert(media)
     .values({
       path: upload.path, kind: meta.kind, width: upload.width, height: upload.height,
@@ -83,6 +91,7 @@ export function createMedia(db: Db, upload: ProcessedUpload, meta: { kind: Media
     })
     .returning({ id: media.id })
     .get().id;
+  return { id, existed: false };
 }
 
 export function mediaUsage(db: Db, id: number): string[] {

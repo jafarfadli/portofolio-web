@@ -33,7 +33,7 @@ export function UploadForm() {
       <div className="adm-actions adm-wide">
         <button className="btn btn-ink" type="submit" disabled={pending}>{pending ? "Uploading" : "Upload"}</button>
         <p className="adm-status" id="upload-status" role="status" data-kind={kindOf(state)}>
-          {state.error ?? (state.done ? "Uploaded." : "")}
+          {state.error ?? state.notice ?? (state.done ? "Uploaded." : "")}
         </p>
       </div>
     </form>
