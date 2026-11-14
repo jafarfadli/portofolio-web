@@ -11,6 +11,11 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   serverExternalPackages: ["better-sqlite3"],
   poweredByHeader: false,
+  experimental: {
+    // Uploads go through a server action: a 15 MB cap plus multipart overhead. The proxy buffers bodies too.
+    serverActions: { bodySizeLimit: "16mb" },
+    proxyClientMaxBodySize: "16mb",
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

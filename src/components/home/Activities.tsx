@@ -14,7 +14,7 @@ export function Activities({ items }: { items: HomeActivity[] }) {
               <span className="title">{a.title}<small>{a.subtitle}</small></span>
               <span className="role" data-role={a.role}>{a.roleLabel}</span>
               {a.photo ? (
-                <img className="thumb" src={a.photo.url} alt="" loading="lazy" width={a.photo.width} height={a.photo.height} />
+                <img className="thumb" src={a.photo.url} srcSet={a.photo.srcSet} sizes="(max-width: 860px) 90vw, 340px" alt="" loading="lazy" width={a.photo.width} height={a.photo.height} />
               ) : null}
             </>
           );

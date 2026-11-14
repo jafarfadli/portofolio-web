@@ -68,7 +68,7 @@ export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: 
             pr.screenshot ? (
               <li key={pr.id} className={`slot-li ${SLOTS[i]}`}>
                 <a className={`sticker${i === 0 ? " is-resting" : ""}`} href={`#p-${pr.slug}`}>
-                  <img src={pr.screenshot.url} alt={pr.screenshot.alt} width={pr.screenshot.width} height={pr.screenshot.height} loading={i < 2 ? undefined : "lazy"} />
+                  <img src={pr.screenshot.url} srcSet={pr.screenshot.srcSet} sizes="(max-width: 860px) 60vw, 330px" alt={pr.screenshot.alt} width={pr.screenshot.width} height={pr.screenshot.height} loading={i < 2 ? undefined : "lazy"} />
                   <span className={`sticker-cap${i === 0 ? " cap-top" : ""}`}>{pr.stickerCaption} <Icon name="arrow-ur" /></span>
                 </a>
               </li>

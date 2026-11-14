@@ -5,6 +5,11 @@ import nextTs from "eslint-config-next/typescript";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  {
+    // Plain <img> on purpose: sharp writes 480/960/1600 WebP variants at upload and components pass srcSet, so
+    // next/image's on-demand optimiser (and its disk cache on the Mac mini) is not needed.
+    rules: { "@next/next/no-img-element": "off" },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

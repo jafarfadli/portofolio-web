@@ -21,6 +21,8 @@ export function ProjectCard({ project: pr, layout }: { project: HomeProject; lay
           <figure className="print" style={printStyle}>
             <img
               src={pr.screenshot.url}
+              srcSet={pr.screenshot.srcSet}
+              sizes="(max-width: 860px) 90vw, 760px"
               alt={pr.screenshot.alt}
               width={pr.screenshot.width}
               height={pr.screenshot.height}

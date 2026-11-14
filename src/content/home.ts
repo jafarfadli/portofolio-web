@@ -2,7 +2,7 @@ import "server-only";
 import type { Db } from "@/db/client";
 import { achievements, activities, education, experiences, media, profile, projects, skills } from "@/db/schema";
 
-export type MediaRef = { url: string; width: number; height: number; alt: string };
+export type MediaRef = { url: string; width: number; height: number; alt: string; srcSet?: string };
 export type Profile = typeof profile.$inferSelect;
 export type Project = typeof projects.$inferSelect;
 export type Achievement = typeof achievements.$inferSelect;
@@ -26,6 +26,14 @@ export function mediaUrl(relPath: string): string {
   return `/media/${relPath.split("/").map(encodeURIComponent).join("/")}`;
 }
 
+/** Uploads carry WebP variants; seeded media has none, so srcSet stays undefined and <img> uses src alone. */
+export function toMediaRef(m: typeof media.$inferSelect): MediaRef {
+  const srcSet = m.variants.length
+    ? [...m.variants.map((v) => `${mediaUrl(v.path)} ${v.width}w`), `${mediaUrl(m.path)} ${m.width}w`].join(", ")
+    : undefined;
+  return { url: mediaUrl(m.path), width: m.width, height: m.height, alt: m.alt, srcSet };
+}
+
 const onSite = <T extends { showOnSite: boolean; sortOrder: number }>(rows: T[]): T[] =>
   rows.filter((r) => r.showOnSite).sort((a, b) => a.sortOrder - b.sortOrder);
 
@@ -38,7 +46,7 @@ export function getHomeContent(db: Db): HomeContent | null {
   const p = getProfile(db);
   if (!p) return null;
   const refs = new Map<number, MediaRef>(
-    db.select().from(media).all().map((m) => [m.id, { url: mediaUrl(m.path), width: m.width, height: m.height, alt: m.alt }]),
+    db.select().from(media).all().map((m) => [m.id, toMediaRef(m)]),
   );
   const ref = (id: number | null) => (id == null ? null : (refs.get(id) ?? null));
   return {
