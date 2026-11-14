@@ -1,0 +1,76 @@
+{
+ "title": "Choose the case study structure",
+ "question": "The world is settled (Lanyard & Badge). Pick how the /projects/[slug] page is put together, or re-roll.",
+ "options": [
+  {
+   "id": "dossier",
+   "kind": "assigned",
+   "label": "Badge-back dossier",
+   "kicker": "THE ROLL",
+   "thesis": "The first viewport is the 30-second version printed on a badge back; the full story follows, clipped to the cord.",
+   "palette": [
+    "#2132d6",
+    "#f2f2ee",
+    "#111216",
+    "#ffffff"
+   ],
+   "materials": [
+    "badge stock card on a webbing stub",
+    "hero screenshot print",
+    "metric cells",
+    "cord + clip marks"
+   ],
+   "viewport": "Left: a hanging stock card with name, outcome, role/year, stack, four key metrics and links. Right: the hero screenshot or demo video as a print.",
+   "risk": "Two summaries (card and story) can repeat each other if the story does not go deeper.",
+   "html": ".impeccable/mocks/case-study/a-dossier.html"
+  },
+  {
+   "id": "program",
+   "kind": "dealt",
+   "label": "Event program",
+   "thesis": "Read like a printed event program: a sticky agenda-style index on the left, one stock page per section on the right.",
+   "palette": [
+    "#2132d6",
+    "#f2f2ee",
+    "#111216",
+    "#c8cef6"
+   ],
+   "materials": [
+    "expanded display title",
+    "condensed agenda index",
+    "stock reading pages",
+    "inline prints and diagram"
+   ],
+   "viewport": "Huge project name and outcome over the ground, hero print top right; below, the index (Problem, Role, Approach, Architecture, Results, Gallery) beside the first stock page.",
+   "risk": "Metrics sit inside Results, so a skimming recruiter must scroll or jump to see proof.",
+   "html": ".impeccable/mocks/case-study/b-program.html"
+  },
+  {
+   "id": "results",
+   "kind": "dealt",
+   "label": "Results first",
+   "thesis": "Proof before story: before/after metric tags hang from a webbing rail right under the title.",
+   "palette": [
+    "#2132d6",
+    "#f2f2ee",
+    "#111216",
+    "#45474d"
+   ],
+   "materials": [
+    "webbing rail",
+    "die-cut metric tags with before values",
+    "hero print",
+    "story column"
+   ],
+   "viewport": "Project name and outcome, a horizontal webbing rail with four hanging metric tags (struck-through before value, big after value), then the hero print and a short context column.",
+   "risk": "Projects without strong numbers look thin; the rail needs at least two honest metrics.",
+   "html": ".impeccable/mocks/case-study/c-results.html"
+  }
+ ],
+ "reroll": true,
+ "buildPath": {
+  "value": "code",
+  "toggle": false
+ },
+ "steer": true
+}

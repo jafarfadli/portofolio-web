@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ledgerly case study, Dimas Arkana</title>
+  <meta name="description" content="How Ledgerly got 1,200 small shops paid four days sooner: problem, role, decisions, architecture, results.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="project.css">
+</head>
+<body class="page-case">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-arrow-ur" viewBox="0 0 256 256"><path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z"/></symbol>
+    <symbol id="i-download" viewBox="0 0 256 256"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"/></symbol>
+    <symbol id="i-left" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"/></symbol>
+    <symbol id="i-right" viewBox="0 0 256 256"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 256 256"><path d="M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.830,88Z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 256 256"><path d="M200,32H160a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H160V48h40ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Zm0,176H56V48H96Z"/></symbol>
+  </svg>
+
+  <a class="skip" href="#story">Skip to the case study</a>
+  <div class="weave" aria-hidden="true"></div>
+  <div class="cord is-on" aria-hidden="true"><span class="cord-fill"></span></div>
+
+  <header class="nav is-solid">
+    <a class="brand" href="index.html">Dimas Arkana</a>
+    <nav class="nav-links" aria-label="Site">
+      <a href="index.html#work" aria-current="true">Work</a>
+      <a href="index.html#achievements">Achievements</a>
+      <a href="index.html#activities">Activities</a>
+      <a href="index.html#experience">Experience</a>
+    </nav>
+    <a class="btn btn-stock" href="cv.html">Download CV <svg class="icon" aria-hidden="true"><use href="#i-download"/></svg></a>
+  </header>
+
+  <main id="top">
+    <!-- ================= Header: what, outcome, facts ================= -->
+    <header class="cs-head">
+      <div class="cs-head-text">
+        <a class="cs-back" href="index.html#work"><svg class="icon" aria-hidden="true"><use href="#i-left"/></svg>All work</a>
+        <h1 class="cs-title">Ledgerly</h1>
+        <p class="cs-outcome">Invoicing that got 1,200 small shops paid four days sooner.</p>
+        <dl class="cs-facts">
+          <div><dt>Year</dt><dd>2025</dd></div>
+          <div><dt>Role</dt><dd>Solo full-stack</dd></div>
+          <div><dt>Duration</dt><dd>5 months</dd></div>
+          <div><dt>Team</dt><dd>Me, plus a designer for 2 weeks</dd></div>
+        </dl>
+        <ul class="cs-tags" aria-label="Stack">
+          <li>Next.js</li><li>Go</li><li>PostgreSQL</li><li>Midtrans</li><li>WhatsApp Business API</li>
+        </ul>
+        <div class="hero-actions">
+          <a class="btn btn-stock" href="https://ledgerly.example/">Live site <svg class="icon" aria-hidden="true"><use href="#i-arrow-ur"/></svg></a>
+          <a class="btn btn-line" href="https://code.example/ledgerly">Code <svg class="icon" aria-hidden="true"><use href="#i-arrow-ur"/></svg></a>
+        </div>
+      </div>
+      <figure class="cs-hero cs-print">
+        <img src="assets/screens/ledgerly.png" alt="Ledgerly overview: outstanding balance, payments per week, top customers" width="1440" height="900">
+      </figure>
+    </header>
+
+    <!-- ================= Body: program index + pages ================= -->
+    <div class="cs-body" id="story">
+      <nav class="cs-index" aria-label="Case study sections" data-index>
+        <ol>
+          <li><a href="#problem">Problem</a></li>
+          <li><a href="#role">My role</a></li>
+          <li><a href="#approach">Approach</a></li>
+          <li><a href="#architecture">Architecture</a></li>
+          <li><a href="#results">Results</a></li>
+          <li><a href="#demo">Demo</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#next">Next steps</a></li>
+        </ol>
+      </nav>
+
+      <div class="cs-pages">
+        <section class="cs-page on-stock" id="problem" aria-labelledby="problem-h">
+          <h2 id="problem-h">Problem</h2>
+          <p>Small shops in Jakarta invoiced customers over WhatsApp and chased payment by hand. Owners kept a notebook of who owed what, and an invoice took <strong>13.1 days</strong> on average to get paid.</p>
+          <p>The goal was a tool a shop owner could learn in ten minutes: it sends a link the customer can pay from, and it reminds them politely without the owner doing anything.</p>
+        </section>
+
+        <section class="cs-page on-stock" id="role" aria-labelledby="role-h">
+          <h2 id="role-h">My role</h2>
+          <p>I built Ledgerly alone, from scoping with three shop owners to running it in production: the Next.js dashboard, the Go API, the PostgreSQL schema, the Midtrans payment integration, and the reminder worker. A designer helped for two weeks on the invoice and pay-link screens.</p>
+        </section>
+
+        <section class="cs-page on-stock" id="approach" aria-labelledby="approach-h">
+          <h2 id="approach-h">Approach</h2>
+          <p>Four decisions shaped the product. Each one traded something away on purpose.</p>
+          <ul class="cs-decisions">
+            <li>
+              <h3>Pay links, not customer accounts</h3>
+              <p>Customers pay from a link with no sign-up. The link carries a signed token that expires with the invoice.</p>
+              <p class="trade">Gave up: payment history for customers across shops.</p>
+            </li>
+            <li>
+              <h3>Reminders as a job queue, not cron</h3>
+              <p>Each invoice schedules its own reminders in a Postgres job table read with <code>SKIP LOCKED</code>, so a crashed worker never sends the same reminder twice.</p>
+              <p class="trade">Gave up: one more process to deploy and watch.</p>
+            </li>
+            <li>
+              <h3>Money as whole rupiah</h3>
+              <p>Amounts are stored as integers, and Midtrans webhooks are applied idempotently by order id, so retries cannot double-count a payment.</p>
+              <p class="trade">Gave up: support for currencies with cents, for now.</p>
+            </li>
+            <li>
+              <h3>Server-rendered dashboard</h3>
+              <p>Pages render on the server with React Server Components and ship under 100 KB of JavaScript, which keeps the dashboard quick on the mid-range Android phones most owners use.</p>
+              <p class="trade">Gave up: some offline behaviour a single-page app could have had.</p>
+            </li>
+          </ul>
+        </section>
+
+        <section class="cs-page on-stock" id="architecture" aria-labelledby="arch-h">
+          <h2 id="arch-h">Architecture</h2>
+          <p>Two front doors, one API, and a worker that owns everything that happens later.</p>
+          <div class="arch" data-arch>
+            <svg class="arch-wires" aria-hidden="true"></svg>
+            <div class="arch-node is-person" data-node="owner" style="--c:1;--r:1;--mc:1;--mr:1"><span class="slot" aria-hidden="true"></span><b>Shop owner</b><small>Phone or laptop</small></div>
+            <div class="arch-node is-person" data-node="customer" style="--c:1;--r:3;--mc:2;--mr:1"><span class="slot" aria-hidden="true"></span><b>Customer</b><small>Opens the pay link</small></div>
+            <div class="arch-node" data-node="dash" style="--c:2;--r:1;--mc:1;--mr:2"><span class="slot" aria-hidden="true"></span><b>Dashboard</b><small>Next.js, server-rendered</small></div>
+            <div class="arch-node" data-node="pay" style="--c:2;--r:3;--mc:2;--mr:2"><span class="slot" aria-hidden="true"></span><b>Pay link page</b><small>Next.js, no login</small></div>
+            <div class="arch-node" data-node="api" style="--c:3;--r:2;--mc:1 / -1;--mr:3"><span class="slot" aria-hidden="true"></span><b>Go API</b><small>Invoices, auth, webhooks</small></div>
+            <div class="arch-node" data-node="db" style="--c:4;--r:2;--mc:1;--mr:4"><span class="slot" aria-hidden="true"></span><b>PostgreSQL</b><small>Invoices and job table</small></div>
+            <div class="arch-node" data-node="worker" style="--c:5;--r:2;--mc:1;--mr:5"><span class="slot" aria-hidden="true"></span><b>Reminder worker</b><small>Go, reads jobs</small></div>
+            <div class="arch-node is-external" data-node="midtrans" style="--c:4;--r:1;--mc:2;--mr:4"><span class="slot" aria-hidden="true"></span><b>Midtrans</b><small>Payments, external</small></div>
+            <div class="arch-node is-external" data-node="wa" style="--c:5;--r:3;--mc:2;--mr:5"><span class="slot" aria-hidden="true"></span><b>WhatsApp API</b><small>Messages, external</small></div>
+          </div>
+          <ul class="arch-flows" data-wires>
+            <li data-from="owner" data-to="dash">The shop owner creates invoices in the dashboard.</li>
+            <li data-from="dash" data-to="api">The dashboard calls the Go API.</li>
+            <li data-from="customer" data-to="pay">The customer opens the pay link page.</li>
+            <li data-from="pay" data-to="api">The pay link page asks the API for a Midtrans payment.</li>
+            <li data-from="api" data-to="db">The API stores invoices and schedules reminder jobs.</li>
+            <li data-from="api" data-to="midtrans">The API creates payments in Midtrans, and Midtrans calls back when a customer pays.</li>
+            <li data-from="worker" data-to="db">The worker claims due reminder jobs.</li>
+            <li data-from="worker" data-to="wa">The worker sends reminders over WhatsApp.</li>
+          </ul>
+        </section>
+
+        <section class="cs-page on-stock" id="results" aria-labelledby="results-h">
+          <h2 id="results-h">Results</h2>
+          <p>Measured over the first three months after launch, against each shop's own previous three months. All figures here are sample data.</p>
+          <div class="results">
+            <div class="rail" aria-hidden="true"></div>
+            <ul class="tags-hung">
+              <li><p class="tag-pin"><small class="was">from 13.1 days</small><b>9.4 days</b><span>average time to get paid (sample)</span></p></li>
+              <li><p class="tag-pin"><small class="was">from 41%</small><b>78%</b><span>invoices paid from the link (sample)</span></p></li>
+              <li><p class="tag-pin"><small class="was">from 2.5 hours</small><b>20 min</b><span>owner time spent chasing payments each week (sample)</span></p></li>
+              <li><p class="tag-pin"><small class="was">target under 300 ms</small><b>180 ms</b><span>p95 latency of the invoice API (sample)</span></p></li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="cs-page on-stock" id="demo" aria-labelledby="demo-h">
+          <h2 id="demo-h">Demo</h2>
+          <figure class="cs-video">
+            <div class="cs-print">
+              <video data-demo controls muted loop playsinline preload="metadata" poster="assets/video/ledgerly-demo-poster.jpg" width="1280" height="800" aria-describedby="demo-cap">
+                <source src="assets/video/ledgerly-demo.mp4" type="video/mp4">
+              </video>
+              <button class="video-btn" type="button" data-demo-toggle data-state="idle" hidden>
+                <svg class="icon i-play" aria-hidden="true"><use href="#i-play"/></svg>
+                <svg class="icon i-pause" aria-hidden="true"><use href="#i-pause"/></svg>
+                <span class="video-label">Play demo, 6 s</span>
+              </button>
+            </div>
+            <figcaption id="demo-cap">From the overview to a single invoice and its pay link. Six seconds, no sound.</figcaption>
+          </figure>
+        </section>
+
+        <section class="cs-page on-stock" id="gallery" aria-labelledby="gallery-h">
+          <h2 id="gallery-h">Gallery</h2>
+          <div class="cs-gallery">
+            <figure class="g-wide">
+              <div class="cs-print"><img src="assets/screens/ledgerly-invoice.png" alt="Invoice detail with line items, total, the pay link and an activity log" width="1440" height="900" loading="lazy"></div>
+              <figcaption>Invoice detail: the pay link and every reminder in one place.</figcaption>
+            </figure>
+            <figure class="g-phone">
+              <div class="cs-print"><img src="assets/screens/ledgerly-pay.png" alt="Pay link page on a phone with the amount, line items and QRIS selected" width="780" height="1688" loading="lazy"></div>
+              <figcaption>What the customer sees: pay in two taps.</figcaption>
+            </figure>
+            <figure class="g-wide">
+              <div class="cs-print"><img src="assets/screens/ledgerly-customers.png" alt="Customers list with outstanding balance, average days to pay, last reminder and status, next to the reminder schedule" width="1440" height="900" loading="lazy"></div>
+              <figcaption>Customers: who pays late, and when the next reminder goes out.</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section class="cs-page on-stock" id="next" aria-labelledby="next-h">
+          <h2 id="next-h">What I'd do next</h2>
+          <ul class="cs-list">
+            <li>Partial payments, which shops ask for most on large orders.</li>
+            <li>A shared customer directory across a shop's branches.</li>
+            <li>Moving reminder copy into the dashboard so owners can write it in their own voice.</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <!-- ================= Next project ================= -->
+    <section class="cs-more" aria-labelledby="more-h">
+      <h2 id="more-h">Next project</h2>
+      <a class="cs-next-card on-stock" href="index.html#p-rute">
+        <span class="cs-next-field" style="--field:#FF6A2B"><img src="assets/screens/rute.png" alt="" width="780" height="1688" loading="lazy"></span>
+        <span class="cs-next-body">
+          <span class="cs-next-title"><strong>Rute</strong> shows Jakarta commuters when the next bus actually arrives.</span>
+          <span class="btn btn-ink">Read the case study <svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></span>
+        </span>
+      </a>
+      <footer class="footer"><span>Dimas Arkana, 2026</span><span>Built with Next.js, served from a Mac mini</span></footer>
+    </section>
+  </main>
+
+  <script src="project.js"></script>
+</body>
+</html>

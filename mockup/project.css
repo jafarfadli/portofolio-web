@@ -1,0 +1,228 @@
+/* Case study page (Read surface) - inherits every token and component from styles.css.
+   Structure: "Event program" - header on the ground, a sticky agenda-style index, one stock page per section. */
+
+html { scroll-behavior: smooth; scroll-padding-top: 104px; }
+
+/* ---------- Header ---------- */
+.cs-head {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(32px, 4vw, 64px); align-items: start;
+  padding: 120px var(--gutter-r) 0 var(--gutter);
+}
+.cs-back { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 15px; font-weight: 650; color: var(--on-ground); text-decoration: none; }
+.cs-back:hover { text-decoration: underline; }
+.cs-title {
+  margin-top: 14px; font-size: clamp(64px, 8.4vw, 140px); line-height: 0.86; font-weight: 900; overflow-wrap: anywhere;
+  font-variation-settings: "wdth" 125; letter-spacing: -0.04em;
+}
+.cs-outcome {
+  margin-top: 22px; max-width: 22em; font-size: clamp(28px, 3.3vw, 48px); line-height: 1.12; font-weight: 650;
+  font-variation-settings: "wdth" 96; letter-spacing: -0.02em; text-wrap: balance;
+}
+.cs-facts { display: grid; grid-template-columns: repeat(4, minmax(0, auto)); gap: 16px 36px; justify-content: start; margin: 36px 0 0; padding-top: 16px; border-top: 2px solid rgba(242, 242, 238, 0.25); }
+.cs-facts dt { font-size: 14px; font-weight: 600; color: var(--on-ground-2); }
+.cs-facts dd { margin: 4px 0 0; font-size: 18px; font-weight: 750; font-feature-settings: "tnum" 1; }
+.cs-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.cs-tags li { display: inline-flex; align-items: center; min-height: 30px; padding: 0 12px; border-radius: var(--r-pill); box-shadow: inset 0 0 0 1.5px rgba(242, 242, 238, 0.45); font-size: 13.5px; font-weight: 650; }
+.cs-head .hero-actions { margin-top: 30px; }
+
+.cs-print { position: relative; background: #ffffff; padding: 8px; border-radius: var(--r-sticker); box-shadow: 0 26px 50px -18px rgba(0, 0, 0, 0.55); }
+.cs-print img, .cs-print video { display: block; width: 100%; height: auto; border-radius: calc(var(--r-sticker) - 6px); }
+.cs-hero { margin: 64px 0 0; transform: rotate(-2deg); }
+
+/* ---------- Body: index + pages ---------- */
+.cs-body {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: clamp(220px, 20vw, 300px) minmax(0, 1fr); gap: clamp(32px, 4vw, 64px); align-items: start;
+  padding: clamp(96px, 10vw, 140px) var(--gutter-r) 0 var(--gutter);
+}
+.cs-index { position: sticky; top: 104px; }
+.cs-index li:last-child a { border-bottom: 2px solid rgba(242, 242, 238, 0.22); }
+.cs-index a {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 0;
+  border-top: 2px solid rgba(242, 242, 238, 0.22); color: var(--on-ground-2); text-decoration: none;
+  font-size: 22px; line-height: 1; font-weight: 820; font-variation-settings: "wdth" 72; text-transform: uppercase;
+  transition: color 200ms var(--ease-out);
+}
+.cs-index a:hover { color: var(--on-ground); }
+.cs-index a[aria-current="true"] { color: var(--on-ground); }
+/* the printed "Reading" tag: a physical label on the active row, not a heading label */
+.cs-index a[aria-current="true"]::after {
+  content: "Reading"; flex: none; background: var(--stock); color: var(--ink); border-radius: var(--r-pill); padding: 5px 10px;
+  font-size: 12.5px; font-weight: 800; letter-spacing: 0.14em; font-variation-settings: "wdth" 85;
+}
+
+.cs-pages { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(18px, 2vw, 28px); min-width: 0; }
+.cs-page {
+  background: var(--stock); color: var(--ink); border-radius: var(--r-card); box-shadow: var(--shadow-hang);
+  padding: clamp(28px, 3.2vw, 52px); scroll-margin-top: 104px;
+}
+.cs-page h2 { font-size: clamp(30px, 3vw, 44px); line-height: 1; font-weight: 850; font-variation-settings: "wdth" 112; letter-spacing: -0.02em; text-wrap: balance; }
+.cs-page p { margin-top: 16px; max-width: 64ch; font-size: 18px; line-height: 1.6; }
+.cs-page strong { font-weight: 750; font-feature-settings: "tnum" 1; }
+/* code is data, not costume: same family, condensed, no monospace */
+.cs-page code { font-family: inherit; font-weight: 700; font-variation-settings: "wdth" 85; font-size: 0.95em; background: rgba(17, 18, 22, 0.07); padding: 1px 6px; border-radius: 3px; }
+
+.cs-decisions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 40px; margin-top: 30px; }
+.cs-decisions li { padding-top: 16px; border-top: 2px solid var(--ink); }
+.cs-decisions h3 { font-size: clamp(20px, 1.7vw, 25px); line-height: 1.2; font-weight: 800; font-variation-settings: "wdth" 104; letter-spacing: -0.01em; }
+.cs-decisions p { margin-top: 8px; font-size: 16.5px; line-height: 1.5; }
+.cs-decisions .trade { color: var(--ink-2); font-size: 15px; font-weight: 600; }
+
+.cs-list { margin-top: 18px; }
+.cs-list li { padding: 12px 0; font-size: 18px; line-height: 1.5; border-bottom: 1px solid rgba(17, 18, 22, 0.14); }
+.cs-list li:last-child { border-bottom: 0; }
+
+/* ---------- Architecture: booths wired by cords ---------- */
+.arch {
+  position: relative; margin-top: 28px; padding: clamp(20px, 2.4vw, 32px); border-radius: var(--r-sticker);
+  background-color: var(--ground-deep); background-image: url("assets/textures/twill.png"); background-size: 24px 24px;
+  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); grid-template-rows: repeat(3, auto); gap: 30px 22px;
+}
+.arch-wires { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 0; }
+.arch-wires path { fill: none; stroke: var(--stock); stroke-width: 2.5; stroke-linecap: round; }
+.arch-wires circle { fill: var(--stock); stroke: var(--ink); stroke-width: 2; }
+.arch.is-armed .arch-wires path { transition: stroke-dashoffset 700ms cubic-bezier(0.65, 0, 0.35, 1); }
+.arch-node {
+  position: relative; z-index: 1; grid-column: var(--c); grid-row: var(--r);
+  background: var(--stock); color: var(--ink); border-radius: var(--r-sticker); padding: 0 14px 14px;
+  box-shadow: var(--shadow-sticker);
+}
+.arch-node .slot { display: block; width: 40px; height: 8px; margin: 10px auto 10px; }
+.arch-node b { display: block; font-size: 16px; line-height: 1.2; font-weight: 800; font-variation-settings: "wdth" 104; }
+.arch-node small { display: block; margin-top: 3px; font-size: 13px; line-height: 1.3; font-weight: 600; color: var(--ink-2); }
+/* who it is, told by form: people are round-ended badges, external services are outline-only */
+.arch-node.is-person { align-self: center; border-radius: var(--r-pill); padding: 12px 16px; text-align: center; }
+.arch-node.is-person b { font-variation-settings: "wdth" 88; }
+.arch-node.is-person .slot { display: none; }
+.arch-node.is-external { background: transparent; color: var(--on-ground); box-shadow: inset 0 0 0 2px var(--stock); }
+.arch-node.is-external small { color: var(--on-ground-2); }
+.arch-node.is-external .slot { background: rgba(242, 242, 238, 0.25); box-shadow: none; }
+.arch-flows { margin-top: 22px; display: grid; gap: 6px; }
+.arch-flows li { position: relative; padding-left: 18px; font-size: 15.5px; line-height: 1.45; max-width: 72ch; }
+.arch-flows li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 7px; height: 7px; border-radius: 50%; background: var(--ink); }
+
+/* ---------- Results: tags hung from a webbing rail ---------- */
+.results { position: relative; margin-top: 30px; padding-top: 14px; }
+.rail { position: absolute; left: -8px; right: -8px; top: 0; height: 14px; border-radius: 3px; background-color: var(--ink); background-image: url("assets/textures/webbing.png"); background-size: 16px 16px; }
+.tags-hung { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.tags-hung li { position: relative; padding-top: 34px; transform-origin: 50% 0; }
+.tags-hung li:nth-child(odd) { transform: rotate(-1.5deg); }
+.tags-hung li:nth-child(even) { transform: rotate(1.2deg); }
+.tags-hung li::before { content: ""; position: absolute; left: 50%; top: 0; width: 2px; height: 40px; margin-left: -1px; background: var(--ink); }
+.tag-pin {
+  position: relative; margin: 0; background: var(--ink); color: var(--stock); text-align: center;
+  padding: 34px 16px 18px; border-radius: 0 0 6px 6px;
+  clip-path: polygon(50% 0, 100% 18px, 100% 100%, 0 100%, 0 18px);
+}
+.tag-pin::before { /* eyelet the string passes through */
+  content: ""; position: absolute; left: 50%; top: 13px; width: 10px; height: 10px; margin-left: -5px; border-radius: 50%;
+  background: var(--stock); box-shadow: inset 0 0 0 2px rgba(17, 18, 22, 0.35);
+}
+.tag-pin .was { display: block; margin-bottom: 2px; font-size: 15px; line-height: 1.3; font-weight: 650; color: var(--metal); }
+.tag-pin b { display: block; white-space: nowrap; font-size: clamp(26px, 2.6vw, 38px); line-height: 1.1; font-weight: 850; font-variation-settings: "wdth" 112; letter-spacing: -0.02em; font-feature-settings: "tnum" 1; }
+.tag-pin span { display: block; margin-top: 6px; font-size: 13.5px; line-height: 1.3; font-weight: 600; color: var(--metal); }
+
+/* ---------- Demo video ---------- */
+.cs-video { margin-top: 26px; }
+.video-btn {
+  position: absolute; right: 18px; bottom: 18px; width: 52px; height: 52px; border-radius: 50%; border: 0;
+  display: grid; place-items: center; background: var(--stock); color: var(--ink); cursor: pointer;
+  box-shadow: 0 6px 16px -8px rgba(10, 11, 18, 0.7); transition: transform 160ms var(--ease-out), background-color 200ms var(--ease-out);
+}
+.video-btn:hover { background: #ffffff; }
+.video-btn:active { transform: scale(0.96); }
+.video-btn .icon { width: 22px; height: 22px; }
+.video-btn .i-pause, .video-label { display: none; }
+/* Never played: a printed pill in the middle says this is a video and how long it runs. After the first play it docks to the corner. */
+.video-btn[data-state="idle"] {
+  left: 50%; top: 50%; right: auto; bottom: auto; width: auto; height: 56px; padding: 0 24px 0 18px; gap: 10px;
+  display: inline-flex; align-items: center; border-radius: var(--r-pill); transform: translate(-50%, -50%);
+  font-size: 17px; font-weight: 750; white-space: nowrap;
+}
+.video-btn[data-state="idle"]:active { transform: translate(-50%, -50%) scale(0.98); }
+.video-btn[data-state="idle"] .video-label { display: inline; }
+.video-btn[hidden] { display: none; } /* scripts off: the native controls stand in */
+.video-btn[data-state="playing"] .i-pause { display: block; }
+.video-btn[data-state="playing"] .i-play { display: none; }
+.cs-video figcaption, .cs-gallery figcaption { margin-top: 12px; font-size: 15px; line-height: 1.45; color: var(--ink-2); }
+
+/* ---------- Gallery ---------- */
+.cs-gallery { display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr); gap: 32px 28px; align-items: start; margin-top: 26px; }
+.cs-gallery figure { margin: 0; }
+.cs-gallery .g-wide { grid-column: 1; }
+.cs-gallery .g-phone { grid-column: 2; grid-row: 1 / span 2; }
+.cs-gallery .g-wide .cs-print { transform: rotate(-0.8deg); }
+.cs-gallery .g-phone .cs-print { transform: rotate(1.5deg); }
+
+/* ---------- Next project ---------- */
+.cs-more { position: relative; z-index: 1; padding: clamp(96px, 10vw, 140px) var(--gutter-r) clamp(48px, 6vw, 80px) var(--gutter); }
+.cs-more h2 { margin-bottom: clamp(36px, 5vw, 64px); font-size: clamp(44px, 6.6vw, 96px); line-height: 0.95; font-weight: 850; font-variation-settings: "wdth" 122; letter-spacing: -0.025em; }
+.cs-next-card {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); overflow: hidden; text-decoration: none;
+  background: var(--stock); color: var(--ink); border-radius: var(--r-card); box-shadow: var(--shadow-hang);
+  transition: transform 420ms var(--ease-out), box-shadow 420ms var(--ease-out);
+}
+.cs-next-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+.cs-next-field { position: relative; min-height: 300px; overflow: hidden; background: var(--field, var(--ground-deep)); }
+.cs-next-field img { position: absolute; left: 22%; top: 12%; width: 46%; height: auto; background: #ffffff; padding: 7px; border-radius: var(--r-sticker); box-shadow: 0 26px 50px -18px rgba(0, 0, 0, 0.55); transform: rotate(-3deg); }
+.cs-next-body { display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; gap: 28px; padding: clamp(22px, 2.4vw, 34px); }
+.cs-next-title { font-size: clamp(25px, 2.4vw, 36px); line-height: 1.12; font-weight: 450; letter-spacing: -0.015em; text-wrap: balance; max-width: 26ch; }
+.cs-next-title strong { font-weight: 850; font-variation-settings: "wdth" 108; }
+
+/* ---------- Reading progress on the cord (scroll-linked state, no script) ---------- */
+.page-case .cord-fill { transform: scaleY(1); }
+@supports (animation-timeline: scroll()) {
+  .page-case .cord-fill { transform: scaleY(0); animation: cs-progress linear both; animation-timeline: scroll(root block); }
+}
+@keyframes cs-progress { to { transform: scaleY(1); } }
+
+/* ---------- Small screens ---------- */
+@media (max-width: 860px) {
+  html { scroll-padding-top: 132px; }
+  .cs-head { grid-template-columns: minmax(0, 1fr); padding-top: 96px; padding-left: var(--gutter); }
+  .cs-title { font-size: clamp(48px, 15vw, 72px); }
+  .cs-hero { margin-top: 36px; transform: rotate(-1deg); }
+  .cs-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cs-body { grid-template-columns: minmax(0, 1fr); gap: 24px; padding-top: 64px; }
+  .cs-index {
+    top: 72px; z-index: 20; margin: 0 calc(-1 * var(--gutter-r)) 0 calc(-1 * var(--gutter));
+    padding: 10px var(--gutter-r) 10px var(--gutter); background: rgba(26, 39, 173, 0.94);
+    backdrop-filter: saturate(140%) blur(10px); -webkit-backdrop-filter: saturate(140%) blur(10px);
+  }
+  .cs-index ol { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+  .cs-index ol::-webkit-scrollbar { display: none; }
+  .cs-index li a {
+    border: 0; padding: 0 14px; min-height: 44px; white-space: nowrap; border-radius: var(--r-pill);
+    font-size: 15px; font-variation-settings: "wdth" 85; color: var(--on-ground); box-shadow: inset 0 0 0 1.5px rgba(242, 242, 238, 0.45);
+  }
+  .cs-index li a[aria-current="true"] { background: var(--stock); color: var(--ink); box-shadow: none; }
+  .cs-index li a[aria-current="true"]::after { content: none; }
+  .cs-page { scroll-margin-top: 132px; }
+  .cs-decisions { grid-template-columns: 1fr; }
+  /* Same booths, re-hung top to bottom in flow order; the cords now run vertically between rows. */
+  .arch { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; gap: 34px 14px; padding: 18px 14px; }
+  .arch-node { grid-column: var(--mc); grid-row: var(--mr); padding: 0 10px 10px; }
+  .arch-node[data-node="api"] { justify-self: center; width: min(100%, 210px); }
+  .arch-node b { font-size: 14.5px; }
+  .arch-node small { font-size: 12px; }
+  .arch-node.is-person { padding: 10px 12px; }
+  /* One row of tags under the one rail, swiped like the achievements fan. */
+  .tags-hung { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 0 2px 18px; }
+  .tags-hung::-webkit-scrollbar { display: none; }
+  .tags-hung li { flex: 0 0 62%; scroll-snap-align: start; }
+  .tag-pin { padding: 32px 10px 16px; }
+  .tag-pin b { font-size: 25px; white-space: normal; }
+  .tag-pin span { font-size: 12.5px; }
+  .cs-gallery { grid-template-columns: 1fr; }
+  .cs-gallery .g-wide, .cs-gallery .g-phone { grid-column: 1; grid-row: auto; }
+  .cs-gallery .g-phone { max-width: 62%; }
+  .cs-next-card { grid-template-columns: 1fr; }
+  .cs-next-field { min-height: 240px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .page-case .cord-fill { animation: none; transform: scaleY(1); }
+  .arch.is-armed .arch-wires path { transition: none; }
+}

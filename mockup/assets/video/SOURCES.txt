@@ -1,0 +1,2 @@
+ledgerly-demo.mp4: synthetic sample, built with ffmpeg (zoompan + crossfade) from mockup/assets/screens/ledgerly.png and ledgerly-invoice.png. Replace with a real 6-10 s muted screen recording.
+ledgerly-demo-poster.jpg: frame at 4.6 s of the same video (the invoice with its pay link).

@@ -28,6 +28,20 @@ typography:
     lineHeight: 0.86
     letterSpacing: "-0.04em"
     fontVariation: "'wdth' 125"
+  case-title:
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(64px, 8.4vw, 140px)"
+    fontWeight: 900
+    lineHeight: 0.86
+    letterSpacing: "-0.04em"
+    fontVariation: "'wdth' 125"
+  case-title-mobile:
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(48px, 15vw, 72px)"
+    fontWeight: 900
+    lineHeight: 0.86
+    letterSpacing: "-0.04em"
+    fontVariation: "'wdth' 125"
   section-headline:
     fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(44px, 6.6vw, 96px)"
@@ -42,6 +56,13 @@ typography:
     lineHeight: 0.95
     letterSpacing: "-0.025em"
     fontVariation: "'wdth' 108"
+  page-headline:
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(30px, 3vw, 44px)"
+    fontWeight: 850
+    lineHeight: 1
+    letterSpacing: "-0.02em"
+    fontVariation: "'wdth' 112"
   agenda-title:
     fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(32px, 5.2vw, 80px)"
@@ -49,6 +70,18 @@ typography:
     lineHeight: 0.98
     letterSpacing: "-0.01em"
     fontVariation: "'wdth' 72"
+  index-row:
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "22px"
+    fontWeight: 820
+    lineHeight: 1
+    fontVariation: "'wdth' 72"
+  index-pill:
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "15px"
+    fontWeight: 820
+    lineHeight: 1
+    fontVariation: "'wdth' 85"
   lede:
     fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(30px, 2.9vw, 44px)"
@@ -117,6 +150,24 @@ typography:
     fontSize: "clamp(18px, 1.5vw, 22px)"
     fontWeight: 750
     lineHeight: 1.2
+    fontVariation: "'wdth' 100"
+  booth-name:
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "16px"
+    fontWeight: 800
+    lineHeight: 1.2
+    fontVariation: "'wdth' 104"
+  fact-value:
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "18px"
+    fontWeight: 750
+    fontFeature: "'tnum' 1"
+    fontVariation: "'wdth' 100"
+  body-page:
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "18px"
+    fontWeight: 400
+    lineHeight: 1.6
     fontVariation: "'wdth' 100"
   body:
     fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
@@ -203,6 +254,11 @@ spacing:
   badge-pad-x: "clamp(20px, 2vw, 28px)"
   itinerary-pad: "clamp(24px, 3vw, 48px)"
   nav-height: "72px"
+  index-width: "clamp(220px, 20vw, 300px)"
+  page-pad: "clamp(28px, 3.2vw, 52px)"
+  case-top: "clamp(96px, 10vw, 140px)"
+  read-offset: "104px"
+  read-offset-compact: "132px"
 components:
   button-stock:
     backgroundColor: "{colors.badge-stock}"
@@ -340,6 +396,88 @@ components:
     typography: "{typography.cv-body}"
     padding: "12mm 15mm 11mm"
     width: "210mm"
+  case-tag:
+    backgroundColor: "transparent"
+    textColor: "{colors.on-ground}"
+    rounded: "{rounded.pill}"
+    padding: "0 12px"
+    height: "30px"
+  case-index-row:
+    backgroundColor: "transparent"
+    textColor: "{colors.on-ground-soft}"
+    typography: "{typography.index-row}"
+    padding: "12px 0"
+  case-index-row-active:
+    textColor: "{colors.on-ground}"
+  reading-tag:
+    backgroundColor: "{colors.badge-stock}"
+    textColor: "{colors.print-ink}"
+    typography: "{typography.printed-label}"
+    rounded: "{rounded.pill}"
+    padding: "5px 10px"
+  case-index-pill:
+    backgroundColor: "transparent"
+    textColor: "{colors.on-ground}"
+    typography: "{typography.index-pill}"
+    rounded: "{rounded.pill}"
+    padding: "0 14px"
+    height: "44px"
+  case-index-pill-active:
+    backgroundColor: "{colors.badge-stock}"
+    textColor: "{colors.print-ink}"
+  case-page:
+    backgroundColor: "{colors.badge-stock}"
+    textColor: "{colors.print-ink}"
+    rounded: "{rounded.card}"
+    padding: "clamp(28px, 3.2vw, 52px)"
+  arch-field:
+    backgroundColor: "{colors.lanyard-deep}"
+    rounded: "{rounded.sticker}"
+    padding: "clamp(20px, 2.4vw, 32px)"
+  arch-booth:
+    backgroundColor: "{colors.badge-stock}"
+    textColor: "{colors.print-ink}"
+    typography: "{typography.booth-name}"
+    rounded: "{rounded.sticker}"
+    padding: "0 14px 14px"
+  arch-booth-person:
+    backgroundColor: "{colors.badge-stock}"
+    textColor: "{colors.print-ink}"
+    rounded: "{rounded.pill}"
+    padding: "12px 16px"
+  arch-booth-external:
+    backgroundColor: "transparent"
+    textColor: "{colors.on-ground}"
+    rounded: "{rounded.sticker}"
+    padding: "0 14px 14px"
+  hang-tag:
+    backgroundColor: "{colors.print-ink}"
+    textColor: "{colors.badge-stock}"
+    typography: "{typography.metric}"
+    padding: "34px 16px 18px"
+  results-rail:
+    backgroundColor: "{colors.print-ink}"
+    rounded: "{rounded.label-cut}"
+    height: "14px"
+  demo-toggle:
+    backgroundColor: "{colors.badge-stock}"
+    textColor: "{colors.print-ink}"
+    rounded: "{rounded.pill}"
+    size: "52px"
+  demo-toggle-idle:
+    backgroundColor: "{colors.badge-stock}"
+    textColor: "{colors.print-ink}"
+    rounded: "{rounded.pill}"
+    padding: "0 24px 0 18px"
+    height: "56px"
+  demo-toggle-hover:
+    backgroundColor: "{colors.kiss-cut-white}"
+  next-project-card:
+    backgroundColor: "{colors.badge-stock}"
+    textColor: "{colors.print-ink}"
+    typography: "{typography.project-title}"
+    rounded: "{rounded.card}"
+    padding: "clamp(22px, 2.4vw, 34px)"
 ---
 
 # Design System: Lanyard & Badge
@@ -354,6 +492,8 @@ The system is physical, not digital. Depth comes from objects lying on fabric (n
 
 This file is derived from the shipped mockup (`mockup/index.html`, `mockup/styles.css`, `mockup/main.js`, `mockup/cv.html`). It is the spec for the production build (Next.js + SQLite, public `/`, `/projects/[slug]`, `/cv`, plus `/admin`). Every name, metric, photo, screenshot, and achievement in the mockup is synthetic and must be replaced (see Content rules in Do's and Don'ts).
 
+The case study page (`mockup/project.html`, `mockup/project.css`, `mockup/project.js`, on top of the shared `mockup/styles.css`; production `/projects/[slug]`) extends the world without changing it. It reads as an event program held on the lanyard: the header sits on the ground, a sticky program index on the left tells you where you are, each part of the story is printed on its own stock page, the architecture is a set of booths on a strip of deep twill wired together with stock cords, and the results hang as ink tags from a webbing rail. Its rules are recorded in each section below next to the home page's.
+
 **Key Characteristics:**
 - Full-bleed woven ultramarine ground, raster twill tile, fixed behind every scroll.
 - Content on off-white badge stock in near-black ink; 18px card corners, 16px sticker corners, full pills for buttons.
@@ -361,6 +501,7 @@ This file is derived from the shipped mockup (`mockup/index.html`, `mockup/style
 - Physical motion: a damped pendulum badge, stickers that slap down, leader lines that draw to the result.
 - State by form and printed word, never by colour alone.
 - Every creative moment has a plain readable path; reduced motion renders every section in its final state.
+- Case studies read as an event program: a sticky index with a printed "Reading" tag, one stock page per section, the cord as reading progress.
 
 ## Colors
 
@@ -382,6 +523,13 @@ One saturated hue (the lanyard) and a press palette of stock, ink, and metal; no
 
 ### Per-project field colour
 Each project card's screenshot field takes a `--field` colour from that project's own product palette (mockup: `#0E2A22`, `#FF6A2B`, `#E9E2D6`, `#16161D`), falling back to `lanyard-deep`. This is record data stored with the project in SQLite, not a system token, and it never leaks outside the field (no tinted card, no tinted shadow, no tinted text). The pin eyelet hole shows the field colour through it.
+
+### Case study uses
+- `lanyard-deep` under the twill tile is the architecture field; at 0.94 alpha (`rgba(26, 39, 173, 0.94)`) it is the compact program index bar.
+- `print-ink` is the results rail and the hang tags; `clip-metal` prints the tag's before line and label on that ink.
+- `on-ground-soft` sets the fact terms in the header and the program index rows that are not being read.
+- Inline code on a page sits on a 7% ink wash (`rgba(17, 18, 22, 0.07)`): the only tint on stock, and it is a thin print of ink, not a new colour.
+- The next-project card's field takes the next project's own `--field` colour (mockup: Rute, `#FF6A2B`), with the same containment as on project cards: it stays inside the field.
 
 ### Named Rules
 **The One Ground Rule.** Ultramarine is the ground, not a highlight. Never put ultramarine text, borders, or fills on the web page's stock surfaces; on the CV it appears only as the header rule and section labels.
@@ -417,12 +565,27 @@ Each project card's screenshot field takes a `--field` colour from that project'
 - **Printed label** (800, wdth 85, 12.5 to 13px, +0.14 to 0.16em, uppercase): role tags, ribbon bands. Itinerary list labels use 15px, wdth 80. Seal small print 11px/750, wdth 80, +0.1em.
 - **Strap print** (800, wdth 125, 12px, +0.32em, vertical-rl, 62% opacity stock on webbing): the owner's name repeated on the strap.
 
+Case study tiers (`/projects/[slug]`):
+- **Case title** (900, wdth 125, `clamp(64px, 8.4vw, 140px)`, lh 0.86, -0.04em, `overflow-wrap: anywhere`): the project name in the header, one step below closing display. Under 860px: `clamp(48px, 15vw, 72px)`.
+- **Case outcome**: the statement large tier at max 22em with `text-wrap: balance`, directly under the case title.
+- **Page headline** (850, wdth 112, `clamp(30px, 3vw, 44px)`, lh 1, -0.02em, `text-wrap: balance`): the heading of each stock page, sized for a sheet rather than a section of the ground.
+- **Index row** (820, wdth 72, 22px, lh 1, uppercase): program index rows, the agenda title's condensed voice at list scale. Under 860px the rows become pills at 15px, wdth 85.
+- **Facts**: term 14px/600 in `on-ground-soft`; value 18px/750 with tabular figures.
+- **Decision title**: the stop title tier; the decision body is 16.5px/1.5 and the trade-off line 15px/600 in `print-ink-soft`.
+- **Page body** (400, 18px, lh 1.6, max 64ch); list rows 18px/1.5; the architecture flows list 15.5px/1.45, max 72ch; figure captions 15px/1.45 in `print-ink-soft`.
+- **Booth name** (800, wdth 104, 16px, lh 1.2; people at wdth 88) over a 13px/600 role line in `print-ink-soft`. Under 860px: 14.5px and 12px.
+- **Hang tag**: before line 15px/650 in `clip-metal`; value on the metric tier at lh 1.1, `nowrap` (25px and allowed to wrap under 860px); label 13.5px/600 in `clip-metal` (12.5px under 860px).
+- **Header small parts**: back link 15px/650; stack tags on the ground 13.5px/650; demo label 17px/750, `nowrap`.
+- **Inline code**: the same Archivo at 700, wdth 85, 0.95em.
+
 ### Named Rules
 **The Width Axis Rule.** Hierarchy moves on `wdth` as much as on weight: names and display at 118 to 125, reading at 96 to 100, printed labels at 72 to 85. Never fake width with `transform: scaleX` or letter-spacing.
 
 **The Tabular Numbers Rule.** Any figure the eye compares (metrics, years, dates, GPA, latency) sets `font-feature-settings: "tnum" 1`.
 
 **The Printed Label Rule.** Uppercase tracked condensed caps exist only as print on a physical object (ribbon band, role tag, itinerary list label, strap, seal). They never float above a heading as a section label.
+
+**The Code Is Data Rule.** Identifiers in prose (`SKIP LOCKED`) stay in Archivo at 700, wdth 85, on a 7% ink wash with `label-cut` corners. Monospace never appears, not even for code.
 
 ## Layout
 
@@ -451,7 +614,26 @@ Each project card's screenshot field takes a `--field` colour from that project'
 - Itinerary stops go to one column.
 - Clip marks on the cord are hidden.
 
+**Case study page.** The nav is solid from load, marks Work as current, and never hides (the hide-on-scroll script is the home page's); the cord is shown from load. Anchor links scroll with CSS `scroll-behavior: smooth` (no Lenis on this page) and land under `scroll-padding-top: read-offset`, with each page also carrying `scroll-margin-top: read-offset`.
+- **Header:** a 7fr / 5fr grid, gap `clamp(32px, 4vw, 64px)`, padding `120px gutter-right 0 gutter-left`, aligned to the top. Left: back link, case title, outcome, facts, stack tags, actions. Right: the hero print, 64px down, rotated -2deg.
+- **Body:** a grid of `index-width` and the remaining width, same gap, top padding `case-top`. The program index is sticky at `top: read-offset`; the pages stack in one column with `grid-gap` between them. The skip link targets the body (`#story`).
+- **Section order and anchors:** Problem `#problem`, My role `#role`, Approach `#approach`, Architecture `#architecture`, Results `#results`, Demo `#demo`, Gallery `#gallery`, What I'd do next `#next` (index label "Next steps"), then the Next project section on the ground.
+- **Next project:** padding `case-top gutter-right clamp(48px, 6vw, 80px) gutter-left`; section headline, then the card, then the footer.
+
+**Responsive rules under 860px (case study).**
+- `read-offset-compact` replaces `read-offset` for scroll padding and page scroll margins (the nav plus the index bar).
+- Header goes to one column, top padding 96px; the case title takes its compact tier; the hero print follows the actions 36px down at -1deg. Facts go to two columns.
+- Body goes to one column, gap 24px, top padding 64px.
+- The program index becomes a full-bleed bar sticky at `top: 72px` under the nav: negative margins out to both gutters, 10px vertical padding, `lanyard-deep` at 0.94 with the nav's `saturate(140%) blur(10px)`, holding one horizontal row of pills with the scrollbar hidden.
+- Approach decisions go to one column.
+- Architecture booths re-hang in two columns in flow order (see Components); field gap 34px 14px, padding 18px 14px.
+- Result tags hang in one horizontal scroll-snap row under the one rail.
+- Gallery goes to one column; the phone print is at most 62% wide.
+- The next-project card stacks; its field is at least 240px tall.
+
 **Z-index layers.** weave 0; main 1; cord 2; hero stickers 2 (a peeled or focused sticker 5, so it can lift over the badge, which requires the sticker list to create no stacking context); pendulum 3; project field: punch slot 2, leader 3, pin and dot 4; fan items `10 - distance`; agenda preview 40; nav 50; sample-content note 60; skip link 100.
+
+On the case study: the compact index bar 20; inside the architecture field, wires 0 and booths 1.
 
 ## Elevation & Depth
 
@@ -465,6 +647,14 @@ Depth is physical: objects hang over or lie on woven fabric and cast neutral, ne
 - **Button stock** (`0 6px 16px -8px rgba(10,11,18,.7)`, hover `0 10px 22px -8px rgba(10,11,18,.75)`).
 - **Small parts**: clip mark `0 3px 6px rgba(10,11,18,.4)`; clasp `0 4px 8px rgba(10,11,18,.45)`; ribbon band `0 6px 10px -4px rgba(0,0,0,.4)`; CV sheet on screen `0 30px 70px -20px rgba(10,11,18,.6)`.
 - **Insets** (punched holes and webbing edges only): slot `inset 0 2px 3px rgba(0,0,0,.35)`; strap edges `inset 3px 0 0 rgba(255,255,255,.05), inset -3px 0 0 rgba(0,0,0,.35)`; seal ring `inset 0 0 0 5px ink, inset 0 0 0 7px stock`.
+
+### Case study depth
+- **Stock pages** and the **next-project card** take the hang shadow; the card lifts on hover to the lift shadow and `translateY(-4px)` (420ms `ease-out`).
+- **Booths** take the sticker shadow: small parts lying on the twill. External booths have no shadow at all.
+- **Hang tags** carry no shadow; the die-cut silhouette, the string, and the tilt carry them.
+- **Prints** (hero, demo, gallery, the next card's screenshot) take the print shadow. The demo toggle takes the button stock shadow.
+- **Eyelet** on a hang tag: `inset 0 0 0 2px rgba(17, 18, 22, 0.35)`, a hole punched through the tag.
+- An outline-only object (the volunteer role tag, the external booth) draws its 2px stock ring as an inset. That ring is a cut edge, not a rim light, and it is allowed under the Hole Not Light Rule.
 
 ### Named Rules
 **The Neutral Shadow Rule.** Every shadow is near-black and offset down. A shadow tinted with the ground, the field colour, or white is a glow and is banned.
@@ -481,6 +671,13 @@ Depth is physical: objects hang over or lie on woven fabric and cast neutral, ne
 - **Seals**: circles, flat ink with a 2px stock ring inset 5px; rotated off-axis (-12deg on the event badge).
 - **Clip mark**: 20x34px rounded rectangle (`clip` radius), 4px metal border, ground fill.
 - **Clasp**: 40x46px ring, 6px metal border with a 10px top edge, radius `12px 12px 18px 18px`.
+
+- **Hang tag** (results): ink, die-cut with a peaked top (`clip-path: polygon(50% 0, 100% 18px, 100% 100%, 0 100%, 0 18px)`), bottom corners at `pin`, a 10px stock eyelet 13px below the peak. Each hangs by a 2px ink string, 40px long, from the rail.
+- **Rail**: a 14px strip of webbing over ink, `label-cut` radius, overhanging the page content by 8px each side.
+- **Booths** (architecture): form tells the kind. A system is a stock card at `sticker` radius with a 40x8px punched slot; a person is a full pill with no slot; an external service is outline only (2px stock ring, transparent fill) with its slot at 25% stock.
+- **Architecture field**: a `sticker`-radius rectangle of deep twill laid on the page.
+- **Decision item**: a 2px ink rule on top, 16px above the title.
+- **Inline code**: `label-cut` corners.
 
 ## Components
 
@@ -550,6 +747,7 @@ The hero object. A pendulum (`strap` + `clasp` + `badge`) hung from above the vi
 ### Cord + clip marks
 - Fixed 6px cord at `cord-x`: an empty track at 14% stock, and an ink webbing fill that scales from the top with scroll progress (scrub 0.4) from the about section entering to the contact section's end. Fades in (400ms) once that range starts.
 - Each section head (except about) carries a clip mark aligned to the cord at the headline's first line. Hidden under 860px.
+- On the case study the cord is reading progress for the whole page (see Section pages); there are no clip marks.
 
 ### Closing
 - Closing display headline, a 34ch sub-line (550, `clamp(20px, 1.8vw, 26px)`), stock "Email me" + line "Download CV" pills, icon links (GitHub, LinkedIn, email, 44px targets), then a footer over a 2px rule at 25% stock (14px, `on-ground-soft`).
@@ -562,6 +760,58 @@ The hero object. A pendulum (`strap` + `clasp` + `badge`) hung from above the vi
 - Entries: a row with bold title + soft-ink org on the left and the date (9pt, tnum, soft ink) right-aligned on the baseline; bullet points 14px indent, soft-ink markers. Achievements and activities are one-line rows with right-aligned years.
 - Ultramarine appears only as the 2.5pt header rule and the section labels (cv-section-label, uppercase). Everything else is ink on white.
 - The CV is generated from the same SQLite records as the site; the owner selects which items appear per application.
+
+### Case study header
+The recruiter's whole answer in one viewport, printed straight on the ground.
+- **Back link:** "All work" with a leading left-arrow icon, 15px/650 stock, 44px min target, underline on hover; it returns to the home page's `#work`.
+- **Title and outcome:** the project name in case title, then the outcome sentence (case outcome).
+- **Facts:** a `dl` of Year, Role, Duration, Team in four auto-width columns (gap 16px 36px; two columns under 860px), 36px below the outcome, over a 2px rule at 25% stock with 16px above the row.
+- **Stack tags:** 30px pills, 0 12px padding, a 1.5px inset ring at 45% stock, 22px below the facts. Pure metadata, no hover.
+- **Actions:** a stock "Live site" pill and a line "Code" pill, each with a trailing arrow-up-right, 30px below the tags. Each renders only when the project record has that URL; with neither, the row is omitted.
+- **Hero print:** the project's lead screenshot as a print (8px white border, sticker radius, print shadow) in the right column at -2deg (-1deg under 860px).
+
+### Program index
+The event schedule you hold while reading; it tells you where you are.
+- **Rows:** a numbered list of links in the index row tier, `on-ground-soft`, 12px vertical padding, 2px rules at 22% stock above each row and under the last. Hover and the current row go to `on-ground` (200ms `ease-out`).
+- **Reading tag:** the current row (`aria-current="true"`) carries a printed stock pill reading "Reading" at its right end, in the printed label voice (12.5px, 800, wdth 85, +0.14em, uppercase from the row). It is a label printed on the row, never a heading label, and appears nowhere else.
+- **Scroll-spy:** the current section is the last page whose top has passed 35% of the viewport height; before the first page passes, the first is current. It is computed on `scroll` and `resize`, throttled to one `requestAnimationFrame`, never with IntersectionObserver, so a jump between two spots where no page crosses a threshold still updates.
+- **Under 860px:** the sticky bar of pills (see Layout). Pills are 40px tall, 0 14px padding, index pill tier, `on-ground` text with a 1.5px inset ring at 45% stock. The current pill fills stock with ink text and drops the ring; it does not carry the Reading tag. When the current pill changes, the script scrolls the row (never the page) to centre it, smoothly, or instantly under reduced motion.
+
+### Section pages
+- One stock page per section: `card` radius, hang shadow, padding `page-pad`, `scroll-margin-top: read-offset` (compact under 860px). Page headline, then page body paragraphs, with key figures in `<strong>` at 750 and tabular figures.
+- Plain lists ("What I'd do next") are rows with 12px vertical padding and 1px rules at 14% ink, no rule under the last.
+- **Cord as reading progress:** the shared cord's ink fill is a scroll-driven animation from `scaleY(0)` to `scaleY(1)` on `animation-timeline: scroll(root block)`, linear, so it measures the whole case study with no script. Where scroll timelines are unsupported, and under reduced motion, the cord is fully drawn.
+
+### Approach decisions
+- A two-column grid (gap 30px 40px; one column under 860px), 30px under the intro. Each decision: a 2px ink rule, a decision title, one or two body lines, then a trade-off line that always opens with "Gave up:" and names what the choice cost.
+
+### Architecture booths and cords
+The system drawn as an exhibition floor: booths on a strip of lanyard, wired with stock cords. All text is DOM text; only the cords are SVG.
+- **Field:** `lanyard-deep` with the twill tile at 24px, `sticker` radius, padding `clamp(20px, 2.4vw, 32px)`; a 5-column, 3-row grid, gap 30px 22px. This twill scrolls with the page because it is a piece of material laid on the sheet, not the page ground.
+- **Booths:** placed by data. Each booth carries `--c` and `--r` (its desktop column and row in the 5x3 grid) and `--mc` and `--mr` (its column and row in the 2-column compact grid, in flow order: people, front doors, the API across both columns, data and payments, worker and messages). The booth that spans both compact columns is centred at `min(100%, 210px)`. Booth kind by form, never by colour (see Shapes); people booths centre vertically in their cell.
+- **Cords:** one SVG path per flow, drawn from the measured booth boxes and redrawn on resize: 2.5px stock stroke, round caps, no fill, with a 4.5px-radius stock end dot ringed 2px ink at both ends. Desktop routing: booths in the same column hang a straight vertical line from edge to edge; any other pair is a horizontal cubic from the facing side edges with both control points at half the horizontal distance. Compact routing: booths in different rows join with a vertical cubic from the bottom edge to the top edge (control points at half the vertical distance); booths in the same row join with the horizontal cubic.
+- **Draw-in:** once, when 35% of the field is visible, each cord draws via `stroke-dashoffset` from its full length to 0 over 700ms `cubic-bezier(0.65, 0, 0.35, 1)`, staggered 90ms per cord in flow order. Under reduced motion every cord is already drawn, with no transition.
+- **Flows list:** under the field, one line per cord, in drawing order, describing who talks to whom in plain sentences (15.5px, 7px ink dot bullets). The SVG is `aria-hidden`; the list is the readable path, and it carries the from/to data the cords are drawn from.
+
+### Results hang tags
+Before and after, hung like price tags from a strap.
+- A webbing **rail** across the top of the results, and one ink **hang tag** per metric on a 2px string, `transform-origin` at the top centre.
+- Each tag, top to bottom: the eyelet; the **before line**, a legible "from 13.1 days" (or "target under 300 ms" when there is no before), never struck through; the **value** in the metric tier; the **label** in plain words ending in "(sample)" while the figure is synthetic.
+- **Desktop:** four up in a grid (gap 18px), alternating tilt (odd -1.5deg, even +1.2deg).
+- **Under 860px:** one horizontal scroll-snap row under the same rail (each tag 62% wide, snap to start, gap 14px, scrollbar hidden), swiped like the achievements row.
+
+### Demo video
+- A print holding a muted, looping, `playsinline` video (`preload="metadata"`) whose poster is a mid-flow frame of the recording, never the hero screenshot. The caption below says what it shows, its length, and that it has no sound.
+- **Autoplay:** only when motion is allowed, and only while at least 50% of the video is visible; it pauses when it leaves view. A pause by the user sticks until the user plays again.
+- **Toggle:** before the first play, a centred stock pill (56px, 0 24px 0 18px, play icon, 17px/750 label "Play demo, 6 s"; the printed label is its accessible name). After the first play it docks to the bottom-right corner as a 52px round stock button 18px in, showing pause while playing and play while paused, named "Pause demo" or "Play demo". Hover goes white; press scales to 0.96 (0.98 on the pill), 160ms.
+- **Scripts off:** the video keeps its native `controls` and the printed toggle stays `hidden`; the script removes the controls and reveals the toggle. The page never depends on the script to play the demo.
+
+### Gallery prints
+- A 2.2fr / 1fr grid (gap 32px 28px): wide desktop prints in the first column, one phone print spanning two rows in the second. Wide prints tilt -0.8deg, the phone +1.5deg. Under 860px one column, the phone print at most 62% wide. Each print has a caption saying what the screen shows.
+- No screenshot appears twice on one page: the hero print, the demo poster, every gallery print, and the next-project card each show a different screen.
+
+### Next project card
+- A section headline "Next project" on the ground, then one card linking to the next case study: stock, `card` radius, hang shadow, a 1fr / 1.4fr grid (stacked under 860px). Left: a field in the next project's own `--field` colour (fallback `lanyard-deep`), at least 300px tall (240px compact), holding a 46% wide print at -3deg (7px white border, empty alt since the title names it). Right: the project title sentence (max 26ch) and an ink "Read the case study" pill with a trailing right arrow. Hover lifts the whole card (see Elevation & Depth).
 
 ## Do's and Don'ts
 
@@ -583,6 +833,14 @@ The hero object. A pendulum (`strap` + `clasp` + `badge`) hung from above the vi
 - **Do** measure and fit the first name to the badge width in production (Next.js), stepping size or `wdth` down until it fits.
 - **Do** replace all synthetic content before launch: the owner name "Dimas Arkana", role, stack, location, availability, email `hello@dimasarkana.example` and social URLs; the four projects (Ledgerly, Rute, Kanbo, Pantau) with their copy, metrics, tags, and per-project field colours; `mockup/assets/screens/*.png` (generated mock screens); `mockup/assets/photos/act-*.jpg` (Unsplash stand-ins listed in `SOURCES.txt`); `mockup/assets/qr-cv.svg` (must encode the real `/cv` URL, stock background); the five achievements, six activities, three experience stops, education, GPA, and the CV text; remove the "Mockup with sample content" note and every "(sample)" marker.
 - **Do** keep provenance for every shipping raster (source or generator next to the asset).
+- **Do** print a result's before value as a legible line ("from 13.1 days") above the value, in `clip-metal` on the ink tag.
+- **Do** describe every architecture cord in the flows list under the diagram, in drawing order, and draw the cords from that list and the booth placements; never hand-draw connector paths.
+- **Do** drive the program index from scroll position (35% of the viewport, rAF-throttled), not IntersectionObserver.
+- **Do** render Live site and Code only when the project record has those URLs.
+- **Do** end a case study's pages with "What I'd do next" (index label "Next steps"), followed by the Next project section on the ground.
+- **Do** use a mid-flow frame of the demo recording as its poster, and keep its provenance next to the video.
+- **Do** autoplay a demo only muted, looping, while at least half visible, and with motion allowed; pause it when it leaves view and let a user pause stick.
+- **Do** draw lines (architecture cords) with `cubic-bezier(0.65, 0, 0.35, 1)`, the CSS twin of the leader lines' `power2.inOut`.
 
 ### Don't:
 - **Don't** put eyebrow or kicker labels (small uppercase tracked text) above section headings or titles; printed labels live only on physical objects (ribbons, role tags, strap, seals, itinerary list labels).
@@ -600,3 +858,16 @@ The hero object. A pendulum (`strap` + `clasp` + `badge`) hung from above the vi
 - **Don't** add hero stickers beyond the five slots or let them cover the badge name at rest.
 - **Don't** reintroduce leader lines, sticker captions, the fanned layout, the cursor preview, or clip marks under 860px.
 - **Don't** use ultramarine on the CV beyond the header rule and section labels, add a second column, icons, photos, or skill bars, or let it run past one A4 page.
+- **Don't** strike through before values or show change as struck-out text.
+- **Don't** repeat a screenshot within one page.
+- **Don't** title the last case study section "Next" or anything that reads as the next project; it is "What I'd do next".
+- **Don't** add a floating table of contents, a hero banner, or a reading progress bar other than the cord.
+- **Don't** tell booth kinds apart by colour; people, systems, and external services differ by form.
+- **Don't** autoplay a demo with sound or under reduced motion.
+- **Don't** show the "Reading" tag anywhere except the current index row on wide screens.
+
+### Deliberate detector exceptions
+These trip automated design checks on purpose and are part of the system:
+- **Nested cards:** architecture booths are cards inside the architecture field inside a stock page. The field is a strip of fabric laid on the sheet and the booths are objects on that fabric, so the nesting is physical, not decorative.
+- **Display headings at line-height 1.0:** page headlines and program index rows set `line-height: 1` (and the larger display tiers go below 1). Tight leading on condensed or expanded display type is intended; running paragraphs never go under 1.45.
+- **Per-project field colour:** the next-project card's field carries another project's colour, a value outside the palette tokens. It is record data, contained to the field, as on project cards.

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-14T06:13:37+00:00",
+  "generatedAt": "2026-11-14T16:40:00+00:00",
   "title": "Design System: Lanyard & Badge",
   "extensions": {
     "colorMeta": {
@@ -285,6 +285,38 @@
       "cv-body": {
         "displayName": "CV Body",
         "purpose": "CV reading text."
+      },
+      "case-title": {
+        "displayName": "Case Title",
+        "purpose": "Project name in the case study header; one step below closing display."
+      },
+      "case-title-mobile": {
+        "displayName": "Case Title (compact)",
+        "purpose": "Case title under 860px."
+      },
+      "page-headline": {
+        "displayName": "Page Headline",
+        "purpose": "Heading of each stock page on the case study."
+      },
+      "index-row": {
+        "displayName": "Index Row",
+        "purpose": "Program index rows: condensed uppercase, the agenda voice at list scale."
+      },
+      "index-pill": {
+        "displayName": "Index Pill",
+        "purpose": "Program index pills under 860px."
+      },
+      "booth-name": {
+        "displayName": "Booth Name",
+        "purpose": "Name on an architecture booth; people at wdth 88; 14.5px under 860px."
+      },
+      "fact-value": {
+        "displayName": "Fact Value",
+        "purpose": "Values in the case study facts row (year, role, duration, team)."
+      },
+      "body-page": {
+        "displayName": "Page Body",
+        "purpose": "Running text on case study pages, max 64ch."
       }
     },
     "shadows": [
@@ -357,6 +389,16 @@
         "name": "chip-kiss-cut",
         "value": "0 0 0 5px #ffffff",
         "purpose": "White kiss-cut outline on stack chips, combined with the sticker shadow."
+      },
+      {
+        "name": "tag-eyelet",
+        "value": "inset 0 0 0 2px rgba(17,18,22,.35)",
+        "purpose": "Eyelet punched through a results hang tag."
+      },
+      {
+        "name": "outline-ring",
+        "value": "inset 0 0 0 2px #f2f2ee",
+        "purpose": "Cut edge of outline-only objects (external booth); not a rim light."
       }
     ],
     "motion": [
@@ -454,6 +496,41 @@
         "name": "reduced-motion",
         "value": "no Lenis, no pendulum, no entrance; transitions 1ms; flip becomes 180ms linear opacity cross-fade; cord full; leaders drawn; fan and preview duration 0",
         "purpose": "prefers-reduced-motion: final readable state."
+      },
+      {
+        "name": "case-scroll-spy",
+        "value": "current = last .cs-page whose top <= 0.35 * innerHeight (else the first); on scroll + resize, one rAF per frame; no IntersectionObserver",
+        "purpose": "Program index current row; under 860px the row (not the page) scrolls to centre the active pill, smooth or instant under reduced motion."
+      },
+      {
+        "name": "case-cord-progress",
+        "value": "cord-fill scaleY 0>1, linear both, animation-timeline: scroll(root block); fallback and reduced motion scaleY(1)",
+        "purpose": "Cord as reading progress on the case study, no script."
+      },
+      {
+        "name": "arch-wire-draw",
+        "value": "stroke-dashoffset length>0, 700ms cubic-bezier(0.65,0,0.35,1), stagger 90ms in flow order; once at 35% of the field visible",
+        "purpose": "Architecture cords drawing in; reduced motion: drawn, no transition."
+      },
+      {
+        "name": "demo-autoplay",
+        "value": "muted loop playsinline; play at 50% visible unless user paused; pause when out of view; never under reduced motion",
+        "purpose": "Case study demo video."
+      },
+      {
+        "name": "demo-toggle",
+        "value": "press scale .96 (idle pill .98), 160ms ease-out; background 200ms",
+        "purpose": "Demo play/pause control."
+      },
+      {
+        "name": "next-card-hover",
+        "value": "translateY(-4px) + lift shadow, 420ms ease-out",
+        "purpose": "Next project card."
+      },
+      {
+        "name": "case-anchor-scroll",
+        "value": "CSS scroll-behavior: smooth, scroll-padding-top 104px (132px under 860px); auto under reduced motion",
+        "purpose": "Case study anchor jumps; no Lenis on this page."
       }
     ],
     "breakpoints": [
@@ -481,6 +558,11 @@
         "name": "print",
         "value": "@page A4, margin 0",
         "purpose": "CV prints on one A4 page."
+      },
+      {
+        "name": "compact-case",
+        "value": "max-width: 860px",
+        "purpose": "Case study: one-column header and body, index becomes a sticky pill bar at top 72px, architecture in 2 columns by --mc/--mr with vertical cords, result tags in one scroll-snap row, one-column gallery, stacked next card."
       }
     ],
     "zIndex": [
@@ -539,6 +621,18 @@
       {
         "name": "skip-link",
         "value": 100
+      },
+      {
+        "name": "case-index-compact",
+        "value": 20
+      },
+      {
+        "name": "arch-wires",
+        "value": 0
+      },
+      {
+        "name": "arch-booth",
+        "value": 1
       }
     ],
     "materials": [
@@ -646,6 +740,39 @@
       "description": "Rank ramp by tails and band width, same ink: winner two splayed tails full band, finalist one tail 88%, award no tail 76%.",
       "html": "<div class=\"ds-ground\"><div class=\"ds-ev\"><div class=\"ds-ribbon is-winner\"><span class=\"ds-tail l\"></span><span class=\"ds-tail r\"></span><span class=\"ds-band\">Winner</span></div></div><div class=\"ds-ev\"><div class=\"ds-ribbon is-finalist\"><span class=\"ds-tail\"></span><span class=\"ds-band\">Finalist</span></div></div><div class=\"ds-ev\"><div class=\"ds-ribbon is-award\"><span class=\"ds-band\">Certified</span></div></div></div>",
       "css": ":host{--ground:#2132d6;--ground-deep:#1a27ad;--stock:#f2f2ee;--ink:#111216;--ink-2:#45474d;--metal:#c9ccd6;--ease-out:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-ground{background:var(--ground);padding:24px 32px 150px;display:flex;gap:40px;}.ds-ev{position:relative;width:180px;height:110px;background:var(--stock);border-radius:18px;}.ds-ribbon{position:absolute;left:-12px;right:-12px;bottom:-18px;display:flex;justify-content:center;}.ds-band{position:relative;z-index:2;background:var(--ink);color:var(--stock);width:100%;text-align:center;padding:9px 8px;font-size:13px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;font-variation-settings:'wdth' 85;border-radius:3px;box-shadow:0 6px 10px -4px rgba(0,0,0,.4);}.ds-tail{position:absolute;top:28px;width:34px;background:#26282f;clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%);}.is-winner .ds-tail{height:118px;}.is-winner .ds-tail.l{left:34%;transform:rotate(7deg);}.is-winner .ds-tail.r{right:34%;transform:rotate(-7deg);}.is-finalist .ds-tail{height:74px;left:50%;margin-left:-17px;}.is-finalist .ds-band{width:88%;}.is-award .ds-band{width:76%;padding:7px 8px;}"
+    },
+    {
+      "name": "Program Index",
+      "kind": "nav",
+      "refersTo": "case-index-row",
+      "description": "Sticky condensed uppercase rows; the current row carries a printed stock 'Reading' pill. Under 860px: a row of 44px pills, the current one in stock/ink.",
+      "html": "<div class=\"ds-ground\"><ol class=\"ds-index\"><li><a href=\"#\">Problem</a></li><li><a href=\"#\" aria-current=\"true\">My role</a></li><li><a href=\"#\">Approach</a></li><li><a href=\"#\">Architecture</a></li></ol></div>",
+      "css": ":host{--ground:#2132d6;--ground-deep:#1a27ad;--stock:#f2f2ee;--ink:#111216;--ink-2:#45474d;--metal:#c9ccd6;--on-ground-2:#c8cef6;--ease-out:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-ground{background:var(--ground);padding:28px;}.ds-index{list-style:none;margin:0;padding:0;width:280px;}.ds-index li:last-child a{border-bottom:2px solid rgba(242,242,238,.22);}.ds-index a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-top:2px solid rgba(242,242,238,.22);color:var(--on-ground-2);text-decoration:none;font-size:22px;line-height:1;font-weight:820;font-variation-settings:'wdth' 72;text-transform:uppercase;transition:color 200ms var(--ease-out);}.ds-index a:hover,.ds-index a[aria-current=true]{color:var(--stock);}.ds-index a:focus-visible{outline:3px solid var(--stock);outline-offset:3px;border-radius:6px;}.ds-index a[aria-current=true]::after{content:'Reading';background:var(--stock);color:var(--ink);border-radius:999px;padding:5px 10px;font-size:12.5px;font-weight:800;letter-spacing:.14em;font-variation-settings:'wdth' 85;}"
+    },
+    {
+      "name": "Architecture Booths",
+      "kind": "custom",
+      "refersTo": "arch-booth",
+      "description": "Booths on deep twill, kind by form: slot card (system), pill (person), outline (external service); joined by 2.5px stock cords with ink-ringed end dots.",
+      "html": "<div class=\"ds-arch\"><svg class=\"ds-wires\" viewBox=\"0 0 600 120\" preserveAspectRatio=\"none\"><path d=\"M150 60 L210 60\"/><path d=\"M390 60 L450 60\"/><circle cx=\"150\" cy=\"60\" r=\"4.5\"/><circle cx=\"210\" cy=\"60\" r=\"4.5\"/><circle cx=\"390\" cy=\"60\" r=\"4.5\"/><circle cx=\"450\" cy=\"60\" r=\"4.5\"/></svg><div class=\"ds-node is-person\"><b>Shop owner</b><small>Phone or laptop</small></div><div class=\"ds-node\"><span class=\"ds-slot\"></span><b>Go API</b><small>Invoices, auth</small></div><div class=\"ds-node is-external\"><span class=\"ds-slot\"></span><b>Midtrans</b><small>Payments, external</small></div></div>",
+      "css": ":host{--ground:#2132d6;--ground-deep:#1a27ad;--stock:#f2f2ee;--ink:#111216;--ink-2:#45474d;--metal:#c9ccd6;--on-ground-2:#c8cef6;--ease-out:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-arch{position:relative;display:grid;grid-template-columns:repeat(3,150px);gap:30px 30px;align-items:center;padding:28px;border-radius:16px;background-color:var(--ground-deep);background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0 2px,transparent 2px 6px);}.ds-wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}.ds-wires path{fill:none;stroke:var(--stock);stroke-width:2.5;stroke-linecap:round;vector-effect:non-scaling-stroke;}.ds-wires circle{fill:var(--stock);stroke:var(--ink);stroke-width:2;}.ds-node{position:relative;z-index:1;background:var(--stock);color:var(--ink);border-radius:16px;padding:0 14px 14px;box-shadow:0 14px 28px -10px rgba(10,11,18,.55),0 2px 4px rgba(10,11,18,.25);}.ds-slot{display:block;width:40px;height:8px;margin:10px auto;border-radius:8px;background:var(--ground-deep);box-shadow:inset 0 2px 3px rgba(0,0,0,.35);}.ds-node b{display:block;font-size:16px;line-height:1.2;font-weight:800;font-variation-settings:'wdth' 104;}.ds-node small{display:block;margin-top:3px;font-size:13px;line-height:1.3;font-weight:600;color:var(--ink-2);}.ds-node.is-person{border-radius:999px;padding:12px 16px;text-align:center;}.ds-node.is-person b{font-variation-settings:'wdth' 88;}.ds-node.is-external{background:transparent;color:var(--stock);box-shadow:inset 0 0 0 2px var(--stock);}.ds-node.is-external small{color:var(--on-ground-2);}.ds-node.is-external .ds-slot{background:rgba(242,242,238,.25);box-shadow:none;}",
+      "note": "The mockup lays the raster twill tile (assets/textures/twill.png at 24px) on the field; the stripe here only stands in for it inside the panel."
+    },
+    {
+      "name": "Results Hang Tag",
+      "kind": "custom",
+      "refersTo": "hang-tag",
+      "description": "Ink die-cut tag with eyelet on a string from a webbing rail: legible 'from ...' before line, value, plain-words label with (sample). Never strike through.",
+      "html": "<div class=\"ds-sheet\"><div class=\"ds-rail\"></div><ul class=\"ds-tags\"><li><p class=\"ds-tag\"><small>from 13.1 days</small><b>9.4 days</b><span>average time to get paid (sample)</span></p></li><li><p class=\"ds-tag\"><small>from 41%</small><b>78%</b><span>invoices paid from the link (sample)</span></p></li></ul></div>",
+      "css": ":host{--ground:#2132d6;--ground-deep:#1a27ad;--stock:#f2f2ee;--ink:#111216;--ink-2:#45474d;--metal:#c9ccd6;--on-ground-2:#c8cef6;--ease-out:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-sheet{position:relative;background:var(--stock);border-radius:18px;padding:30px 36px 36px;}.ds-rail{position:absolute;left:28px;right:28px;top:30px;height:14px;border-radius:3px;background:var(--ink);}.ds-tags{position:relative;list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,200px);gap:18px;}.ds-tags li{position:relative;padding-top:34px;transform-origin:50% 0;transform:rotate(-1.5deg);}.ds-tags li:nth-child(even){transform:rotate(1.2deg);}.ds-tags li::before{content:'';position:absolute;left:50%;top:0;width:2px;height:40px;margin-left:-1px;background:var(--ink);}.ds-tag{position:relative;margin:0;background:var(--ink);color:var(--stock);text-align:center;padding:34px 16px 18px;border-radius:0 0 6px 6px;clip-path:polygon(50% 0,100% 18px,100% 100%,0 100%,0 18px);}.ds-tag::before{content:'';position:absolute;left:50%;top:13px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--stock);box-shadow:inset 0 0 0 2px rgba(17,18,22,.35);}.ds-tag small{display:block;margin-bottom:2px;font-size:15px;line-height:1.3;font-weight:650;color:var(--metal);}.ds-tag b{display:block;white-space:nowrap;font-size:34px;line-height:1.1;font-weight:850;font-variation-settings:'wdth' 112;letter-spacing:-.02em;font-feature-settings:'tnum' 1;}.ds-tag span{display:block;margin-top:6px;font-size:13.5px;line-height:1.3;font-weight:600;color:var(--metal);}"
+    },
+    {
+      "name": "Demo Toggle",
+      "kind": "button",
+      "refersTo": "demo-toggle-idle",
+      "description": "Idle: centred printed pill 'Play demo, 6 s'. After first play it docks to the corner as a 52px round pause/play button. Scripts off: the video keeps native controls and the toggle stays hidden.",
+      "html": "<div class=\"ds-print\"><div class=\"ds-frame\"></div><button class=\"ds-vbtn\" type=\"button\"><svg viewBox=\"0 0 256 256\" width=\"22\" height=\"22\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z\"/></svg><span>Play demo, 6 s</span></button></div>",
+      "css": ":host{--ground:#2132d6;--ground-deep:#1a27ad;--stock:#f2f2ee;--ink:#111216;--ink-2:#45474d;--metal:#c9ccd6;--on-ground-2:#c8cef6;--ease-out:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-print{position:relative;width:420px;background:#fff;padding:8px;border-radius:16px;box-shadow:0 26px 50px -18px rgba(0,0,0,.55);}.ds-frame{aspect-ratio:16/10;border-radius:10px;background:#dfe3e8;}.ds-vbtn{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:inline-flex;align-items:center;gap:10px;height:56px;padding:0 24px 0 18px;border:0;border-radius:999px;background:var(--stock);color:var(--ink);font:inherit;font-size:17px;font-weight:750;white-space:nowrap;cursor:pointer;box-shadow:0 6px 16px -8px rgba(10,11,18,.7);transition:transform 160ms var(--ease-out),background-color 200ms var(--ease-out);}.ds-vbtn:hover{background:#fff;}.ds-vbtn:active{transform:translate(-50%,-50%) scale(.98);}.ds-vbtn:focus-visible{outline:3px solid var(--ink);outline-offset:3px;}"
     }
   ],
   "narrative": {
@@ -657,7 +784,8 @@
       "One family, Archivo variable (wdth 62 to 125, wght 100 to 900), roles separated by width as much as weight.",
       "Physical motion: a damped pendulum badge, stickers that slap down, leader lines that draw to the result.",
       "State by form and printed word, never by colour alone.",
-      "Every creative moment has a plain readable path; reduced motion renders every section in its final state."
+      "Every creative moment has a plain readable path; reduced motion renders every section in its final state.",
+      "Case studies read as an event program: a sticky index with a printed 'Reading' tag, one stock page per section, the cord as reading progress."
     ],
     "rules": [
       {
@@ -699,6 +827,11 @@
         "name": "The Hole Not Light Rule",
         "body": "Insets are only for things cut into material (slots, eyelets, webbing edges). Never use an inset as a highlight or rim light.",
         "section": "elevation"
+      },
+      {
+        "name": "The Code Is Data Rule",
+        "body": "Identifiers in prose stay in Archivo at 700, wdth 85, on a 7% ink wash with label-cut corners. Monospace never appears, not even for code.",
+        "section": "typography"
       }
     ],
     "dos": [
@@ -718,7 +851,15 @@
       "**Do** keep the page fully readable with scripts off: GSAP absent means the badge, stickers, cards, fan row, and agenda all render static.",
       "**Do** measure and fit the first name to the badge width in production (Next.js), stepping size or `wdth` down until it fits.",
       "**Do** replace all synthetic content before launch: the owner name \"Dimas Arkana\", role, stack, location, availability, email `hello@dimasarkana.example` and social URLs; the four projects (Ledgerly, Rute, Kanbo, Pantau) with their copy, metrics, tags, and per-project field colours; `mockup/assets/screens/*.png` (generated mock screens); `mockup/assets/photos/act-*.jpg` (Unsplash stand-ins listed in `SOURCES.txt`); `mockup/assets/qr-cv.svg` (must encode the real `/cv` URL, stock background); the five achievements, six activities, three experience stops, education, GPA, and the CV text; remove the \"Mockup with sample content\" note and every \"(sample)\" marker.",
-      "**Do** keep provenance for every shipping raster (source or generator next to the asset)."
+      "**Do** keep provenance for every shipping raster (source or generator next to the asset).",
+      "**Do** print a result's before value as a legible line ('from 13.1 days') above the value, in clip-metal on the ink tag.",
+      "**Do** describe every architecture cord in the flows list under the diagram, in drawing order, and draw cords from that list and the booth placements (--c/--r, --mc/--mr); never hand-draw connector paths.",
+      "**Do** drive the program index from scroll position (35% of the viewport, rAF-throttled), not IntersectionObserver.",
+      "**Do** render Live site and Code only when the project record has those URLs.",
+      "**Do** end a case study's pages with 'What I'd do next' (index label 'Next steps'), followed by the Next project section on the ground.",
+      "**Do** use a mid-flow frame of the demo recording as its poster, and keep its provenance next to the video.",
+      "**Do** autoplay a demo only muted, looping, while at least half visible, and with motion allowed; pause it out of view and let a user pause stick.",
+      "**Do** draw lines (architecture cords) with cubic-bezier(0.65, 0, 0.35, 1), the CSS twin of the leader lines' power2.inOut."
     ],
     "donts": [
       "**Don't** put eyebrow or kicker labels (small uppercase tracked text) above section headings or titles; printed labels live only on physical objects (ribbons, role tags, strap, seals, itinerary list labels).",
@@ -735,7 +876,19 @@
       "**Don't** render any copy in canvas, WebGL, or images; all text is DOM text.",
       "**Don't** add hero stickers beyond the five slots or let them cover the badge name at rest.",
       "**Don't** reintroduce leader lines, sticker captions, the fanned layout, the cursor preview, or clip marks under 860px.",
-      "**Don't** use ultramarine on the CV beyond the header rule and section labels, add a second column, icons, photos, or skill bars, or let it run past one A4 page."
+      "**Don't** use ultramarine on the CV beyond the header rule and section labels, add a second column, icons, photos, or skill bars, or let it run past one A4 page.",
+      "**Don't** strike through before values or show change as struck-out text.",
+      "**Don't** repeat a screenshot within one page.",
+      "**Don't** title the last case study section 'Next' or anything that reads as the next project; it is 'What I'd do next'.",
+      "**Don't** add a floating table of contents, a hero banner, or a reading progress bar other than the cord.",
+      "**Don't** tell booth kinds apart by colour; people, systems, and external services differ by form.",
+      "**Don't** autoplay a demo with sound or under reduced motion.",
+      "**Don't** show the 'Reading' tag anywhere except the current index row on wide screens."
+    ],
+    "detectorExceptions": [
+      "Nested cards: architecture booths are cards inside the twill field inside a stock page; the nesting is physical (objects on fabric on a sheet).",
+      "Display headings at line-height 1.0: page headlines and program index rows set line-height 1; running paragraphs never go under 1.45.",
+      "Per-project field colour on the next-project card: record data outside the palette tokens, contained to the field."
     ]
   }
 }

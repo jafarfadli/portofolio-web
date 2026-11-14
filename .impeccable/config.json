@@ -1,0 +1,35 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "nested-cards",
+        "value": "*",
+        "files": [
+          "mockup/project.html"
+        ],
+        "createdAt": "2026-11-14T09:46:01.783Z",
+        "reason": "Agent: architecture booths sit on a twill field inside a stock page; DESIGN.md 'Deliberate detector exceptions'"
+      },
+      {
+        "rule": "tight-leading",
+        "value": "*",
+        "files": [
+          "mockup/project.html"
+        ],
+        "createdAt": "2026-11-14T09:46:01.808Z",
+        "reason": "Agent: display headings (case title, page h2) set at line-height 0.86 to 1.0 per DESIGN.md type ramp; body text is 1.6"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "mockup/project.html"
+        ],
+        "createdAt": "2026-11-14T09:46:01.833Z",
+        "reason": "Agent: false positive, .cs-page padding is clamp(28px, 3.2vw, 52px); measured 46px at 1440"
+      }
+    ]
+  }
+}
