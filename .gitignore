@@ -21,3 +21,9 @@ playwright-report/
 Icon
 # superpowers execution scratch
 .superpowers/
+
+# Next.js / TypeScript artefacts
+next-env.d.ts
+*.tsbuildinfo
+/out/
+/coverage/
