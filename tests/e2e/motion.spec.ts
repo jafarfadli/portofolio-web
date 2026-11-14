@@ -23,6 +23,16 @@ test("achievement fan opens on the winner and steps with buttons and arrow keys"
   await expect(caption).toContainText("Winner, Nusantara Code Cup 2024");
 });
 
+test("stepping to the end of the fan keeps keyboard focus on a live button", async ({ page }) => {
+  await page.goto("/");
+  await page.locator("#achievements").scrollIntoViewIfNeeded();
+  const next = page.getByRole("button", { name: "Next achievement" });
+  await expect(page.locator("[data-fan-caption]")).toContainText("Winner, Nusantara Code Cup 2024");
+  while (await next.isEnabled()) await next.click();
+  await expect(next).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Previous achievement" })).toBeFocused();
+});
+
 test.describe("reduced motion", () => {
   test.use({ reducedMotion: "reduce" });
 
@@ -31,5 +41,10 @@ test.describe("reduced motion", () => {
     await expect(page.locator(".lede .line > span").first()).toHaveCSS("transform", "none");
     await page.locator("#work").scrollIntoViewIfNeeded();
     await expect(page.locator(".pin").first()).toHaveCSS("opacity", "1");
+    // These only hold when the island ran: no Lenis under reduced motion, and the fan caption is set by JS.
+    await expect(page.locator("html")).not.toHaveClass(/lenis/);
+    await page.locator("#achievements").scrollIntoViewIfNeeded();
+    await expect(page.locator("[data-fan-caption]")).toContainText("Winner, Nusantara Code Cup 2024");
+    await expect(page.locator('.fan-item[aria-current="true"]')).toHaveCSS("opacity", "1");
   });
 });

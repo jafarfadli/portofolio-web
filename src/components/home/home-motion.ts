@@ -17,13 +17,25 @@ export function initHomeMotion(doc: Document): () => void {
   const wide = () => win.matchMedia("(min-width: 861px)").matches;
 
   const ac = new AbortController();
-  const on = (el: EventTarget, type: string, fn: (e: Event) => void) => el.addEventListener(type, fn, { signal: ac.signal });
+  // Created first and empty so handler-created tweens and ScrollTriggers (added via ctx.add) are reverted too.
+  const ctx = gsap.context(() => {});
+  const on = (el: EventTarget, type: string, fn: (e: Event) => void) =>
+    el.addEventListener(type, (e) => { ctx.add(() => fn(e)); }, { signal: ac.signal });
   const tickers: Ticker[] = [];
   const addTicker = (fn: Ticker) => { gsap.ticker.add(fn); tickers.push(fn); };
   const timeouts: number[] = [];
   let lenis: Lenis | null = null;
 
-  const ctx = gsap.context(() => {
+  const teardown = () => {
+    ac.abort();
+    tickers.forEach((fn) => gsap.ticker.remove(fn));
+    timeouts.forEach((t) => win.clearTimeout(t));
+    lenis?.destroy();
+    gsap.ticker.lagSmoothing(500, 33);
+    ctx.revert();
+  };
+
+  const body = () => {
     /* ---------- Fit the first name to the badge width ---------- */
     const fit = () =>
       doc.querySelectorAll<HTMLElement>("[data-fit]").forEach((el) => {
@@ -245,6 +257,9 @@ export function initHomeMotion(doc: Document): () => void {
         caption.replaceChildren(b, ` ${cur.dataset.what ?? ""}`);
         prev.disabled = active === 0;
         next.disabled = active === items.length - 1;
+        // A button that just became disabled loses focus; hand it to the other one so keyboard users keep their place.
+        if (doc.activeElement === next && next.disabled) prev.focus({ preventScroll: true });
+        else if (doc.activeElement === prev && prev.disabled) next.focus({ preventScroll: true });
       };
       const layout = (dur = 0.7) => {
         const spread = Math.min(Math.max(win.innerWidth * 0.135, 150), 220);
@@ -348,14 +363,13 @@ export function initHomeMotion(doc: Document): () => void {
       };
       ScrollTrigger.create({ trigger: agenda, start: "top bottom", end: "bottom top", onUpdate: recheck, onLeave: hide, onLeaveBack: hide });
     }
-  });
-
-  return () => {
-    ac.abort();
-    tickers.forEach((fn) => gsap.ticker.remove(fn));
-    timeouts.forEach((t) => win.clearTimeout(t));
-    lenis?.destroy();
-    gsap.ticker.lagSmoothing(500, 33);
-    ctx.revert();
   };
+
+  try {
+    ctx.add(body);
+  } catch (err) {
+    teardown();
+    throw err;
+  }
+  return teardown;
 }
