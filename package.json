@@ -17,6 +17,7 @@
     "e2e:serve": "rm -rf .data-e2e && DATA_DIR=.data-e2e pnpm -s db:seed && next build && DATA_DIR=.data-e2e next start -p 3100"
   },
   "dependencies": {
+    "@node-rs/argon2": "^2.2.2",
     "better-sqlite3": "^12.11.1",
     "drizzle-orm": "^0.45.4",
     "gsap": "^3.15.1",
