@@ -93,8 +93,8 @@ Rules:
 
 - **`/`**: a 1:1 port of the approved mockup, rendered from DB records.
   - Static markup lives in Server Components.
-  - Each interactive piece is its own client island: `PendulumBadge`, `StickerField`, `LeaderLine`, `BadgeFan`, `AgendaPreview`, `Cord`, `SmoothScroll`.
-  - The first-name size on the badge is fitted to the badge width at render (measured with canvas `measureText` on the client, with a CSS clamp fallback).
+  - Motion lives in one client island (`HomeMotion`, a port of `mockup/main.js` with full cleanup), mounted only on `/`.
+  - The first-name size on the badge is fitted to the badge width at render (scaled by the rendered `scrollWidth`/`clientWidth` ratio on the client, re-run on resize and after fonts load, with a CSS size fallback).
 - **Mobile navigation (new)**: below 860px a "Menu" pill opens a sheet listing the section links plus Download CV. Its design follows DESIGN.md (stock sheet on the ground, pill controls).
 - **`/projects/[slug]`**: the case study page.
   - Not mocked yet. It will be designed in the same world before implementation (section 13).
