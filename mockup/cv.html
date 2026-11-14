@@ -43,7 +43,7 @@
     header.cv .contact li { display: inline-flex; align-items: center; gap: 1.4mm; }
     header.cv .contact svg { width: 3.3mm; height: 3.3mm; fill: var(--navy); flex: none; }
     /* the portrait stands in front of the strap band, cut out from its background */
-    .cv-photo { position: relative; margin: -9mm 0 -3mm; height: 31mm; transform: translateY(-4mm); display: flex; align-items: flex-end; justify-content: center; }
+    .cv-photo { position: relative; margin: -12mm 0 -3mm; height: 34mm; display: flex; align-items: flex-end; justify-content: center; }
     .cv-photo img { display: block; height: 100%; width: auto; }
 
     /* ---------- body: one cord down the left margin; every section clips onto it ---------- */
@@ -69,21 +69,21 @@
     ul.points li::marker { color: var(--metal); }
     /* metrics read first: bold navy, tabular */
     .m { font-weight: 800; color: var(--navy); font-feature-settings: "tnum" 1; }
-    .tags { display: inline-flex; flex-wrap: wrap; gap: 1.2mm; margin-left: 1.5mm; vertical-align: 0.2mm; }
-    .tags span, .chip { display: inline-block; padding: 0.2mm 1.8mm; border-radius: 99px; border: 0.7pt solid #b9bcc6; font-size: 7.4pt; font-weight: 650; color: var(--ink-2); line-height: 1.35; }
+    .tags { display: inline; margin-left: 1mm; }
+    .tags span, .chip { display: inline-block; margin: 0 0.4mm 0.5mm 0; padding: 0.2mm 1.8mm; border-radius: 99px; border: 0.7pt solid #b9bcc6; font-size: 7.4pt; font-weight: 650; color: var(--ink-2); line-height: 1.35; }
     ul.lines { margin: 0; padding: 0; list-style: none; }
     ul.lines li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 0.5mm 0; }
-    ul.lines li > span:first-child { display: inline-flex; align-items: center; gap: 2mm; }
+    ul.lines li > span:first-child { display: block; }
     /* rank and role tags, told by their cut as on the site */
-    .tag-cut { flex: none; display: inline-block; width: 21mm; padding: 0.5mm 2mm 0.4mm; text-align: center; font-size: 6.8pt; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; font-variation-settings: "wdth" 85; background: var(--ink); color: var(--stock); border-radius: 0.5mm; }
+    .tag-cut { display: inline-block; margin-right: 1.4mm; vertical-align: 0.15mm; width: 21mm; padding: 0.5mm 2mm 0.4mm; text-align: center; font-size: 6.8pt; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; font-variation-settings: "wdth" 85; background: var(--ink); color: var(--stock); border-radius: 0.5mm; }
     .tag-cut.winner, .tag-cut.speaker { clip-path: polygon(0 0, 100% 0, calc(100% - 1.6mm) 50%, 100% 100%, 0 100%); padding-right: 3mm; }
     .tag-cut.finalist, .tag-cut.volunteer { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 0.8pt var(--ink); }
     .tag-cut.award { background: var(--stock); color: var(--ink); }
     .tag-cut.organizer, .tag-cut.host { border-radius: 99px; }
     .tag-cut.mentor { border-radius: 0.5mm 0.5mm 2mm 2mm; }
-    .skills p { margin: 0 0 1.2mm; display: flex; align-items: baseline; gap: 2mm; }
-    .skills b { flex: none; width: 24mm; font-size: 8.4pt; font-weight: 800; }
-    .skills .chips { display: flex; flex-wrap: wrap; gap: 1.2mm; }
+    .skills p { margin: 0 0 1.2mm; }
+    .skills b { display: inline-block; width: 24mm; font-size: 8.4pt; font-weight: 800; }
+    .skills .chips { display: inline; }
     /* foot: the other end of the strap */
     .cv-foot { position: absolute; left: 0; right: 0; bottom: 0; height: 3mm; background: var(--navy) url("assets/textures/twill.png") 0 0 / 24px 24px; }
 
@@ -170,19 +170,19 @@
         <section class="cv">
           <h2><span>Selected projects</span></h2>
           <div class="entry">
-            <div class="row"><span><b>Ledgerly</b>, invoicing for small shops <span class="tags"><span>Next.js</span><span>Go</span><span>PostgreSQL</span><span>Midtrans</span></span></span><span class="when">2025</span></div>
+            <div class="row"><span><b>Ledgerly</b>, invoicing for small shops <span class="tags"><span>Next.js</span> <span>Go</span> <span>PostgreSQL</span> <span>Midtrans</span></span></span><span class="when">2025</span></div>
             <ul class="points"><li>Used by <span class="m">1,200</span> shops; average time to get paid dropped from <span class="m">13.1 to 9.4 days</span>.</li></ul>
           </div>
           <div class="entry">
-            <div class="row"><span><b>Rute</b>, live bus arrivals for Jakarta commuters <span class="tags"><span>React Native</span><span>Go</span><span>Redis</span></span></span><span class="when">2024</span></div>
+            <div class="row"><span><b>Rute</b>, live bus arrivals for Jakarta commuters <span class="tags"><span>React Native</span> <span>Go</span> <span>Redis</span></span></span><span class="when">2024</span></div>
             <ul class="points"><li>Arrival times refresh every <span class="m">15 seconds</span> from GPS feeds.</li></ul>
           </div>
           <div class="entry">
-            <div class="row"><span><b>Kanbo</b>, realtime team boards <span class="tags"><span>Next.js</span><span>WebSockets</span><span>PostgreSQL</span></span></span><span class="when">2024</span></div>
+            <div class="row"><span><b>Kanbo</b>, realtime team boards <span class="tags"><span>Next.js</span> <span>WebSockets</span> <span>PostgreSQL</span></span></span><span class="when">2024</span></div>
             <ul class="points"><li>Presence updates under <span class="m">120 ms</span> for teams of 3 to 30.</li></ul>
           </div>
           <div class="entry">
-            <div class="row"><span><b>Pantau</b>, open-source uptime monitor <span class="tags"><span>Go</span><span>SQLite</span><span>HTMX</span></span></span><span class="when">2023 to present</span></div>
+            <div class="row"><span><b>Pantau</b>, open-source uptime monitor <span class="tags"><span>Go</span> <span>SQLite</span> <span>HTMX</span></span></span><span class="when">2023 to present</span></div>
             <ul class="points"><li>Single-binary deploy; <span class="m">640</span> GitHub stars and <span class="m">31</span> contributors.</li></ul>
           </div>
         </section>
@@ -190,21 +190,21 @@
         <section class="cv">
           <h2><span>Achievements</span></h2>
           <ul class="lines">
-            <li><span><span class="tag-cut winner">Winner</span>Nusantara Code Cup, software development</span><span class="when">2024</span></li>
-            <li><span><span class="tag-cut award">Certified</span>AWS Certified Developer, Associate</span><span class="when">2025</span></li>
-            <li><span><span class="tag-cut finalist">Finalist</span>Hackathon Jakarta Pintar (top 10 of 214)</span><span class="when">2023</span></li>
-            <li><span><span class="tag-cut award">Honorable</span>Regional Programming Contest</span><span class="when">2023</span></li>
-            <li><span><span class="tag-cut award">Dean's list</span>Five semesters, Institut Teknologi Nusantara</span><span class="when">2021 to 2023</span></li>
+            <li><span><span class="tag-cut winner">Winner</span> Nusantara Code Cup, software development</span><span class="when">2024</span></li>
+            <li><span><span class="tag-cut award">Certified</span> AWS Certified Developer, Associate</span><span class="when">2025</span></li>
+            <li><span><span class="tag-cut finalist">Finalist</span> Hackathon Jakarta Pintar (top 10 of 214)</span><span class="when">2023</span></li>
+            <li><span><span class="tag-cut award">Honorable</span> Regional Programming Contest</span><span class="when">2023</span></li>
+            <li><span><span class="tag-cut award">Dean's list</span> Five semesters, Institut Teknologi Nusantara</span><span class="when">2021 to 2023</span></li>
           </ul>
         </section>
 
         <section class="cv">
           <h2><span>Activities</span></h2>
           <ul class="lines">
-            <li><span><span class="tag-cut speaker">Speaker</span>JakWeb Meetup #42</span><span class="when">2025</span></li>
-            <li><span><span class="tag-cut organizer">Organizer</span>Ruang Kode Hackathon (300 participants)</span><span class="when">2024</span></li>
-            <li><span><span class="tag-cut mentor">Mentor</span>Campus Code Camp</span><span class="when">2024</span></li>
-            <li><span><span class="tag-cut host">Host</span>Open Source Saturday</span><span class="when">2023</span></li>
+            <li><span><span class="tag-cut speaker">Speaker</span> JakWeb Meetup #42</span><span class="when">2025</span></li>
+            <li><span><span class="tag-cut organizer">Organizer</span> Ruang Kode Hackathon (300 participants)</span><span class="when">2024</span></li>
+            <li><span><span class="tag-cut mentor">Mentor</span> Campus Code Camp</span><span class="when">2024</span></li>
+            <li><span><span class="tag-cut host">Host</span> Open Source Saturday</span><span class="when">2023</span></li>
           </ul>
         </section>
 
@@ -218,9 +218,9 @@
 
         <section class="cv skills">
           <h2><span>Skills</span></h2>
-          <p><b>Languages</b><span class="chips"><span class="chip">TypeScript</span><span class="chip">Go</span><span class="chip">SQL</span><span class="chip">Python</span></span></p>
-          <p><b>Web</b><span class="chips"><span class="chip">Next.js</span><span class="chip">React</span><span class="chip">React Native</span><span class="chip">Tailwind CSS</span></span></p>
-          <p><b>Data and infra</b><span class="chips"><span class="chip">PostgreSQL</span><span class="chip">Redis</span><span class="chip">Docker</span><span class="chip">Playwright</span></span></p>
+          <p><b>Languages</b> <span class="chips"><span class="chip">TypeScript</span> <span class="chip">Go</span> <span class="chip">SQL</span> <span class="chip">Python</span></span></p>
+          <p><b>Web</b> <span class="chips"><span class="chip">Next.js</span> <span class="chip">React</span> <span class="chip">React Native</span> <span class="chip">Tailwind CSS</span></span></p>
+          <p><b>Data and infra</b> <span class="chips"><span class="chip">PostgreSQL</span> <span class="chip">Redis</span> <span class="chip">Docker</span> <span class="chip">Playwright</span></span></p>
         </section>
       </div>
       <span class="cv-foot" aria-hidden="true"></span>

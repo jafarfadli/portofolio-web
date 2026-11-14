@@ -78,6 +78,7 @@ button { font: inherit; color: inherit; }
 
 :focus-visible { outline: 3px solid var(--on-ground); outline-offset: 3px; border-radius: 6px; }
 .on-stock :focus-visible, .on-stock:focus-visible { outline-color: var(--ink); }
+.project :focus-visible, .itinerary :focus-visible, .event :focus-visible { outline-color: var(--ink); } /* stock cards keep an ink ring on either colourway */
 
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .skip { position: fixed; left: 16px; top: -60px; z-index: 100; background: var(--stock); color: var(--ink); padding: 10px 16px; border-radius: var(--r-pill); font-weight: 700; text-decoration: none; transition: top 200ms var(--ease-out); }
@@ -107,6 +108,7 @@ button { font: inherit; color: inherit; }
   background-size: auto, 24px 24px;
 }
 /* the seam: each panel is sewn onto the one above it */
+.theme-light .clip-mark { border-color: var(--metal-dark); }
 .theme-dark + .theme-light::before, .theme-light + .theme-dark::before {
   content: ""; position: absolute; left: 0; right: 0; top: 12px; height: 0; border-top: 2px dashed var(--stitch); pointer-events: none;
 }
@@ -115,7 +117,7 @@ button { font: inherit; color: inherit; }
 .cord { position: fixed; z-index: 2; left: var(--cord-x); top: 0; bottom: 0; width: 6px; pointer-events: none; opacity: 0; transition: opacity 400ms var(--ease-out); }
 .cord.is-on { opacity: 1; }
 .cord::before { content: ""; position: absolute; inset: 0; background: rgba(127, 131, 145, 0.24); border-radius: 3px; }
-.cord-fill { position: absolute; inset: 0; background: var(--ink); border-radius: 3px; transform-origin: top; transform: scaleY(0);
+.cord-fill { position: absolute; inset: 0; background-color: var(--concrete); box-shadow: inset 0 0 0 1.5px rgba(17, 18, 22, 0.7); border-radius: 3px; transform-origin: top; transform: scaleY(0);
   background-image: url("assets/textures/webbing.png"); background-size: 16px 16px; }
 
 /* ---------- Buttons ---------- */
@@ -237,7 +239,9 @@ main { position: relative; z-index: 1; }
 .badge-role { font-size: clamp(16px, 1.3vw, 19px); font-weight: 750; line-height: 1.15; }
 .badge-stack { margin-top: 6px; font-size: 13.5px; color: var(--ink-2); line-height: 1.35; }
 .badge-foot { margin-top: auto; margin-left: calc(-1 * clamp(20px, 2vw, 28px)); margin-right: calc(-1 * clamp(20px, 2vw, 28px)); }
-.flip-row { display: flex; justify-content: space-between; align-items: center; padding: 0 clamp(20px, 2vw, 28px) 12px; font-size: 13px; font-weight: 650; color: var(--ink-2); }
+.flip-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 0 clamp(20px, 2vw, 28px) 12px; font-size: 13px; line-height: 1.25; font-weight: 650; color: var(--ink-2); }
+.flip-row > span { min-width: 0; text-wrap: balance; }
+.flip-row .flip-btn { flex: none; }
 .flip-btn {
   display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px 0 12px; border-radius: var(--r-pill);
   border: 2px solid var(--ink); background: transparent; color: var(--ink); font-weight: 700; font-size: 13.5px; cursor: pointer;
@@ -298,7 +302,7 @@ main { position: relative; z-index: 1; }
   line-height: 1;
 }
 .s-award .seal b { display: block; font-size: 30px; font-weight: 900; font-variation-settings: "wdth" 125; }
-.s-award .seal small { display: block; font-size: 11px; font-weight: 750; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; font-variation-settings: "wdth" 80; }
+.s-award .seal small { display: block; font-size: 10px; line-height: 1.15; font-weight: 750; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; font-variation-settings: "wdth" 80; }
 
 .statement { position: absolute; z-index: 2; left: var(--gutter); width: min(52vw, 740px); top: 18%; }
 .lede { font-size: clamp(38px, 3.9vw, 58px); line-height: 1.02; font-weight: 800; font-variation-settings: "wdth" 90; letter-spacing: -0.025em; text-wrap: balance; }
@@ -487,7 +491,7 @@ main { position: relative; z-index: 1; }
   .role { justify-self: start; }
   .agenda .thumb { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; border: 6px solid #fff; }
   .preview { display: none; }
-  .mock-note { left: 16px; right: auto; }
+  .mock-note { left: auto; right: 12px; top: 80px; bottom: auto; }
 }
 
 /* ---------- Reduced motion: final, readable state ---------- */
@@ -518,6 +522,8 @@ main { position: relative; z-index: 1; }
   .pin, .pin.points-r { left: auto !important; top: auto !important; right: 12px; bottom: 12px; max-width: 66%; translate: none; padding: 10px 12px 10px 30px; clip-path: polygon(16px 0, 100% 0, 100% 100%, 16px 100%, 0 50%); border-radius: 0 6px 6px 0; }
   .pin.points-r::before { left: 11px; right: auto; }
   .clip-mark { display: none; }
+  .cord { display: none; } /* the cord rules the desktop page; on phones it only crossed the hero */
+  .stickers { display: none; } /* every project is one scroll away as a full card */
   .sticker-cap, .sticker.is-resting .sticker-cap { display: none; } /* stickers stay links to their project cards */
   .event .year { font-size: 44px; }
   .s-ledgerly .sticker-cap { left: 26px; transform: none !important; }
@@ -525,4 +531,11 @@ main { position: relative; z-index: 1; }
   .pin b, .pin.is-big b { font-size: 26px; }
   .pin span { font-size: 12.5px; }
   .fan { padding-bottom: 110px; }
+}
+
+/* narrow phones: shorter strap and a smaller pass so the statement reaches the first screen */
+@media (max-width: 420px) {
+  .pendulum { --strap-l: 110px; }
+  .badge { --badge-w: 260px; }
+  .hero-stage { height: 560px; }
 }
