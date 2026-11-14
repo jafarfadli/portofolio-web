@@ -77,3 +77,54 @@ The "Plan 3 (CV builder + PDF)" section now belongs to Plan 4.
   - The seed-data comment "by rank, then recency" does not match the order (AWS is placed second).
   - The seed test does not assert pick type, pick order, or `metricIsSample`.
 - **Native module.** `better-sqlite3` is pinned to ^12 because v13 crashes on Node 23.1. Move to Node LTS at deploy (Plan 5) and retry v13.
+
+## Deferred from the Plan 2 reviews
+
+Per-task and final reviews found these minor points. None blocks Plan 2; pick them up when the area is next touched.
+
+- **Tests.**
+  - `getDb()` itself has no unit test.
+  - No unit test pins the Selected work layout by position.
+  - The featured-cap content test depends on the seed having 4 featured projects.
+  - The sessions test checks `id != token`, not `id == sha256(token)`, and has no exact-boundary cases.
+  - The store tests miss the featured cap on update, the self-exclusion re-save, a successful move down, and the `itemType` scoping of the CV cascade.
+  - `parseCardArt` branch tests are missing: `objectPosition`, `leader.dot`, and `big`/`ink` types.
+  - The keyboard test has no unfocused baseline.
+  - The admin axe scan covers default renders only.
+  - The editor e2e tests have no `try/finally` cleanup.
+  - The HEIC refusal test self-skips, because this sharp build cannot encode HEVC.
+  - Playwright skips the admin projects when a public spec fails, and future admin specs must not share rows on `.data-e2e`.
+- **Data and auth.**
+  - `admin_user` has no `CHECK (id = 1)`, and `sessions` has no index on `expires_at`.
+  - Session expiry Dates carry milliseconds while the DB stores seconds.
+  - `attemptLogin` has no password length cap.
+  - A successful login's attempt row counts as a failure until argon2 finishes.
+  - The `lockedUntil` window semantics are undocumented.
+- **Validation.**
+  - `Number()` accepts hex and exponent input.
+  - Media ids have no safe-integer guard.
+  - Card-art numbers have no range check, and `PATH_D` refuses exponent notation.
+  - Email and URL fields have no length cap, and text fields keep embedded newlines.
+- **Editor UX and accessibility.**
+  - Focus is not moved after a failed submit.
+  - Status text present at first render may not be announced.
+  - The submit button uses `disabled` rather than `aria-disabled` while pending.
+  - The setup form attaches every error to "Repeat password".
+  - Dashboard warnings are keyed by text.
+  - The unknown-flag notice is unmapped, and deleting a missing id still says "Deleted.".
+  - `setFlag` and `saveAlt` report success for a missing id.
+- **Media.**
+  - Screenshots and logos can be uploaded with empty alt.
+  - Media form errors are not tied to inputs with `aria-invalid`.
+  - The in-use delete notice is generic.
+  - A failed `fs.rm` can leave orphan files.
+  - A pixel-limit rejection uses the "not an image" message.
+  - The delete summary is labelled by database id.
+  - A duplicate upload rewrites identical files.
+- **Ops.**
+  - The health route swallows the DB error without logging it.
+  - `Permissions-Policy` and the `/api/health` headers are not asserted.
+  - The proxy matcher's `icon.svg|favicon.ico` exclusion is a prefix match.
+  - The `until curl` loop in `scripts/e2e-serve.sh` never exits if the public server dies at start-up.
+  - Turbopack traces the whole project from `src/admin/media.ts`: add a `turbopackIgnore` comment on its fs paths.
+  - `idFrom` is duplicated in `src/admin/actions.ts` and `src/admin/media-actions.ts`.
