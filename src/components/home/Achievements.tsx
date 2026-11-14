@@ -47,8 +47,9 @@ export function Achievements({ items }: { items: HomeAchievement[] }) {
   return (
     <section className="section theme-light" id="achievements" aria-labelledby="ach-h">
       <SectionHead id="ach-h" title="Achievements" lead="Competitions, certifications, and academic awards." />
-      {/* hover slows the strap, keyboard focus and leaving the screen stop it (see home-motion.ts and site.css) */}
-      <div className="reel" data-reel>
+      {/* Hover slows the strap; focusing the strip itself (by Tab) stops it, and so does leaving the screen. There is no
+          pause button: the strip is the stop (see home-motion.ts and site.css). */}
+      <div className="reel" data-reel tabIndex={0} role="region" aria-label="Achievements, moving strip. Focus it to stop.">
         <ul className="reel-track" data-reel-track aria-label="Achievements">
           {passes(false)}
           {passes(true)}

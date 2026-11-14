@@ -40,6 +40,21 @@ test("achievements reel runs without a pause button, hover slows it and each pas
   expect(await cloneSrc()).toBe(await onPhoto.getAttribute("src"));
 });
 
+test("the reel is its own stop: focusing it pauses the strip, blurring lets it run", async ({ page }) => {
+  await page.goto("/");
+  const reel = page.getByRole("region", { name: "Achievements, moving strip. Focus it to stop." });
+  const track = page.locator("[data-reel-track]");
+  await reel.scrollIntoViewIfNeeded();
+  await expect(reel).toHaveAttribute("tabindex", "0");
+  const state = () => track.evaluate((el) => el.getAnimations()[0]?.playState);
+  await expect.poll(state).toBe("running");
+  await reel.focus();
+  await expect.poll(state).toBe("paused");
+  await expect(reel).toHaveCSS("outline-style", "solid");
+  await reel.blur();
+  await expect.poll(state).toBe("running");
+});
+
 test("hero stickers sit above the statement box, so each one can be hovered", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
@@ -78,13 +93,14 @@ test.describe("reduced motion", () => {
     await expect(page.locator(".lede .line > span").first()).toHaveCSS("transform", "none");
     await page.locator("#work").scrollIntoViewIfNeeded();
     await expect(page.locator(".pin").first()).toHaveCSS("opacity", "1");
-    // The last of these only holds when the island ran: no Lenis under reduced motion, and the reel's tabindex is set by JS.
+    // The last of these only holds when the island ran: no Lenis under reduced motion, and the island renames the reel.
     await expect(page.locator("html")).not.toHaveClass(/lenis/);
     await page.locator("#achievements").scrollIntoViewIfNeeded();
     await expect(page.locator("[data-reel-track]")).toHaveCSS("animation-name", "none");
     await expect(page.locator(".ach.is-clone")).toHaveCount(5);
     await expect(page.locator(".ach.is-clone:visible")).toHaveCount(0);
     await expect(page.locator("[data-reel]")).toHaveAttribute("tabindex", "0");
+    await expect(page.locator("[data-reel]")).toHaveAttribute("aria-label", "Achievements, scroll sideways");
     // Each pass stands on its first photo: the dots are hidden.
     await expect(page.locator(".ach-dots").first()).toBeAttached();
     await expect(page.locator(".ach-dots:visible")).toHaveCount(0);
@@ -103,5 +119,28 @@ test.describe("reduced motion", () => {
         return lit;
       });
     await expect.poll(drawn).toBeGreaterThan(0);
+    // And it stays still: two snapshots half a second apart are the same, pixel for pixel.
+    const still = await page.locator(".hero-dust").evaluate(async (c: HTMLCanvasElement) => {
+      const snap = () => c.getContext("2d")!.getImageData(0, 0, c.width, c.height).data;
+      const a = snap();
+      await new Promise((r) => setTimeout(r, 500));
+      const b = snap();
+      return a.length === b.length && a.every((v, i) => v === b[i]);
+    });
+    expect(still).toBe(true);
+  });
+
+  test("passes stand on their first photo and never turn", async ({ page }) => {
+    await page.goto("/");
+    const reel = page.locator("[data-reel]");
+    await reel.scrollIntoViewIfNeeded();
+    await expect(reel).not.toHaveClass(/is-offscreen/);
+    const onPhoto = page.locator(".ach:not(.is-clone)").first().locator(".ach-photo.is-on");
+    await expect(onPhoto).toHaveCount(1);
+    const first = await onPhoto.getAttribute("src");
+    // With motion the first turn comes 4.8s after load (a 1.2s offset, then every 3.6s): wait past it.
+    await page.waitForTimeout(5500);
+    await expect(onPhoto).toHaveCount(1);
+    expect(await onPhoto.getAttribute("src")).toBe(first);
   });
 });

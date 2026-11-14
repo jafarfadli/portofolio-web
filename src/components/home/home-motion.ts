@@ -251,7 +251,12 @@ export function initHomeMotion(doc: Document): () => void {
         aim.y = (e.clientY / win.innerHeight) * 2 - 1;
         if (!leaning) { leaning = true; gsap.ticker.add(lean); }
       });
-      on(hero, "pointerleave", () => { aim.x = 0; aim.y = 0; });
+      // Leaving the hero eases every sticker home, even when the lean had come to rest and taken itself off the ticker.
+      on(hero, "pointerleave", () => {
+        aim.x = 0;
+        aim.y = 0;
+        if (!leaning) { leaning = true; gsap.ticker.add(lean); }
+      });
       ac.signal.addEventListener("abort", () =>
         items.forEach(({ el }) => { el.style.removeProperty("--px"); el.style.removeProperty("--py"); }),
       );
@@ -343,20 +348,28 @@ export function initHomeMotion(doc: Document): () => void {
           });
           on(hero, "pointerleave", () => { aim.x = 0; aim.y = 0; });
         }
-        // Its own frame loop, idle while the hero is off screen or the tab is hidden.
+        // Its own frame loop. It schedules no frame at all while the hero is off screen or the tab is hidden: the hero
+        // observer and visibilitychange start it again.
         let visible = true;
-        let prev = performance.now();
-        let frame = 0;
-        const io = new IntersectionObserver((entries) => { visible = entries.at(-1)!.isIntersecting; });
-        io.observe(hero);
+        let prev = 0;
+        let frame = 0; // 0 while no frame is scheduled
         const tick = (now: number) => {
-          const dt = Math.min((now - prev) / 1000, 0.05);
+          frame = 0;
+          if (!visible || doc.hidden) return;
+          draw(Math.min((now - prev) / 1000, 0.05));
           prev = now;
-          if (visible && !doc.hidden) draw(dt);
           frame = win.requestAnimationFrame(tick);
         };
-        frame = win.requestAnimationFrame(tick);
-        ac.signal.addEventListener("abort", () => { io.disconnect(); win.cancelAnimationFrame(frame); });
+        const run = () => {
+          if (frame || !visible || doc.hidden || ac.signal.aborted) return;
+          prev = performance.now();
+          frame = win.requestAnimationFrame(tick);
+        };
+        const io = new IntersectionObserver((entries) => { visible = entries.at(-1)!.isIntersecting; run(); });
+        io.observe(hero);
+        on(doc, "visibilitychange", run);
+        run();
+        ac.signal.addEventListener("abort", () => { io.disconnect(); win.cancelAnimationFrame(frame); frame = 0; });
       }
     }
 
@@ -394,10 +407,11 @@ export function initHomeMotion(doc: Document): () => void {
       pace();
       on(win, "resize", pace);
       if (reduce) {
-        // No motion: the row stands still and scrolls sideways, by keyboard too.
-        reel.tabIndex = 0;
-        reel.setAttribute("role", "region");
+        // No motion: the row stands still and scrolls sideways, by keyboard too. The server already made it a focusable
+        // region; only its name changes.
+        const label = reel.getAttribute("aria-label");
         reel.setAttribute("aria-label", "Achievements, scroll sideways");
+        ac.signal.addEventListener("abort", () => { if (label !== null) reel.setAttribute("aria-label", label); });
       }
       // Hover slows the strap to a stroll instead of stopping it (keyboard focus and leaving the screen still stop it,
       // in CSS). The rate is eased on the running CSS animation itself.

@@ -166,7 +166,11 @@
       aim.y = (e.clientY / window.innerHeight) * 2 - 1;
       if (!leaning) { leaning = true; gsap.ticker.add(lean); }
     });
-    hero.addEventListener("pointerleave", () => { aim.x = 0; aim.y = 0; });
+    // leaving the hero eases every sticker home, even when the lean had come to rest and taken itself off the ticker
+    hero.addEventListener("pointerleave", () => {
+      aim.x = 0; aim.y = 0;
+      if (!leaning) { leaning = true; gsap.ticker.add(lean); }
+    });
     function lean() {
       let still = true;
       items.forEach((it) => {
@@ -246,15 +250,25 @@
         });
         hero.addEventListener("pointerleave", () => { aim.x = 0; aim.y = 0; });
       }
-      let on = true, prev = performance.now();
-      new IntersectionObserver((es) => { on = es[es.length - 1].isIntersecting; }).observe(hero);
+      // its own frame loop; it schedules no frame at all while the hero is off screen or the tab is hidden, and the hero
+      // observer and visibilitychange start it again
+      let on = true, prev = 0, frame = 0; // frame is 0 while none is scheduled
       const tick = (now) => {
-        const dt = Math.min((now - prev) / 1000, 0.05);
+        frame = 0;
+        if (!on || document.hidden) return;
+        draw(Math.min((now - prev) / 1000, 0.05));
         prev = now;
-        if (on && !document.hidden) draw(dt);
-        requestAnimationFrame(tick);
+        frame = requestAnimationFrame(tick);
       };
-      requestAnimationFrame(tick);
+      const run = () => {
+        if (frame || !on || document.hidden) return;
+        prev = performance.now();
+        frame = requestAnimationFrame(tick);
+      };
+      // the latest entry wins
+      new IntersectionObserver((es) => { on = es[es.length - 1].isIntersecting; run(); }).observe(hero);
+      document.addEventListener("visibilitychange", run);
+      run();
     }
   }
 
@@ -296,9 +310,8 @@
   pace();
   window.addEventListener("resize", pace);
   if (reduce) {
-    // no motion: the row stands still and scrolls sideways, by keyboard too
-    reel.tabIndex = 0;
-    reel.setAttribute("role", "region");
+    // no motion: the row stands still and scrolls sideways, by keyboard too (the markup already makes it a focusable
+    // region; only its name changes)
     reel.setAttribute("aria-label", "Achievements, scroll sideways");
   }
   // hover slows the strap to a stroll instead of stopping it (keyboard focus still stops it, in CSS)

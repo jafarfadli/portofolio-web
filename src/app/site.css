@@ -395,6 +395,8 @@ main { position: relative; z-index: 1; }
 .reel-track { display: flex; width: max-content; animation: reel var(--reel-dur, 70s) linear infinite; }
 /* hover only slows it (home-motion.ts eases the playback rate); keyboard focus and leaving the screen stop it */
 .reel:focus-within .reel-track, .reel.is-offscreen .reel-track { animation-play-state: paused; }
+/* the strip itself takes focus (it is the stop); it runs to the screen edge (on phones, both edges), so its ring is drawn just inside it */
+.reel:focus-visible { outline-offset: -3px; }
 @keyframes reel { to { transform: translateX(-50%); } }
 .ach { --ach-gap: clamp(24px, 2.6vw, 40px); position: relative; flex: none; width: clamp(260px, 24vw, 340px); margin-right: var(--ach-gap); padding-top: 56px; }
 /* each pass carries its own length of the strap, so the two copies join without a seam */
