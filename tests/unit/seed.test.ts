@@ -23,6 +23,13 @@ describe("seed", () => {
       db.select().from(achievements).all().sort((a, b) => a.sortOrder - b.sortOrder).map((a) => a.title),
     ).toEqual(["Nusantara Code Cup", "AWS Certified Developer", "Hackathon Jakarta Pintar", "Regional Programming Contest", "Dean's List"]);
     expect(db.select().from(achievements).all().every((a) => a.photoId !== null)).toBe(true);
+    const cup = db.select().from(achievements).all().find((a) => a.title === "Nusantara Code Cup")!;
+    expect(cup.photo2Id).not.toBeNull();
+    expect(cup.photo3Id).not.toBeNull();
+    expect(cup.photo4Id).toBeNull();
+    const aws = db.select().from(achievements).all().find((a) => a.title === "AWS Certified Developer")!;
+    expect(aws.photo2Id).not.toBeNull();
+    expect(aws.photo3Id).toBeNull();
     expect(db.select().from(activities).all()).toHaveLength(6);
     expect(db.select().from(skills).all()).toHaveLength(12);
 

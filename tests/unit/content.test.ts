@@ -30,12 +30,33 @@ describe("getHomeContent", () => {
   it("keeps site order and site visibility", () => {
     const c = getHomeContent(db)!;
     expect(c.achievements[0].title).toBe("Nusantara Code Cup");
-    expect(c.achievements[0].photo?.url).toMatch(/^\/media\/photos\/act-stage-[0-9a-f]{10}\.jpg$/);
-    expect(c.achievements.every((a) => a.photo !== null)).toBe(true);
+    const urls = c.achievements[0].photos.map((p) => p.url);
+    expect(urls).toHaveLength(3);
+    expect(urls[0]).toMatch(/^\/media\/photos\/act-stage-[0-9a-f]{10}\.jpg$/);
+    expect(urls[1]).toMatch(/^\/media\/photos\/act-hackathon-[0-9a-f]{10}\.jpg$/);
+    expect(urls[2]).toMatch(/^\/media\/photos\/act-talk-[0-9a-f]{10}\.jpg$/);
+    expect(c.achievements.every((a) => a.photos.length >= 2)).toBe(true);
     expect(c.activities).toHaveLength(6);
     expect(c.activities[0].photo?.url).toMatch(/^\/media\/photos\/act-talk-/);
     expect(c.skills.map((s) => s.name)).not.toContain("Python");
     expect(c.skills).toHaveLength(10);
+  });
+});
+
+describe("achievement photos", () => {
+  it("is an empty list when every photo column is null", () => {
+    const d = seededDb();
+    d.update(achievements).set({ photoId: null, photo2Id: null, photo3Id: null, photo4Id: null }).where(eq(achievements.title, "Dean's List")).run();
+    const deans = getHomeContent(d)!.achievements.find((a) => a.title === "Dean's List")!;
+    expect(deans.photos).toEqual([]);
+  });
+
+  it("keeps the column order and skips gaps", () => {
+    const d = seededDb();
+    const first = getHomeContent(d)!.achievements[0];
+    d.update(achievements).set({ photo2Id: null, photo4Id: first.photo3Id }).where(eq(achievements.id, first.id)).run();
+    const again = getHomeContent(d)!.achievements[0];
+    expect(again.photos.map((p) => p.url)).toEqual([first.photos[0].url, first.photos[2].url, first.photos[2].url]);
   });
 });
 

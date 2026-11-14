@@ -110,6 +110,10 @@ export const achievements = sqliteTable("achievements", {
   cvYear: text("cv_year").notNull(),
   /** Photo on the pass in the moving strap, cropped 4:3. */
   photoId: integer("photo_id").references(() => media.id),
+  /** Photos 2 to 4 take turns with the first on the pass. */
+  photo2Id: integer("photo2_id").references(() => media.id),
+  photo3Id: integer("photo3_id").references(() => media.id),
+  photo4Id: integer("photo4_id").references(() => media.id),
 });
 
 export const activities = sqliteTable("activities", {

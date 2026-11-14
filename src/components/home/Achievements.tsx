@@ -21,9 +21,9 @@ export function Achievements({ items }: { items: HomeAchievement[] }) {
       >
         <article className="ach-card">
           <span className="slot" aria-hidden="true" />
-          {a.photo ? (
-            <img className="ach-photo" src={a.photo.url} srcSet={a.photo.srcSet} sizes="(max-width: 860px) 260px, 340px" alt={clone ? "" : a.photo.alt} width={a.photo.width} height={a.photo.height} loading="lazy" />
-          ) : null}
+          {a.photos.map((photo, n) => (
+            <img key={photo.url} className="ach-photo" src={photo.url} srcSet={photo.srcSet} sizes="(max-width: 860px) 260px, 340px" alt={clone || n > 0 ? "" : photo.alt} width={photo.width} height={photo.height} loading="lazy" />
+          ))}
           <div className="ach-body">
             <p className="ach-meta"><span className={`rank is-${a.rank}`}>{a.rankLabel}</span><span className="ach-year">{a.year}</span></p>
             <h3>{a.title}</h3>

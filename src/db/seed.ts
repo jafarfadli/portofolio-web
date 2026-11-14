@@ -66,8 +66,12 @@ export function seed(db: Db, opts: { assetsDir: string; uploadsDir: string }): v
 
     const achievementIds = new Map<string, number>();
     seedAchievements.forEach((a, i) => {
-      const { photo, ...rest } = a;
-      const row = tx.insert(achievements).values({ ...rest, sortOrder: i + 1, photoId: mediaId(photo) }).returning({ id: achievements.id }).get();
+      const { photo, morePhotos, ...rest } = a;
+      const [p2, p3, p4] = morePhotos.map((k) => mediaId(k));
+      const row = tx
+        .insert(achievements)
+        .values({ ...rest, sortOrder: i + 1, photoId: mediaId(photo), photo2Id: p2 ?? null, photo3Id: p3 ?? null, photo4Id: p4 ?? null })
+        .returning({ id: achievements.id }).get();
       achievementIds.set(a.title, row.id);
     });
 

@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, or } from "drizzle-orm";
 import sharp, { type OutputInfo } from "sharp";
 import type { Db } from "@/db/client";
 import { achievements, activities, media, profile, projects, type MediaVariant } from "@/db/schema";
@@ -105,7 +105,12 @@ export function mediaUsage(db: Db, id: number): string[] {
     ...(owner?.photoId === id ? ["Profile, badge photo"] : []),
     ...(owner?.cvPhotoId === id ? ["Profile, CV photo"] : []),
     ...db.select({ name: projects.name }).from(projects).where(eq(projects.screenshotId, id)).all().map((r) => r.name),
-    ...db.select({ name: achievements.title }).from(achievements).where(eq(achievements.photoId, id)).all().map((r) => r.name),
+    ...db
+      .select({ name: achievements.title })
+      .from(achievements)
+      .where(or(eq(achievements.photoId, id), eq(achievements.photo2Id, id), eq(achievements.photo3Id, id), eq(achievements.photo4Id, id)))
+      .all()
+      .map((r) => r.name),
     ...db.select({ name: activities.title }).from(activities).where(eq(activities.photoId, id)).all().map((r) => r.name),
   ];
 }

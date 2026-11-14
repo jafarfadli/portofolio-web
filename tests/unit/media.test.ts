@@ -6,7 +6,7 @@ import sharp from "sharp";
 import { eq } from "drizzle-orm";
 import { createMedia, deleteMedia, MAX_UPLOAD_BYTES, mediaUsage, processUpload } from "@/admin/media";
 import { toMediaRef } from "@/content/home";
-import { media, profile, projects } from "@/db/schema";
+import { achievements, media, profile, projects } from "@/db/schema";
 import { seededDb } from "./helpers";
 
 const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), "uploads-"));
@@ -113,6 +113,16 @@ describe("media rows", () => {
     const stage = db.select().from(media).all().find((m) => m.path.startsWith("photos/act-stage-"))!;
     expect(mediaUsage(db, stage.id)).toContain("Nusantara Code Cup");
     expect(mediaUsage(db, stage.id)).toContain("HMIF Tech Talk");
+  });
+
+  it("reports achievements that use a photo only as a later photo, and blocks deleting it", async () => {
+    const db = seededDb();
+    const dir = tmp();
+    const upload = await processUpload(await image(900, 675).png().toBuffer(), "photo", dir);
+    const id = createMedia(db, upload, { kind: "photo", alt: "Extra", provenance: "test" }).id;
+    db.update(achievements).set({ photo3Id: id }).where(eq(achievements.title, "Dean's List")).run();
+    expect(mediaUsage(db, id)).toEqual(["Dean's List"]);
+    expect(await deleteMedia(db, id, dir)).toEqual({ ok: false, error: "Used by Dean's List. Pick another image there first." });
   });
 
   it("builds a srcset from the variants, widest last", () => {
