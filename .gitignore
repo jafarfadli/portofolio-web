@@ -2,8 +2,7 @@
 node_modules/
 .next/
 # local data
-.data/
-.data-e2e/
+/.data*/
 # test output
 test-results/
 playwright-report/
@@ -18,7 +17,8 @@ playwright-report/
 # macOS
 .DS_Store
 # macOS folder icon file (name ends with two carriage returns)
-Icon
+Icon
+
 # superpowers execution scratch
 .superpowers/
 
