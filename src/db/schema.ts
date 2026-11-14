@@ -1,4 +1,5 @@
-import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { sql } from "drizzle-orm";
+import { index, integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 const timestamps = () => ({
   createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
@@ -14,6 +15,9 @@ const listCols = () => ({
   ...timestamps(),
 });
 
+/** A smaller WebP written next to the master at upload (480, 960, 1600 px wide; only those narrower than it). */
+export type MediaVariant = { width: number; height: number; path: string };
+
 export const media = sqliteTable("media", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   /** Relative to DATA_DIR/uploads, content-hashed, e.g. "screens/ledgerly-3fa1c2d4e5.png". */
@@ -23,6 +27,7 @@ export const media = sqliteTable("media", {
   height: integer("height").notNull(),
   alt: text("alt").notNull(),
   provenance: text("provenance").notNull(),
+  variants: text("variants", { mode: "json" }).$type<MediaVariant[]>().notNull().default(sql`'[]'`),
   ...timestamps(),
 });
 
@@ -165,3 +170,28 @@ export const cvProfileItems = sqliteTable("cv_profile_items", {
   itemId: integer("item_id").notNull(),
   sortOrder: integer("sort_order").notNull().default(0),
 });
+
+/** The one owner. id is always 1, so a second insert fails on the primary key. */
+export const adminUser = sqliteTable("admin_user", {
+  id: integer("id").primaryKey(),
+  passwordHash: text("password_hash").notNull(),
+  ...timestamps(),
+});
+
+export const sessions = sqliteTable("sessions", {
+  /** sha256 of the cookie token, hex. The token itself is never stored. */
+  id: text("id").primaryKey(),
+  expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  userAgent: text("user_agent").notNull().default(""),
+});
+
+export const loginAttempts = sqliteTable(
+  "login_attempts",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    at: integer("at", { mode: "timestamp" }).notNull(),
+    ok: integer("ok", { mode: "boolean" }).notNull(),
+  },
+  (t) => [index("login_attempts_at").on(t.at)],
+);

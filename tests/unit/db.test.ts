@@ -3,7 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { migrateDb, openDb } from "@/db/client";
-import { profile, projects, skills } from "@/db/schema";
+import { adminUser, loginAttempts, media, profile, projects, sessions, skills } from "@/db/schema";
 import { minimalProject, testDb } from "./helpers";
 
 describe("openDb", () => {
@@ -44,5 +44,27 @@ describe("openDb", () => {
     const file = path.join(fs.mkdtempSync(path.join(os.tmpdir(), "db-")), "nope", "portfolio.db");
     expect(() => openDb(file, { mustExist: true })).toThrow();
     expect(fs.existsSync(path.dirname(file))).toBe(false);
+  });
+});
+
+describe("schema additions", () => {
+  it("defaults media.variants to an empty list and stores the auth tables", () => {
+    const db = testDb();
+    const m = db
+      .insert(media)
+      .values({ path: "screens/a.webp", kind: "screenshot", width: 1, height: 1, alt: "", provenance: "p" })
+      .returning()
+      .get();
+    expect(m.variants).toEqual([]);
+
+    db.insert(adminUser).values({ id: 1, passwordHash: "h" }).run();
+    expect(() => db.insert(adminUser).values({ id: 1, passwordHash: "again" }).run()).toThrow(/UNIQUE|PRIMARY/);
+
+    const now = new Date("2026-11-14T10:00:00Z");
+    db.insert(sessions).values({ id: "digest", expiresAt: now, createdAt: now }).run();
+    expect(db.select().from(sessions).get()).toMatchObject({ id: "digest", userAgent: "", expiresAt: now });
+
+    db.insert(loginAttempts).values({ at: now, ok: false }).run();
+    expect(db.select().from(loginAttempts).get()).toMatchObject({ ok: false, at: now });
   });
 });
