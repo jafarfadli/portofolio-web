@@ -6,3 +6,5 @@ act-conf https://unsplash.com/photos/1540575467063-178a50c2df87
 act-stage https://unsplash.com/photos/1505373877841-8d25f7d46678
 
 owner-badge.jpg: the owner's own portrait (references/Foto.png), cropped 760x950 at +225+250, resized to 400x500, duotoned #1D2640 to #EEEDE8 with ImageMagick. Not a stand-in.
+
+achievements reel (mockup/index.html #achievements): TEMPORARY. Reuses act-stage, act-mentor, act-hackathon, act-workshop and act-conf until the owner supplies achievement photos or approves dedicated placeholders.

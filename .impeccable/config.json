@@ -110,6 +110,15 @@
         ],
         "createdAt": "2026-11-14T12:03:03.764Z",
         "reason": "Agent: decision page with scaled-down page miniatures; exploration artifact, never shipped"
+      },
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "mockup/index.html"
+        ],
+        "createdAt": "2026-11-14T13:26:53.858Z",
+        "reason": "Owner asked (2026-11-14) for the achievements to auto-scroll like danielsun.space; reel has a visible pause button, pauses on hover, focus and off screen, and stands still under reduced motion"
       }
     ]
   }

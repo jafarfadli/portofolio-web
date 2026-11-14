@@ -187,57 +187,33 @@
       .to(pin, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "expo.out" }, 0.62);
   });
 
-  /* ---------------- Achievements: the badge collection fans out ---------------- */
-  const fan = document.querySelector("[data-fan]");
-  const items = [...fan.querySelectorAll(".fan-item")];
-  const caption = document.querySelector("[data-fan-caption]");
-  const prev = document.querySelector("[data-fan-prev]");
-  const next = document.querySelector("[data-fan-next]");
-  let active = 2;
-  let fanned = false;
-  const layout = (dur = 0.7) => {
-    const spread = Math.min(Math.max(window.innerWidth * 0.135, 150), 220);
-    items.forEach((el, i) => {
-      const d = i - active, ad = Math.abs(d);
-      gsap.to(el, {
-        x: d * spread, y: ad * 26, rotation: d * 7.5, scale: 1 - ad * 0.075,
-        opacity: ad > 2 ? 0 : 1, zIndex: 10 - ad,
-        duration: reduce ? 0 : dur, ease: "expo.out", overwrite: "auto",
-      });
-      el.setAttribute("aria-current", d === 0 ? "true" : "false");
-    });
-    const cur = items[active];
-    caption.innerHTML = `<b>${cur.dataset.title}.</b> ${cur.dataset.what}`;
-    prev.disabled = active === 0;
-    next.disabled = active === items.length - 1;
-  };
-  const go = (i) => { active = Math.max(0, Math.min(items.length - 1, i)); layout(); };
-  const enableFan = () => {
-    if (fanned || !wide()) return;
-    fanned = true;
-    fan.classList.add("is-fanned");
-    gsap.set(items, { x: 0, y: 60, rotation: 0, scale: 0.9, opacity: 0 });
-    ScrollTrigger.create({ trigger: fan, start: "top 78%", once: true, onEnter: () => layout(reduce ? 0 : 0.95) });
-    ScrollTrigger.refresh();
-  };
-  enableFan();
-  if (!fanned) { const w = items[active]; fan.scrollLeft = w.offsetLeft - fan.offsetLeft - (fan.clientWidth - w.offsetWidth) / 2; }
-  window.addEventListener("resize", () => { enableFan(); if (fanned) layout(0); });
-  prev.addEventListener("click", () => go(active - 1));
-  next.addEventListener("click", () => go(active + 1));
-  items.forEach((el, i) => el.addEventListener("click", () => { if (!fan.dataset.dragged) go(i); }));
-  fan.parentElement.addEventListener("keydown", (e) => {
-    if (!fanned) return;
-    if (e.key === "ArrowLeft") { e.preventDefault(); go(active - 1); }
-    if (e.key === "ArrowRight") { e.preventDefault(); go(active + 1); }
+  /* ---------------- Achievements: passes ride past on a strap ---------------- */
+  const reel = document.querySelector("[data-reel]");
+  const track = reel.querySelector("[data-reel-track]");
+  const toggle = document.querySelector("[data-reel-toggle]");
+  // a second, hidden copy makes the loop seamless (CSS moves the track by half its width)
+  [...track.children].forEach((li) => {
+    const c = li.cloneNode(true);
+    c.classList.add("is-clone");
+    c.setAttribute("aria-hidden", "true");
+    c.querySelectorAll("img").forEach((im) => { im.alt = ""; });
+    track.append(c);
   });
-  let fx = null;
-  fan.addEventListener("pointerdown", (e) => { if (fanned) { fx = e.clientX; delete fan.dataset.dragged; } });
-  window.addEventListener("pointerup", (e) => {
-    if (fx === null) return;
-    const dx = e.clientX - fx; fx = null;
-    if (Math.abs(dx) > 48) { fan.dataset.dragged = "1"; go(active + (dx < 0 ? 1 : -1)); setTimeout(() => delete fan.dataset.dragged, 0); }
+  const pace = () => track.style.setProperty("--reel-dur", `${Math.round(track.scrollWidth / 2 / 38)}s`); // about 38px a second
+  pace();
+  window.addEventListener("resize", pace);
+  if (reduce) {
+    // no motion: the row stands still and scrolls sideways, by keyboard too
+    reel.tabIndex = 0;
+    reel.setAttribute("role", "region");
+    reel.setAttribute("aria-label", "Achievements, scroll sideways");
+  }
+  toggle.addEventListener("click", () => {
+    const paused = reel.classList.toggle("is-paused");
+    toggle.setAttribute("aria-label", paused ? "Play the achievements" : "Pause the achievements");
+    toggle.querySelector("use").setAttribute("href", paused ? "#i-play" : "#i-pause");
   });
+  new IntersectionObserver(([e]) => reel.classList.toggle("is-offscreen", !e.isIntersecting)).observe(reel);
 
   /* ---------------- Activities: the agenda, photo trails the cursor ---------------- */
   const agenda = document.querySelector("[data-agenda]");
