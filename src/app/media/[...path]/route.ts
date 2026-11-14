@@ -12,7 +12,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ path: s
   const type = MEDIA_TYPES[path.extname(file).toLowerCase()];
   if (!type) return notFound();
   try {
-    const body = await fs.readFile(file);
+    const body = await fs.readFile(/*turbopackIgnore: true*/ file);
     return new Response(new Uint8Array(body), {
       headers: {
         "Content-Type": type,

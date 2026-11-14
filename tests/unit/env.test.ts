@@ -15,6 +15,11 @@ describe("env", () => {
     expect(uploadsDir()).toBe(path.resolve(".data", "uploads"));
   });
 
+  it("treats an empty DATA_DIR as unset", () => {
+    process.env.DATA_DIR = "";
+    expect(dataDir()).toBe(path.resolve(".data"));
+  });
+
   it("uses DATA_DIR when set", () => {
     process.env.DATA_DIR = "/tmp/portfolio-data";
     expect(dataDir()).toBe("/tmp/portfolio-data");
