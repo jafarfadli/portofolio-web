@@ -67,7 +67,7 @@ export function CvDocument({ cv }: { cv: CvContent }) {
                     <b>{pr.name}</b>, {pr.cvTitle}{" "}
                     <span className="tags">
                       {pr.tags.map((t, i) => (
-                        <Fragment key={t}>{i > 0 ? " " : ""}<span>{t}</span></Fragment>
+                        <Fragment key={`${t}-${i}`}>{i > 0 ? " " : ""}<span>{t}</span></Fragment>
                       ))}
                     </span>
                   </span>
@@ -134,7 +134,7 @@ export function CvDocument({ cv }: { cv: CvContent }) {
                 <b>{g.group}</b>{" "}
                 <span className="chips">
                   {g.names.map((n, i) => (
-                    <Fragment key={n}>{i > 0 ? " " : ""}<span className="chip">{n}</span></Fragment>
+                    <Fragment key={`${n}-${i}`}>{i > 0 ? " " : ""}<span className="chip">{n}</span></Fragment>
                   ))}
                 </span>
               </p>

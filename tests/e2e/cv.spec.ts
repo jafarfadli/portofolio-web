@@ -23,6 +23,12 @@ test("CV lists sections in order, ranks achievements, and prints to one A4 page"
   // Literal spaces between chips keep the printed text readable for ATS.
   expect(await page.locator(".cv-sheet").innerText()).toContain("Next.js Go PostgreSQL Midtrans");
 
+  // One fixed tag column: the text cell starts at the same x in Achievements and Activities.
+  const textLeft = (name: string) =>
+    page.locator(".cv-sec", { has: page.locator("h2", { hasText: name }) }).locator(".cv-lines li > span:nth-child(2)").first()
+      .evaluate((el) => el.getBoundingClientRect().left);
+  expect(Math.abs((await textLeft("Achievements")) - (await textLeft("Activities")))).toBeLessThanOrEqual(1);
+
   const pdf = await page.pdf({ format: "A4", preferCSSPageSize: true, printBackground: true });
   const pages = (pdf.toString("latin1").match(/\/Type\s*\/Page[^s]/g) ?? []).length;
   expect(pages).toBe(1);

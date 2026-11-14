@@ -1,7 +1,7 @@
 /* The CV sheet, ported from mockup/cv.html. Every class is cv-prefixed or scoped under .cv-sheet so the global
    site.css rules (.chip, .icon, .when, .role ...) cannot leak in. */
 .cv-page {
-  --paper: #ffffff; --rule: #d9d9d4;
+  --paper: #ffffff; --rule: #d9d9d4; --metal: #a7abb7; /* the mockup's clip metal, not the site's lighter --metal */
   min-height: 100vh; color: var(--ink);
   background: var(--navy) url("/textures/twill.png") 0 0 / 24px 24px;
 }
@@ -70,12 +70,12 @@
   display: inline-block; min-height: 0; margin: 0 0.4mm 0.5mm 0; padding: 0.2mm 1.8mm; border-radius: 99px; border: 0.7pt solid #b9bcc6;
   background: none; box-shadow: none; transform: none; font-size: 7.4pt; font-weight: 650; color: var(--ink-2); line-height: 1.35;
 }
-/* one three-column grid shared by every row, so every tag is as wide as the widest label */
-.cv-lines { display: grid; grid-template-columns: max-content minmax(0, 1fr) max-content; column-gap: 1.4mm; margin: 0; padding: 0; list-style: none; }
+/* one fixed 21mm tag column in every list, so the text lines up across sections; a long label wraps to two lines */
+.cv-lines { display: grid; grid-template-columns: 21mm minmax(0, 1fr) max-content; column-gap: 1.4mm; margin: 0; padding: 0; list-style: none; }
 .cv-lines li { display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; align-items: center; padding: 0.5mm 0; }
 .cv-lines .when { justify-self: end; }
 /* rank and role tags, told by their cut as on the site */
-.tag-cut { display: inline-block; min-width: 21mm; white-space: nowrap; padding: 0.5mm 2mm 0.4mm; text-align: center; font-size: 6.8pt; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; font-variation-settings: "wdth" 85; background: var(--ink); color: var(--stock); border-radius: 0.5mm; }
+.tag-cut { display: block; white-space: normal; line-height: 1.15; padding: 0.5mm 2mm 0.4mm; text-align: center; font-size: 6.8pt; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; font-variation-settings: "wdth" 85; background: var(--ink); color: var(--stock); border-radius: 0.5mm; }
 .tag-cut.winner, .tag-cut.speaker { clip-path: polygon(0 0, 100% 0, calc(100% - 1.6mm) 50%, 100% 100%, 0 100%); padding-right: 3mm; }
 .tag-cut.finalist, .tag-cut.volunteer { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 0.8pt var(--ink); }
 .tag-cut.award { background: var(--stock); color: var(--ink); }
