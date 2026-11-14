@@ -2,13 +2,13 @@ import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { openDb } from "@/db/client";
+import { testDb } from "./helpers";
 import { achievements, activities, cvProfileItems, cvProfiles, media, profile, projects, skills } from "@/db/schema";
 import { resetContent, seed } from "@/db/seed";
 
 describe("seed", () => {
   it("seeds the mockup content and copies media with content-hashed names", () => {
-    const db = openDb(":memory:");
+    const db = testDb();
     const uploads = fs.mkdtempSync(path.join(os.tmpdir(), "uploads-"));
     seed(db, { assetsDir: path.resolve("mockup/assets"), uploadsDir: uploads });
 

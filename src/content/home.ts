@@ -1,3 +1,4 @@
+import "server-only";
 import type { Db } from "@/db/client";
 import { achievements, activities, education, experiences, media, profile, projects, skills } from "@/db/schema";
 

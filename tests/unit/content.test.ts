@@ -1,16 +1,12 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import fs from "node:fs";
-import os from "node:os";
-import path from "node:path";
-import { openDb, type Db } from "@/db/client";
-import { seed } from "@/db/seed";
+import type { Db } from "@/db/client";
+import { seededDb } from "./helpers";
 import { getHomeContent, mediaUrl } from "@/content/home";
 import { getCvContent } from "@/content/cv";
 
 let db: Db;
 beforeAll(() => {
-  db = openDb(":memory:");
-  seed(db, { assetsDir: path.resolve("mockup/assets"), uploadsDir: fs.mkdtempSync(path.join(os.tmpdir(), "up-")) });
+  db = seededDb();
 });
 
 describe("mediaUrl", () => {

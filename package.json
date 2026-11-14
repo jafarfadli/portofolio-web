@@ -12,8 +12,9 @@
     "test:watch": "vitest",
     "e2e": "playwright test",
     "db:generate": "drizzle-kit generate",
-    "db:seed": "tsx src/db/seed-cli.ts",
-    "e2e:serve": "rm -rf .data-e2e && DATA_DIR=.data-e2e tsx src/db/seed-cli.ts && next build && DATA_DIR=.data-e2e next start -p 3100"
+    "db:migrate": "tsx --conditions=react-server src/db/migrate-cli.ts",
+    "db:seed": "tsx --conditions=react-server src/db/seed-cli.ts",
+    "e2e:serve": "rm -rf .data-e2e && DATA_DIR=.data-e2e pnpm -s db:seed && next build && DATA_DIR=.data-e2e next start -p 3100"
   },
   "dependencies": {
     "better-sqlite3": "^12.11.1",
@@ -23,7 +24,8 @@
     "next": "16.4.6",
     "qrcode": "^1.5.4",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.1",
