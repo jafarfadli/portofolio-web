@@ -5,7 +5,7 @@ import path from "node:path";
 import { desc, eq } from "drizzle-orm";
 import sharp, { type OutputInfo } from "sharp";
 import type { Db } from "@/db/client";
-import { activities, media, profile, projects, type MediaVariant } from "@/db/schema";
+import { achievements, activities, media, profile, projects, type MediaVariant } from "@/db/schema";
 import { safeJoin } from "@/lib/safe-path";
 import type { MediaKind } from "./fields";
 
@@ -105,6 +105,7 @@ export function mediaUsage(db: Db, id: number): string[] {
     ...(owner?.photoId === id ? ["Profile, badge photo"] : []),
     ...(owner?.cvPhotoId === id ? ["Profile, CV photo"] : []),
     ...db.select({ name: projects.name }).from(projects).where(eq(projects.screenshotId, id)).all().map((r) => r.name),
+    ...db.select({ name: achievements.title }).from(achievements).where(eq(achievements.photoId, id)).all().map((r) => r.name),
     ...db.select({ name: activities.title }).from(activities).where(eq(activities.photoId, id)).all().map((r) => r.name),
   ];
 }

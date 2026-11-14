@@ -122,15 +122,17 @@ export const seedProjects: SeedProject[] = [
 type SeedAchievement = {
   title: string; rank: "winner" | "finalist" | "award"; rankLabel: string; description: string; year: string;
   sealText: string | null; sealCaption: string | null; caption: string; story: string; cvLine: string; cvYear: string;
+  /** Media key. Temporary reuse of an activity photo until the owner supplies achievement photos. */
+  photo: string;
 };
 
-/** Site order (fan): chronological with the winner in the middle. */
+/** Site order (the reel starts from the first): the winner first, then by rank and recency. */
 export const seedAchievements: SeedAchievement[] = [
-  { title: "Hackathon Jakarta Pintar", rank: "finalist", rankLabel: "Finalist", description: "Hackathon, team of 4. Top 10 of 214 teams.", year: "2023", sealText: null, sealCaption: null, caption: "Finalist, Hackathon Jakarta Pintar 2023", story: "Top 10 of 214 teams with a flood-report app for RT heads.", cvLine: "Hackathon Jakarta Pintar (top 10 of 214)", cvYear: "2023" },
-  { title: "Regional Programming Contest", rank: "award", rankLabel: "Honorable mention", description: "Team of 3. Solved 7 of 12 problems.", year: "2023", sealText: null, sealCaption: null, caption: "Honorable mention, Regional Programming Contest 2023", story: "Solved 7 of 12 problems in five hours, team of three.", cvLine: "Regional Programming Contest", cvYear: "2023" },
-  { title: "Nusantara Code Cup", rank: "winner", rankLabel: "Winner", description: "Software development. First of 96 finalist teams.", year: "2024", sealText: "1st", sealCaption: "Code Cup 2024", caption: "Winner, Nusantara Code Cup 2024, software development", story: "Built an offline-first clinic queue system; first of 96 finalist teams.", cvLine: "Nusantara Code Cup, software development", cvYear: "2024" },
-  { title: "AWS Certified Developer", rank: "award", rankLabel: "Certified", description: "Cloud certification, associate level.", year: "2025", sealText: null, sealCaption: null, caption: "AWS Certified Developer, Associate, 2025", story: "Certification covering serverless, IAM, and deployment pipelines.", cvLine: "AWS Certified Developer, Associate", cvYear: "2025" },
-  { title: "Dean's List", rank: "award", rankLabel: "Dean's list", description: "Five semesters, Institut Teknologi Nusantara.", year: "2023", sealText: null, sealCaption: null, caption: "Dean's List, 2021 to 2023", story: "Five consecutive semesters, Institut Teknologi Nusantara.", cvLine: "Five semesters, Institut Teknologi Nusantara", cvYear: "2021 to 2023" },
+  { title: "Nusantara Code Cup", photo: "act-stage", rank: "winner", rankLabel: "Winner", description: "Software development. First of 96 finalist teams.", year: "2024", sealText: "1st", sealCaption: "Code Cup 2024", caption: "Winner, Nusantara Code Cup 2024, software development", story: "Built an offline-first clinic queue system; first of 96 finalist teams.", cvLine: "Nusantara Code Cup, software development", cvYear: "2024" },
+  { title: "AWS Certified Developer", photo: "act-mentor", rank: "award", rankLabel: "Certified", description: "Cloud certification, associate level.", year: "2025", sealText: null, sealCaption: null, caption: "AWS Certified Developer, Associate, 2025", story: "Certification covering serverless, IAM, and deployment pipelines.", cvLine: "AWS Certified Developer, Associate", cvYear: "2025" },
+  { title: "Hackathon Jakarta Pintar", photo: "act-hackathon", rank: "finalist", rankLabel: "Finalist", description: "Hackathon, team of 4. Top 10 of 214 teams.", year: "2023", sealText: null, sealCaption: null, caption: "Finalist, Hackathon Jakarta Pintar 2023", story: "Top 10 of 214 teams with a flood-report app for RT heads.", cvLine: "Hackathon Jakarta Pintar (top 10 of 214)", cvYear: "2023" },
+  { title: "Regional Programming Contest", photo: "act-workshop", rank: "award", rankLabel: "Honorable mention", description: "Team of 3. Solved 7 of 12 problems.", year: "2023", sealText: null, sealCaption: null, caption: "Honorable mention, Regional Programming Contest 2023", story: "Solved 7 of 12 problems in five hours, team of three.", cvLine: "Regional Programming Contest", cvYear: "2023" },
+  { title: "Dean's List", photo: "act-conf", rank: "award", rankLabel: "Dean's list", description: "Five semesters, Institut Teknologi Nusantara.", year: "2023", sealText: null, sealCaption: null, caption: "Dean's List, 2021 to 2023", story: "Five consecutive semesters, Institut Teknologi Nusantara.", cvLine: "Five semesters, Institut Teknologi Nusantara", cvYear: "2021 to 2023" },
 ];
 
 /** Default CV order for achievements: by rank, then recency. Titles reference seedAchievements. */

@@ -19,6 +19,10 @@ describe("seed", () => {
     expect(p.cvPhotoId).not.toBeNull();
     expect(db.select().from(projects).all()).toHaveLength(4);
     expect(db.select().from(achievements).all()).toHaveLength(5);
+    expect(
+      db.select().from(achievements).all().sort((a, b) => a.sortOrder - b.sortOrder).map((a) => a.title),
+    ).toEqual(["Nusantara Code Cup", "AWS Certified Developer", "Hackathon Jakarta Pintar", "Regional Programming Contest", "Dean's List"]);
+    expect(db.select().from(achievements).all().every((a) => a.photoId !== null)).toBe(true);
     expect(db.select().from(activities).all()).toHaveLength(6);
     expect(db.select().from(skills).all()).toHaveLength(12);
 

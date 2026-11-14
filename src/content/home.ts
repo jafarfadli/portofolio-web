@@ -11,13 +11,14 @@ export type Experience = typeof experiences.$inferSelect;
 export type Education = typeof education.$inferSelect;
 export type Skill = typeof skills.$inferSelect;
 export type HomeProject = Project & { screenshot: MediaRef | null };
+export type HomeAchievement = Achievement & { photo: MediaRef | null };
 export type HomeActivity = Activity & { photo: MediaRef | null };
 export type HomeContent = {
   profile: Profile;
   /** The badge photo. */
   photo: MediaRef | null;
   projects: HomeProject[];
-  achievements: Achievement[];
+  achievements: HomeAchievement[];
   activities: HomeActivity[];
   experiences: Experience[];
   education: Education[];
@@ -58,7 +59,7 @@ export function getHomeContent(db: Db): HomeContent | null {
       .filter((p) => p.featured)
       .slice(0, 4)
       .map((p) => ({ ...p, screenshot: ref(p.screenshotId) })),
-    achievements: onSite(db.select().from(achievements).all()),
+    achievements: onSite(db.select().from(achievements).all()).map((a) => ({ ...a, photo: ref(a.photoId) })),
     activities: onSite(db.select().from(activities).all()).map((a) => ({ ...a, photo: ref(a.photoId) })),
     experiences: onSite(db.select().from(experiences).all()),
     education: onSite(db.select().from(education).all()),

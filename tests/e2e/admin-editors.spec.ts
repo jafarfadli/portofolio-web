@@ -31,7 +31,7 @@ test("a changed select keeps its value after saving, and the next save does not 
   await page.goto("/admin/achievements");
   await page.locator(".adm-title").first().click();
   const rank = page.getByLabel("Rank", { exact: true });
-  const ribbon = page.getByLabel("Ribbon word");
+  const ribbon = page.getByLabel("Rank word");
   const originalRank = await rank.inputValue();
   const originalRibbon = await ribbon.inputValue();
   const changed = originalRank === "finalist" ? "award" : "finalist";
@@ -49,12 +49,12 @@ test("a changed select keeps its value after saving, and the next save does not 
 
   // Leave the shared e2e data as seeded.
   await page.getByLabel("Rank", { exact: true }).selectOption(originalRank);
-  await page.getByLabel("Ribbon word").fill(originalRibbon);
+  await page.getByLabel("Rank word").fill(originalRibbon);
   await page.getByRole("button", { name: "Save changes" }).click();
   await expect(page.getByRole("status")).toHaveText("Saved.");
   await page.reload();
   await expect(page.getByLabel("Rank", { exact: true })).toHaveValue(originalRank);
-  await expect(page.getByLabel("Ribbon word")).toHaveValue(originalRibbon);
+  await expect(page.getByLabel("Rank word")).toHaveValue(originalRibbon);
 });
 
 test("invalid input is refused next to its field and kept for fixing", async ({ page }) => {

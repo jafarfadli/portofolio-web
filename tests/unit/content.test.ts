@@ -29,7 +29,9 @@ describe("getHomeContent", () => {
 
   it("keeps site order and site visibility", () => {
     const c = getHomeContent(db)!;
-    expect(c.achievements.map((a) => a.title)[2]).toBe("Nusantara Code Cup");
+    expect(c.achievements[0].title).toBe("Nusantara Code Cup");
+    expect(c.achievements[0].photo?.url).toMatch(/^\/media\/photos\/act-stage-[0-9a-f]{10}\.jpg$/);
+    expect(c.achievements.every((a) => a.photo !== null)).toBe(true);
     expect(c.activities).toHaveLength(6);
     expect(c.activities[0].photo?.url).toMatch(/^\/media\/photos\/act-talk-/);
     expect(c.skills.map((s) => s.name)).not.toContain("Python");

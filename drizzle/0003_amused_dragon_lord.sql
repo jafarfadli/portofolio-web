@@ -1,0 +1,1 @@
+ALTER TABLE `achievements` ADD `photo_id` integer REFERENCES media(id);

@@ -108,6 +108,8 @@ export const achievements = sqliteTable("achievements", {
   /** Inline markup for the CV line. */
   cvLine: text("cv_line").notNull(),
   cvYear: text("cv_year").notNull(),
+  /** Photo on the pass in the moving strap, cropped 4:3. */
+  photoId: integer("photo_id").references(() => media.id),
 });
 
 export const activities = sqliteTable("activities", {

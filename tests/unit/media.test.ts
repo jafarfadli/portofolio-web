@@ -108,6 +108,13 @@ describe("media rows", () => {
     expect(mediaUsage(db, p.cvPhotoId!)).toEqual(["Profile, CV photo"]);
   });
 
+  it("reports achievements that use a photo", () => {
+    const db = seededDb();
+    const stage = db.select().from(media).all().find((m) => m.path.startsWith("photos/act-stage-"))!;
+    expect(mediaUsage(db, stage.id)).toContain("Nusantara Code Cup");
+    expect(mediaUsage(db, stage.id)).toContain("HMIF Tech Talk");
+  });
+
   it("builds a srcset from the variants, widest last", () => {
     const ref = toMediaRef({
       id: 1, path: "screens/abc.webp", kind: "screenshot", width: 2000, height: 1250, alt: "A", provenance: "p",
