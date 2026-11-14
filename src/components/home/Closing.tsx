@@ -5,7 +5,7 @@ import { SectionHead } from "./SectionHead";
 
 export function Closing({ profile: p }: { profile: Profile }) {
   return (
-    <section className="section closing" id="contact" aria-labelledby="contact-h">
+    <section className="section closing theme-dark" id="contact" aria-labelledby="contact-h">
       <SectionHead id="contact-h" title="Let's talk." style={{ marginBottom: 0 }} />
       <p className="sub">{p.closingLine}</p>
       <div className="hero-actions">

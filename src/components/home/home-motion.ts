@@ -1,6 +1,7 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
+import { iconPath } from "@/components/Icon";
 
 type Ticker = (time: number, deltaTime: number) => void;
 
@@ -14,7 +15,6 @@ export function initHomeMotion(doc: Document): () => void {
   const win = doc.defaultView!;
   const reduce = win.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = win.matchMedia("(pointer: fine)").matches;
-  const wide = () => win.matchMedia("(min-width: 861px)").matches;
 
   const ac = new AbortController();
   // Created first and empty so handler-created tweens and ScrollTriggers (added via ctx.add) are reverted too.
@@ -245,77 +245,29 @@ export function initHomeMotion(doc: Document): () => void {
       });
     }
 
-    /* ---------- Achievements: the badge collection fans out ---------- */
-    const fan = doc.querySelector<HTMLElement>("[data-fan]");
-    if (fan) {
-      const items = [...fan.querySelectorAll<HTMLElement>(".fan-item")];
-      const caption = doc.querySelector<HTMLElement>("[data-fan-caption]")!;
-      const prev = doc.querySelector<HTMLButtonElement>("[data-fan-prev]")!;
-      const next = doc.querySelector<HTMLButtonElement>("[data-fan-next]")!;
-      let active = Math.min(Number(fan.dataset.active ?? 0), items.length - 1);
-      let fanned = false;
-      const setCaption = () => {
-        const cur = items[active];
-        if (!cur) return;
-        const b = doc.createElement("b");
-        b.textContent = `${cur.dataset.title}.`;
-        caption.replaceChildren(b, ` ${cur.dataset.what ?? ""}`);
-        prev.disabled = active === 0;
-        next.disabled = active === items.length - 1;
-        // A button that just became disabled loses focus; hand it to the other one so keyboard users keep their place.
-        if (doc.activeElement === next && next.disabled) prev.focus({ preventScroll: true });
-        else if (doc.activeElement === prev && prev.disabled) next.focus({ preventScroll: true });
-      };
-      const layout = (dur = 0.7) => {
-        const spread = Math.min(Math.max(win.innerWidth * 0.135, 150), 220);
-        items.forEach((el, i) => {
-          const d = i - active;
-          const ad = Math.abs(d);
-          gsap.to(el, {
-            x: d * spread, y: ad * 26, rotation: d * 7.5, scale: 1 - ad * 0.075, opacity: ad > 2 ? 0 : 1, zIndex: 10 - ad,
-            duration: reduce ? 0 : dur, ease: "expo.out", overwrite: "auto",
-          });
-          el.setAttribute("aria-current", d === 0 ? "true" : "false");
-        });
-        setCaption();
-      };
-      const go = (i: number) => { active = Math.max(0, Math.min(items.length - 1, i)); if (fanned) layout(); else setCaption(); };
-      const enableFan = () => {
-        if (fanned || !wide()) return;
-        fanned = true;
-        fan.classList.add("is-fanned");
-        gsap.set(items, { x: 0, y: 60, rotation: 0, scale: 0.9, opacity: 0 });
-        ScrollTrigger.create({ trigger: fan, start: "top 78%", once: true, onEnter: () => layout(reduce ? 0 : 0.95) });
-        ScrollTrigger.refresh();
-      };
-      enableFan();
-      if (!fanned && items[active]) {
-        const w = items[active];
-        fan.scrollLeft = w.offsetLeft - fan.offsetLeft - (fan.clientWidth - w.offsetWidth) / 2;
+    /* ---------- Achievements: passes ride past on a strap ---------- */
+    // The server renders the second, hidden copy of the list; CSS moves the track by half its width.
+    const reel = doc.querySelector<HTMLElement>("[data-reel]");
+    const track = reel?.querySelector<HTMLElement>("[data-reel-track]");
+    const toggle = doc.querySelector<HTMLButtonElement>("[data-reel-toggle]");
+    if (reel && track && toggle) {
+      const pace = () => track.style.setProperty("--reel-dur", `${Math.round(track.scrollWidth / 2 / 38)}s`); // about 38px a second
+      pace();
+      on(win, "resize", pace);
+      if (reduce) {
+        // No motion: the row stands still and scrolls sideways, by keyboard too.
+        reel.tabIndex = 0;
+        reel.setAttribute("role", "region");
+        reel.setAttribute("aria-label", "Achievements, scroll sideways");
       }
-      setCaption();
-      on(win, "resize", () => { enableFan(); if (fanned) layout(0); });
-      on(prev, "click", () => go(active - 1));
-      on(next, "click", () => go(active + 1));
-      items.forEach((el, i) => on(el, "click", () => { if (!fan.dataset.dragged) go(i); }));
-      on(fan.parentElement!, "keydown", (ev) => {
-        const e = ev as KeyboardEvent;
-        if (!fanned) return;
-        if (e.key === "ArrowLeft") { e.preventDefault(); go(active - 1); }
-        if (e.key === "ArrowRight") { e.preventDefault(); go(active + 1); }
+      on(toggle, "click", () => {
+        const paused = reel.classList.toggle("is-paused");
+        toggle.setAttribute("aria-label", paused ? "Play the achievements" : "Pause the achievements");
+        toggle.querySelector("path")?.setAttribute("d", iconPath(paused ? "play" : "pause"));
       });
-      let fx: number | null = null;
-      on(fan, "pointerdown", (ev) => { if (fanned) { fx = (ev as PointerEvent).clientX; delete fan.dataset.dragged; } });
-      on(win, "pointerup", (ev) => {
-        if (fx === null) return;
-        const dx = (ev as PointerEvent).clientX - fx;
-        fx = null;
-        if (Math.abs(dx) > 48) {
-          fan.dataset.dragged = "1";
-          go(active + (dx < 0 ? 1 : -1));
-          timeouts.push(win.setTimeout(() => { delete fan.dataset.dragged; }, 0));
-        }
-      });
+      const io = new IntersectionObserver((entries) => reel.classList.toggle("is-offscreen", !entries.at(-1)!.isIntersecting));
+      io.observe(reel);
+      ac.signal.addEventListener("abort", () => io.disconnect());
     }
 
     /* ---------- Activities: the agenda, photo trails the cursor ---------- */

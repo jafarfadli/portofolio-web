@@ -7,7 +7,7 @@ const LAYOUTS = ["wide", "half", "half", "wide"] as const;
 
 export function Work({ projects }: { projects: HomeProject[] }) {
   return (
-    <section className="section" id="work" aria-labelledby="work-h">
+    <section className="section theme-dark" id="work" aria-labelledby="work-h">
       <SectionHead id="work-h" title="Selected work" />
       <div className="work-grid">
         {projects.map((p, i) => <ProjectCard key={p.id} project={p} layout={LAYOUTS[i] ?? "wide"} />)}

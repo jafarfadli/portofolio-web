@@ -4,7 +4,7 @@ import { SectionHead } from "./SectionHead";
 export function Activities({ items }: { items: HomeActivity[] }) {
   const first = items.find((a) => a.photo)?.photo;
   return (
-    <section className="section" id="activities" aria-labelledby="act-h">
+    <section className="section theme-dark" id="activities" aria-labelledby="act-h">
       <SectionHead id="act-h" title="Activities" lead="Where I show up outside of work: talks, hackathons, mentoring." />
       <ol className="agenda" data-agenda>
         {items.map((a) => {

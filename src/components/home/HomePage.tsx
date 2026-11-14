@@ -14,7 +14,6 @@ export function HomePage({ content, qrDataUrl }: { content: HomeContent; qrDataU
   return (
     <>
       <a className="skip" href="#work">Skip to work</a>
-      <div className="weave" aria-hidden="true" />
       <div className="cord" aria-hidden="true"><span className="cord-fill" /></div>
       <Nav name={`${p.firstName} ${p.lastName}`} />
       <main id="top">

@@ -12,25 +12,23 @@ test("flip turns the badge to the CV side and back, moving focus", async ({ page
   await expect(badge).not.toHaveClass(/is-flipped/);
 });
 
-test("achievement fan opens on the winner and steps with buttons and arrow keys", async ({ page }) => {
+test("achievements reel runs and the button pauses it", async ({ page }) => {
   await page.goto("/");
-  await page.locator("#achievements").scrollIntoViewIfNeeded();
-  const caption = page.locator("[data-fan-caption]");
-  await expect(caption).toContainText("Winner, Nusantara Code Cup 2024");
-  await page.getByRole("button", { name: "Next achievement" }).click();
-  await expect(caption).toContainText("AWS Certified Developer");
-  await page.keyboard.press("ArrowLeft");
-  await expect(caption).toContainText("Winner, Nusantara Code Cup 2024");
-});
-
-test("stepping to the end of the fan keeps keyboard focus on a live button", async ({ page }) => {
-  await page.goto("/");
-  await page.locator("#achievements").scrollIntoViewIfNeeded();
-  const next = page.getByRole("button", { name: "Next achievement" });
-  await expect(page.locator("[data-fan-caption]")).toContainText("Winner, Nusantara Code Cup 2024");
-  while (await next.isEnabled()) await next.click();
-  await expect(next).toBeDisabled();
-  await expect(page.getByRole("button", { name: "Previous achievement" })).toBeFocused();
+  const reel = page.locator("[data-reel]");
+  const track = page.locator("[data-reel-track]");
+  await reel.scrollIntoViewIfNeeded();
+  await expect(track).toHaveCSS("animation-name", "reel");
+  // The pace is measured by the island from the track's width: about 38px a second.
+  await expect.poll(() => track.evaluate((el) => el.style.getPropertyValue("--reel-dur"))).toMatch(/^[1-9]\d*s$/);
+  await page.getByRole("button", { name: "Pause the achievements" }).click();
+  await expect(reel).toHaveClass(/is-paused/);
+  await expect(track).toHaveCSS("animation-play-state", "paused");
+  const play = page.getByRole("button", { name: "Play the achievements" });
+  await expect(play).toBeVisible();
+  await play.click();
+  await expect(reel).not.toHaveClass(/is-paused/);
+  await expect(track).toHaveCSS("animation-play-state", "running");
+  await expect(page.getByRole("button", { name: "Pause the achievements" })).toBeVisible();
 });
 
 test("entrance releases the pre-paint hold and ends with the hero visible", async ({ page }) => {
@@ -56,10 +54,12 @@ test.describe("reduced motion", () => {
     await expect(page.locator(".lede .line > span").first()).toHaveCSS("transform", "none");
     await page.locator("#work").scrollIntoViewIfNeeded();
     await expect(page.locator(".pin").first()).toHaveCSS("opacity", "1");
-    // These only hold when the island ran: no Lenis under reduced motion, and the fan caption is set by JS.
+    // The last of these only holds when the island ran: no Lenis under reduced motion, and the reel's tabindex is set by JS.
     await expect(page.locator("html")).not.toHaveClass(/lenis/);
     await page.locator("#achievements").scrollIntoViewIfNeeded();
-    await expect(page.locator("[data-fan-caption]")).toContainText("Winner, Nusantara Code Cup 2024");
-    await expect(page.locator('.fan-item[aria-current="true"]')).toHaveCSS("opacity", "1");
+    await expect(page.locator("[data-reel-track]")).toHaveCSS("animation-name", "none");
+    await expect(page.locator(".ach.is-clone")).toHaveCount(5);
+    await expect(page.locator(".ach.is-clone:visible")).toHaveCount(0);
+    await expect(page.locator("[data-reel]")).toHaveAttribute("tabindex", "0");
   });
 });

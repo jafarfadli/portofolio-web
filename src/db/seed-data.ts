@@ -126,7 +126,7 @@ type SeedAchievement = {
   photo: string;
 };
 
-/** Site order (the reel starts from the first): the winner first, then by rank and recency. */
+/** Reel order: the winner first, then the CV order. */
 export const seedAchievements: SeedAchievement[] = [
   { title: "Nusantara Code Cup", photo: "act-stage", rank: "winner", rankLabel: "Winner", description: "Software development. First of 96 finalist teams.", year: "2024", sealText: "1st", sealCaption: "Code Cup 2024", caption: "Winner, Nusantara Code Cup 2024, software development", story: "Built an offline-first clinic queue system; first of 96 finalist teams.", cvLine: "Nusantara Code Cup, software development", cvYear: "2024" },
   { title: "AWS Certified Developer", photo: "act-mentor", rank: "award", rankLabel: "Certified", description: "Cloud certification, associate level.", year: "2025", sealText: null, sealCaption: null, caption: "AWS Certified Developer, Associate, 2025", story: "Certification covering serverless, IAM, and deployment pipelines.", cvLine: "AWS Certified Developer, Associate", cvYear: "2025" },

@@ -4,7 +4,7 @@ import { SectionHead } from "./SectionHead";
 
 export function Experience({ experiences, education }: { experiences: ExperienceRow[]; education: Education[] }) {
   return (
-    <section className="section" id="experience" aria-labelledby="exp-h">
+    <section className="section theme-light" id="experience" aria-labelledby="exp-h">
       <SectionHead id="exp-h" title="Experience and education" />
       <div className="itinerary on-stock">
         <h3>Experience</h3>

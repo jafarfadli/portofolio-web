@@ -74,7 +74,7 @@ export const RESOURCES: Record<ListKey, Resource> = {
     flags: ["showOnSite", "showInCv"],
     fields: [
       { name: "title", label: "Title", kind: "text", max: 120 },
-      { name: "rank", label: "Rank", kind: "enum", options: ["winner", "finalist", "award"], help: "Sets the ribbon shape: winner has two tails, finalist one, award none." },
+      { name: "rank", label: "Rank", kind: "enum", options: ["winner", "finalist", "award"], help: "Sets the rank tag's cut: winner notched, finalist outlined, award plain." },
       { name: "rankLabel", label: "Rank word", kind: "text", max: 30, help: "Printed on the rank tag, like Winner or Certified." },
       { name: "year", label: "Year", kind: "text", max: 12 },
       { name: "description", label: "Description", kind: "textarea", max: 300, rows: 3 },
