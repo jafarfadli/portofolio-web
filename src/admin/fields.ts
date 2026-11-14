@@ -67,7 +67,7 @@ export function parseField(f: Field, raw: string | null): One {
       const n = Number(s);
       if (!Number.isFinite(n)) return { error: "Enter a number." };
       if ((f.min !== undefined && n < f.min) || (f.max !== undefined && n > f.max)) {
-        return { error: `Use a number from ${f.min} to ${f.max}.` };
+        return { error: rangeError(f.min, f.max) };
       }
       return { value: n };
     }
@@ -91,6 +91,13 @@ export function parseField(f: Field, raw: string | null): One {
     default:
       return { error: "This field type is not supported." };
   }
+}
+
+/** Names only the bounds that exist, so a one-sided field never says "undefined". */
+function rangeError(min: number | undefined, max: number | undefined): string {
+  if (min !== undefined && max !== undefined) return `Use a number from ${min} to ${max}.`;
+  if (min !== undefined) return `Use a number of at least ${min}.`;
+  return `Use a number of at most ${max}.`;
 }
 
 function parseUrl(s: string): One {

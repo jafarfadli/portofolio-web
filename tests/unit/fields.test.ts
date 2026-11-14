@@ -44,6 +44,8 @@ describe("parseField", () => {
     expect(parseField(F("number", { min: -12, max: 12 }), "3.5")).toEqual({ value: 3.5 });
     expect(parseField(F("number", { min: -12, max: 12 }), "20")).toEqual({ error: "Use a number from -12 to 12." });
     expect(parseField(F("number"), "abc")).toEqual({ error: "Enter a number." });
+    expect(parseField(F("number", { min: 5 }), "3")).toEqual({ error: "Use a number of at least 5." });
+    expect(parseField(F("number", { max: 12 }), "20")).toEqual({ error: "Use a number of at most 12." });
     expect(parseField(F("enum", { options: ["winner", "finalist"] }), "winner")).toEqual({ value: "winner" });
     expect(parseField(F("enum", { options: ["winner", "finalist"] }), "champion")).toEqual({ error: "Pick one of the options." });
   });
