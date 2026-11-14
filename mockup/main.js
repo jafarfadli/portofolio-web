@@ -4,7 +4,6 @@
 (() => {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = window.matchMedia("(pointer: fine)").matches;
-  const wide = () => window.matchMedia("(min-width: 861px)").matches;
   const hasGsap = typeof window.gsap !== "undefined";
   if (!hasGsap) return; // content is fully readable without scripts
   gsap.registerPlugin(ScrollTrigger);

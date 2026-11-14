@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-14T18:30:00+00:00",
+  "generatedAt": "2026-11-14T13:38:04+00:00",
   "title": "Design System: Lanyard & Badge",
   "extensions": {
     "colorMeta": {
@@ -146,22 +146,6 @@
           "#a2a5af",
           "#c6c9d3",
           "#ebeef9"
-        ]
-      },
-      "ribbon-tail": {
-        "role": "neutral",
-        "displayName": "Ribbon Tail",
-        "canonical": "#26282f",
-        "oklch": "oklch(27.8% 0.013 272.9)",
-        "tonalRamp": [
-          "#090b11",
-          "#23252c",
-          "#3f4249",
-          "#5f6169",
-          "#7f828b",
-          "#a2a5ae",
-          "#c6c9d2",
-          "#ebeef8"
         ]
       },
       "clip-metal": {
@@ -314,9 +298,9 @@
         "displayName": "Metric Big",
         "purpose": "The number on pins of full-width project cards."
       },
-      "event-year": {
-        "displayName": "Event Year",
-        "purpose": "Year at the bottom of each achievement badge."
+      "pass-year": {
+        "displayName": "Pass Year",
+        "purpose": "Year beside the rank tag on each achievement pass (15px, 800, tabular)."
       },
       "project-title": {
         "displayName": "Project Title",
@@ -326,9 +310,9 @@
         "displayName": "Project Title Name",
         "purpose": "Leading product name inside the project title."
       },
-      "event-title": {
-        "displayName": "Event Title",
-        "purpose": "Achievement badge title."
+      "pass-title": {
+        "displayName": "Pass Title",
+        "purpose": "Achievement pass title (24px, 850, wdth 115)."
       },
       "stop-title": {
         "displayName": "Stop Title",
@@ -364,7 +348,7 @@
       },
       "printed-label": {
         "displayName": "Printed Label",
-        "purpose": "Condensed caps printed on a physical object: ribbon bands, role tags, the badge header band, CV tabs and tags. Never above a heading."
+        "purpose": "Condensed caps printed on a physical object: rank tags, role tags, the badge header band, CV tabs and tags. Never above a heading."
       },
       "strap-print": {
         "displayName": "Strap Print",
@@ -435,7 +419,7 @@
       {
         "name": "hang",
         "value": "0 28px 60px -18px rgba(10,11,18,.62), 0 6px 14px -6px rgba(10,11,18,.4)",
-        "purpose": "Hanging or lying cards: badge faces, project cards, event badges, itinerary."
+        "purpose": "Hanging or lying cards: badge faces, project cards, itinerary."
       },
       {
         "name": "sticker",
@@ -469,13 +453,18 @@
       },
       {
         "name": "strap-hardware",
-        "value": "filter: drop-shadow(0 3px 3px rgba(10,11,18,.45))",
-        "purpose": "Ring, swivel, and lobster clasp (SVG silhouettes)."
+        "value": "filter: drop-shadow per layer: ring 0 2px 2px rgba(10,11,18,.4); tab 0 1.5px 1.2px rgba(10,11,18,.45); clasp 0 3px 3px rgba(10,11,18,.45)",
+        "purpose": "Ring, sewn tab, and swivel with lobster clasp (SVG silhouettes)."
       },
       {
-        "name": "ribbon-band",
-        "value": "0 6px 10px -4px rgba(0,0,0,.4)",
-        "purpose": "Achievement ribbon band."
+        "name": "reel-strap",
+        "value": "0 3px 6px -2px rgba(10,11,18,.35)",
+        "purpose": "Navy strap the achievement passes hang from; each pass's short strap adds 0 2px 3px rgba(10,11,18,.3)."
+      },
+      {
+        "name": "strap-overlap",
+        "value": "-2px 0 3px rgba(17,18,22,.28)",
+        "purpose": "Outer edge of the hero strap's right length where it lies over the left."
       },
       {
         "name": "cv-sheet",
@@ -600,9 +589,9 @@
         "purpose": "Metric pin leader lines."
       },
       {
-        "name": "fan-layout",
-        "value": "spread clamp(innerWidth*.135,150,220); x d*spread; y |d|*26; rot d*7.5deg; scale 1-|d|*.075; hidden |d|>2; z 10-|d|; 0.7s expo.out; deal-in 0.95s at top 78% from y60 scale .9 opacity 0; drag step >48px; origin 50% -60px",
-        "purpose": "Achievement fan."
+        "name": "reel-drift",
+        "value": "track translateX 0 to -50% (two copies, second aria-hidden) linear infinite; duration = half track width / 38px per s; paused on hover, focus-within, off screen (IntersectionObserver), and by the round pause/play button; hover on a pass straightens it to 30% of its tilt and lifts 6px, 420ms expo.out",
+        "purpose": "Achievements reel."
       },
       {
         "name": "agenda-preview",
@@ -616,7 +605,7 @@
       },
       {
         "name": "reduced-motion",
-        "value": "no Lenis, no pendulum, no entrance; transitions 1ms; flip becomes 180ms linear opacity cross-fade; cord full; leaders drawn; fan and preview duration 0",
+        "value": "no Lenis, no pendulum, no entrance; transitions 1ms; flip becomes 180ms linear opacity cross-fade; cord full; leaders drawn; reel stands still as a keyboard-scrollable snap row; preview duration 0",
         "purpose": "prefers-reduced-motion: final readable state."
       },
       {
@@ -664,12 +653,12 @@
       {
         "name": "compact",
         "value": "max-width: 860px",
-        "purpose": "Single-column hero holding only the lanyard (strap 150px, badge 290px), hero stickers and cord dropped, pins re-anchored, no leaders, fan as scroll-snap row, inline agenda photos, no clip marks, nav brand + CV only."
+        "purpose": "Single-column hero holding only the lanyard (strap 150px, badge 290px), hero stickers and cord dropped, pins re-anchored, no leaders, reel edge to edge, strap tops fade out, inline agenda photos, no clip marks, nav brand + CV only."
       },
       {
         "name": "wide-js",
         "value": "min-width: 861px",
-        "purpose": "JS 'wide' test: fan enabled."
+        "purpose": "JS 'wide' test (still defined in main.js, no longer consumed now that the fan is gone)."
       },
       {
         "name": "narrow-phone",
@@ -731,10 +720,6 @@
         "value": 4
       },
       {
-        "name": "fan-item",
-        "value": "10 - distance"
-      },
-      {
         "name": "agenda-preview",
         "value": 40
       },
@@ -767,7 +752,7 @@
         "value": 0
       },
       {
-        "name": "pendulum-fold",
+        "name": "pendulum-tab",
         "value": 1
       },
       {
@@ -775,7 +760,11 @@
         "value": 1
       },
       {
-        "name": "pendulum-swivel-clasp",
+        "name": "reel-pass",
+        "value": 1
+      },
+      {
+        "name": "pendulum-clasp",
         "value": 2
       }
     ],
@@ -790,13 +779,13 @@
         "name": "webbing",
         "source": "mockup/assets/textures/webbing.png",
         "generator": "mockup/assets-src/make_textures.py webbing(w=32, h=32, rib=3, seed=11)",
-        "display": "background-size 16px 16px over #e5e4df for the strap lengths, the folded end (SVG pattern), and the cord fill; over #111216 for the achievement fan stubs."
+        "display": "background-size 16px 16px over #e5e4df for the strap lengths, the sewn tab (SVG pattern), and the cord fill; over #1d2640 for the achievements reel strap and each pass's short strap."
       },
       {
         "name": "owner-portrait",
         "source": "mockup/assets/photos/owner-badge.jpg, mockup/assets/photos/owner-cutout.png",
         "generator": "Owner's own photo, cropped and duotoned #1D2640 to #EEEDE8 (provenance in mockup/assets/photos/SOURCES.txt); the CV copy has its background removed.",
-        "display": "Badge ID row (4/5, 6px radius); CV header (34mm tall cut-out on the header rule)."
+        "display": "Badge ID row (4/5, 6px radius); CV header (31mm tall cut-out lifted 4mm, its torso fading over the lowest 28%)."
       }
     ],
     "fonts": [
@@ -904,10 +893,10 @@
       "name": "Lanyard Strap and Hardware",
       "kind": "custom",
       "refersTo": "strap",
-      "description": "Two 30px concrete webbing lengths in a V with the owner's name printed in navy, sewn into one folded end (box stitch) round a metal ring; swivel and lobster clasp in flat metal facets.",
-      "html": "<div class=\"ds-ground\"><div class=\"ds-pend\"><span class=\"ds-strap l\">JAFAR FADLI</span><span class=\"ds-strap r\">JAFAR FADLI</span><svg class=\"ds-fold\" viewBox=\"0 0 62 54\" aria-hidden=\"true\"><path fill=\"#e5e4df\" d=\"M0 0H62L57 30C57 45 46 54 31 54C16 54 5 45 5 30Z\"/><path fill=\"rgba(17,18,22,0.13)\" d=\"M5 30C5 45 16 54 31 54C46 54 57 45 57 30C57 40 46 47 31 47C16 47 5 40 5 30Z\"/><path fill=\"none\" stroke=\"rgba(17,18,22,0.2)\" stroke-width=\"3\" d=\"M60.5 0L55.5 30\"/><rect x=\"13\" y=\"8\" width=\"36\" height=\"13\" rx=\"2\" fill=\"none\" stroke=\"rgba(29,38,64,0.55)\" stroke-width=\"1.5\" stroke-dasharray=\"3 2.5\"/></svg><svg class=\"ds-hw ds-ring\" viewBox=\"0 0 64 40\" aria-hidden=\"true\"><circle cx=\"32\" cy=\"18\" r=\"12\" fill=\"none\" stroke=\"#c9ccd6\" stroke-width=\"5\"/><path d=\"M22.5 22.5A11 11 0 0 0 30 29.8\" fill=\"none\" stroke=\"#dfe1e7\" stroke-width=\"1.5\"/></svg><svg class=\"ds-hw ds-clasp\" viewBox=\"0 0 64 64\" aria-hidden=\"true\"><circle cx=\"32\" cy=\"6\" r=\"4.5\" fill=\"none\" stroke=\"#a7abb7\" stroke-width=\"3\"/><rect x=\"23\" y=\"10\" width=\"18\" height=\"12\" rx=\"4\" fill=\"#c9ccd6\"/><rect x=\"23\" y=\"17\" width=\"18\" height=\"5\" rx=\"2.5\" fill=\"#a7abb7\"/><rect x=\"29\" y=\"22\" width=\"6\" height=\"5\" fill=\"#7f8391\"/><path fill=\"#c9ccd6\" fill-rule=\"evenodd\" d=\"M32 27C22 29 19 44 22 54C24 61 29 65 32 65C35 65 40 61 42 54C45 44 42 29 32 27ZM32 34C27 36 25.5 46 27.5 53C28.5 56.5 30.5 58 32 58C33.5 58 35.5 56.5 36.5 53C38.5 46 37 36 32 34Z\"/><path fill=\"#a7abb7\" d=\"M42 54C45 44 42 29 32 27C38.5 31 40.5 45 37.5 56C36 61 34 63.5 32 65C35 65 40 61 42 54Z\"/><path fill=\"none\" stroke=\"#7f8391\" stroke-width=\"1.2\" stroke-linecap=\"round\" d=\"M36.8 40C38.6 45 38.6 50 37 55\"/><rect x=\"16\" y=\"39\" width=\"5.5\" height=\"11\" rx=\"2\" fill=\"#a7abb7\"/></svg></div></div>",
-      "css": ":host{font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-ground{background:#1d2640;height:300px;position:relative;overflow:hidden;}.ds-pend{position:absolute;left:50%;top:0;--l:170px;}.ds-strap{position:absolute;top:-60px;width:30px;height:calc(var(--l) + 60px);background:#e5e4df;border-radius:0 0 3px 3px;transform-origin:50% 100%;box-shadow:inset 2px 0 0 rgba(255,255,255,.35),inset -3px 0 0 rgba(17,18,22,.2);writing-mode:vertical-rl;color:#1d2640;font-size:11px;font-weight:800;letter-spacing:.3em;font-variation-settings:\"wdth\" 125;display:flex;align-items:center;justify-content:flex-end;padding-bottom:40px;box-sizing:border-box;}.ds-strap.l{left:-28px;transform:rotate(-8deg);}.ds-strap.r{left:-2px;transform:rotate(8deg);}.ds-fold{position:absolute;z-index:1;left:-31px;top:calc(var(--l) - 22px);width:62px;height:54px;overflow:visible;}.ds-hw{position:absolute;left:-32px;width:64px;filter:drop-shadow(0 3px 3px rgba(10,11,18,.45));}.ds-ring{z-index:0;top:calc(var(--l) + 10px);height:40px;}.ds-clasp{z-index:2;top:calc(var(--l) + 36px);height:66px;}",
-      "note": "The webbing raster (assets/textures/webbing.png at 16px) is omitted in this preview."
+      "description": "Two 30px concrete webbing lengths with the owner's name printed in navy, converging and overlapping (right on top) into one sewn tab with a box-and-cross stitch; a rounded triangle ring goes in behind the tab and out on both sides; an edge-on swivel eye hooks the ring's point, then a slimmer lobster clasp with a trigger lever drops its hook tip into the badge slot.",
+      "html": "<div class=\"ds-ground\"><div class=\"ds-pend\"><span class=\"ds-strap l\">JAFAR FADLI</span><span class=\"ds-strap r\">JAFAR FADLI</span><svg class=\"ds-hw ds-ring\" viewBox=\"0 0 64 44\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"#7f8391\" stroke-width=\"4.6\" stroke-linejoin=\"round\" d=\"M13 10.5H51Q57.5 10.5 54.6 16.2L34.6 38.6Q32 41.3 29.4 38.6L9.4 16.2Q6.5 10.5 13 10.5Z\"/><path fill=\"none\" stroke=\"#c9ccd6\" stroke-width=\"2.8\" stroke-linejoin=\"round\" d=\"M13 10.5H51Q57.5 10.5 54.6 16.2L34.6 38.6Q32 41.3 29.4 38.6L9.4 16.2Q6.5 10.5 13 10.5Z\"/><path fill=\"none\" stroke=\"#eef0f4\" stroke-width=\"0.9\" stroke-linecap=\"round\" d=\"M12.6 9.7H51M8.7 15.4L28.8 37.6\"/></svg><svg class=\"ds-hw ds-tab\" viewBox=\"0 0 64 46\" aria-hidden=\"true\"><defs><pattern id=\"webbing-tab\" patternUnits=\"userSpaceOnUse\" width=\"16\" height=\"16\"><rect width=\"16\" height=\"16\" fill=\"#e5e4df\"/><image href=\"webbing.png\" width=\"16\" height=\"16\"/></pattern><linearGradient id=\"tab-fold\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#111216\" stop-opacity=\"0\"/><stop offset=\"1\" stop-color=\"#111216\" stop-opacity=\"0.26\"/></linearGradient></defs><path fill=\"url(#webbing-tab)\" d=\"M16 0H48V40.6Q48 44 44.6 44H19.4Q16 44 16 40.6Z\"/><path fill=\"url(#tab-fold)\" d=\"M16 33H48V40.6Q48 44 44.6 44H19.4Q16 44 16 40.6Z\"/><rect x=\"16\" y=\"0\" width=\"2\" height=\"41\" fill=\"#fff\" fill-opacity=\"0.35\"/><rect x=\"45\" y=\"0\" width=\"3\" height=\"41\" fill=\"#111216\" fill-opacity=\"0.2\"/><g fill=\"none\" stroke=\"#1d2640\" stroke-opacity=\"0.55\" stroke-width=\"1.2\" stroke-dasharray=\"2.6 2\"><rect x=\"20.5\" y=\"6\" width=\"23\" height=\"21\" rx=\"1\"/><path d=\"M20.5 6L43.5 27M43.5 6L20.5 27\"/></g></svg><svg class=\"ds-hw ds-clasp\" viewBox=\"0 0 64 80\" aria-hidden=\"true\"><defs><clipPath id=\"clasp-above-slot\"><rect width=\"64\" height=\"79\"/></clipPath><clipPath id=\"clasp-shape\"><path d=\"M32 29C23.5 31 20.5 48 22.5 62C24 73.5 28.5 84 32 84C35.5 84 40 73.5 41.5 62C43.5 48 40.5 31 32 29Z\"/></clipPath></defs><rect x=\"29.4\" y=\"1.6\" width=\"5.2\" height=\"14\" rx=\"2.6\" fill=\"none\" stroke=\"#a7abb7\" stroke-width=\"2.2\"/><rect x=\"26\" y=\"14\" width=\"12\" height=\"11\" rx=\"3.2\" fill=\"#c9ccd6\"/><rect x=\"26\" y=\"19.4\" width=\"12\" height=\"2.2\" fill=\"#a7abb7\"/><rect x=\"30\" y=\"25\" width=\"4\" height=\"5\" fill=\"#7f8391\"/><g clip-path=\"url(#clasp-above-slot)\"><rect x=\"21.5\" y=\"48.5\" width=\"3\" height=\"5\" fill=\"#a7abb7\"/><rect x=\"17.5\" y=\"45\" width=\"5.5\" height=\"12\" rx=\"2\" fill=\"#a7abb7\"/><path fill=\"#c9ccd6\" fill-rule=\"evenodd\" d=\"M32 29C23.5 31 20.5 48 22.5 62C24 73.5 28.5 84 32 84C35.5 84 40 73.5 41.5 62C43.5 48 40.5 31 32 29ZM32 38C28.4 40 27.6 51 28.8 60.5C29.6 67 31 71.5 32 71.5C33 71.5 34.4 67 35.2 60.5C36.4 51 35.6 40 32 38Z\"/><path fill=\"#a7abb7\" d=\"M41.5 62C43.5 48 40.5 31 32 29C37.6 32.5 39.2 47 37 59.5C35.8 67 34.2 76 32 84C35.5 84 40 73.5 41.5 62Z\"/><path fill=\"none\" stroke=\"#7f8391\" stroke-width=\"1.1\" stroke-linecap=\"round\" d=\"M36.6 44C37.9 50 37.9 56 36.4 62\"/><rect y=\"73\" width=\"64\" height=\"7\" fill=\"#111216\" fill-opacity=\"0.4\" clip-path=\"url(#clasp-shape)\"/></g></svg></div></div>",
+      "css": ":host{font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-ground{background:#1d2640;height:340px;position:relative;overflow:hidden;}.ds-pend{position:absolute;left:50%;top:0;--l:200px;}.ds-strap{position:absolute;top:-60px;left:-15px;width:30px;height:calc(var(--l) + 24px);background:#e5e4df;transform-origin:50% 100%;overflow:hidden;box-shadow:inset 2px 0 0 rgba(255,255,255,.35),inset -3px 0 0 rgba(17,18,22,.2);writing-mode:vertical-rl;color:#1d2640;font-size:11px;font-weight:800;letter-spacing:.3em;font-variation-settings:\"wdth\" 125;display:flex;align-items:center;justify-content:flex-end;padding-bottom:40px;box-sizing:border-box;}.ds-strap.l{transform:rotate(-8deg);}.ds-strap.r{transform:rotate(8deg);box-shadow:inset 2px 0 0 rgba(255,255,255,.35),inset -3px 0 0 rgba(17,18,22,.2),-2px 0 3px rgba(17,18,22,.28);}.ds-hw{position:absolute;left:-32px;width:64px;overflow:visible;}.ds-ring{z-index:0;top:calc(var(--l) - 10px);height:44px;filter:drop-shadow(0 2px 2px rgba(10,11,18,.4));}.ds-tab{z-index:1;top:calc(var(--l) - 40px);height:46px;filter:drop-shadow(0 1.5px 1.2px rgba(10,11,18,.45));}.ds-clasp{z-index:2;top:calc(var(--l) + 22px);height:80px;filter:drop-shadow(0 3px 3px rgba(10,11,18,.45));}",
+      "note": "The webbing raster (assets/textures/webbing.png at 16px) is omitted in this preview; the tab shows flat concrete."
     },
     {
       "name": "Sticker with Caption",
@@ -926,12 +915,20 @@
       "css": ":host{--ground:#1d2640;--ground-deep:#151c31;--stock:#f2f2ee;--ink:#111216;--ink-2:#45474d;--metal:#c9ccd6;--ease-out:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-field{--field:#0E2A22;background:var(--field);padding:40px;}.ds-pin{position:relative;display:inline-block;margin:0;background:var(--stock);color:var(--ink);line-height:1.15;max-width:300px;padding:12px 18px 13px 34px;border-radius:0 6px 6px 0;clip-path:polygon(16px 0,100% 0,100% 100%,16px 100%,0 50%);}.ds-pin::before{content:'';position:absolute;left:13px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:var(--field);box-shadow:inset 0 0 0 2px rgba(17,18,22,.35);}.ds-pin b{display:block;white-space:nowrap;font-size:38px;font-weight:850;font-variation-settings:'wdth' 112;letter-spacing:-.02em;font-feature-settings:'tnum' 1;}.ds-pin span{display:block;margin-top:4px;font-size:13.5px;font-weight:600;color:var(--ink-2);}"
     },
     {
-      "name": "Achievement Ribbons",
+      "name": "Achievement Rank Tags",
       "kind": "custom",
-      "refersTo": "ribbon-band",
-      "description": "Rank ramp by tails and band width, same ink: winner two splayed tails full band, finalist one tail 88%, award no tail 76%.",
-      "html": "<div class=\"ds-ground\"><div class=\"ds-ev\"><div class=\"ds-ribbon is-winner\"><span class=\"ds-tail l\"></span><span class=\"ds-tail r\"></span><span class=\"ds-band\">Winner</span></div></div><div class=\"ds-ev\"><div class=\"ds-ribbon is-finalist\"><span class=\"ds-tail\"></span><span class=\"ds-band\">Finalist</span></div></div><div class=\"ds-ev\"><div class=\"ds-ribbon is-award\"><span class=\"ds-band\">Certified</span></div></div></div>",
-      "css": ":host{--ground:#1d2640;--ground-deep:#151c31;--stock:#f2f2ee;--ink:#111216;--ink-2:#45474d;--metal:#c9ccd6;--ease-out:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-ground{background:var(--ground);padding:24px 32px 150px;display:flex;gap:40px;}.ds-ev{position:relative;width:180px;height:110px;background:var(--stock);border-radius:18px;}.ds-ribbon{position:absolute;left:-12px;right:-12px;bottom:-18px;display:flex;justify-content:center;}.ds-band{position:relative;z-index:2;background:var(--ink);color:var(--stock);width:100%;text-align:center;padding:9px 8px;font-size:13px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;font-variation-settings:'wdth' 85;border-radius:3px;box-shadow:0 6px 10px -4px rgba(0,0,0,.4);}.ds-tail{position:absolute;top:28px;width:34px;background:#26282f;clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%);}.is-winner .ds-tail{height:118px;}.is-winner .ds-tail.l{left:34%;transform:rotate(7deg);}.is-winner .ds-tail.r{right:34%;transform:rotate(-7deg);}.is-finalist .ds-tail{height:74px;left:50%;margin-left:-17px;}.is-finalist .ds-band{width:88%;}.is-award .ds-band{width:76%;padding:7px 8px;}"
+      "refersTo": "rank-tag",
+      "description": "Rank told by tag cut, never colour: winner notched on the right, finalist outlined, award plain. Ink fill with stock print, 28px tall, printed-label type.",
+      "html": "<div class=\"ds-ground\"><span class=\"ds-rank is-winner\">Winner</span><span class=\"ds-rank is-finalist\">Finalist</span><span class=\"ds-rank\">Certified</span></div>",
+      "css": ":host{--ground:#e5e4df;--stock:#f2f2ee;--ink:#111216;font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-ground{background:var(--ground);padding:28px 32px;display:flex;gap:24px;align-items:center;}.ds-rank{display:inline-flex;align-items:center;min-height:28px;padding:0 11px;border-radius:3px;white-space:nowrap;background:var(--ink);color:var(--stock);font-size:12.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-variation-settings:'wdth' 85;}.ds-rank.is-winner{clip-path:polygon(0 0,100% 0,calc(100% - 9px) 50%,100% 100%,0 100%);padding-right:21px;}.ds-rank.is-finalist{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink);}"
+    },
+    {
+      "name": "Achievement Pass",
+      "kind": "custom",
+      "refersTo": "achievement-pass",
+      "description": "White sticker-radius pass with a 6px frame hanging by a short navy strap threaded into its slot from the navy reel strap; 4:3 photo, rank tag and year, 24px title, one story line. Rotated per item with the pivot at the rail.",
+      "html": "<div class=\"ds-ground\"><div class=\"ds-rail\"></div><article class=\"ds-card\"><span class=\"ds-short\"></span><span class=\"ds-slot\"></span><div class=\"ds-photo\"></div><div class=\"ds-body\"><p class=\"ds-meta\"><span class=\"ds-rank is-winner\">Winner</span><span class=\"ds-year\">2024</span></p><h3>Nusantara Code Cup</h3><p class=\"ds-story\">Best product among 214 teams.</p></div></article></div>",
+      "css": ":host{--navy:#1d2640;--ink:#111216;--ink-2:#45474d;--stock:#f2f2ee;font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-ground{background:#e5e4df;position:relative;padding:56px 40px 40px;overflow:hidden;}.ds-rail{position:absolute;left:0;right:0;top:0;height:26px;background:var(--navy);box-shadow:inset 0 -2px 0 rgba(0,0,0,.25),0 3px 6px -2px rgba(10,11,18,.35);}.ds-card{position:relative;width:300px;background:#fff;color:var(--ink);border-radius:16px;padding:30px 6px 10px;box-shadow:0 14px 28px -10px rgba(10,11,18,.55),0 2px 4px rgba(10,11,18,.25);transform:rotate(-2deg);transform-origin:50% -43px;}.ds-short{position:absolute;z-index:1;left:50%;top:-43px;width:22px;height:59px;margin-left:-11px;background:var(--navy);box-shadow:inset 2px 0 0 rgba(255,255,255,.12),inset -3px 0 0 rgba(0,0,0,.25),0 2px 3px rgba(10,11,18,.3);}.ds-slot{position:absolute;left:50%;top:11px;width:52px;height:11px;margin-left:-26px;border-radius:8px;background:#151c31;box-shadow:inset 0 2px 3px rgba(0,0,0,.35);}.ds-photo{aspect-ratio:4/3;border-radius:10px;background:#d6d5cf;}.ds-body{padding:14px 10px 4px;}.ds-meta{display:flex;align-items:center;justify-content:space-between;margin:0;}.ds-year{font-size:15px;font-weight:800;color:var(--ink-2);font-feature-settings:'tnum' 1;}.ds-body h3{margin:12px 0 0;font-size:24px;line-height:1.05;font-weight:850;font-variation-settings:'wdth' 115;letter-spacing:-.02em;}.ds-story{margin:6px 0 0;font-size:15px;line-height:1.4;font-weight:550;color:var(--ink-2);}.ds-rank{display:inline-flex;align-items:center;min-height:28px;padding:0 11px;border-radius:3px;background:var(--ink);color:var(--stock);font-size:12.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-variation-settings:'wdth' 85;}.ds-rank.is-winner{clip-path:polygon(0 0,100% 0,calc(100% - 9px) 50%,100% 100%,0 100%);padding-right:21px;}"
     },
     {
       "name": "Program Index",
@@ -977,7 +974,7 @@
   ],
   "narrative": {
     "northStar": "The Badge at the Fair",
-    "overview": "Recruiters meet this engineer the way they meet candidates at a career fair: by reading the badge. The page is sewn from two woven lanyard colourways, navy and concrete, panel to panel, with a stitched seam at every join; everything readable is printed on off-white PVC badge stock in near-black ink, hung from silver clip metal. Project screenshots are die-cut stickers with white kiss-cut borders slapped onto the webbing; metrics hang off them on die-cut tags tied with leader lines; achievements are a fanned collection of event badges whose satin ribbons carry rank by cut and length; activities are the event agenda; experience is the itinerary. One vertical cord runs down the left of the page and every section clips onto it.\n\nThe system is physical, not digital. Depth comes from objects lying on fabric (neutral dark drop shadows under hung or stuck things), never from glow, gloss, or gradient. State is told by form (a ribbon's tails, a tag's cut, a sticker lifting) and printed words, never by hue alone. The only saturated surfaces are the two webbings themselves; content never gets its own accent colour. One type family, Archivo variable, does everything by moving along its width axis: expanded black for names and display, normal width for reading, condensed caps for printed labels.\n\nThis file is derived from the shipped mockup (`mockup/index.html`, `mockup/styles.css`, `mockup/main.js`, `mockup/cv.html`). It is the spec for the production build (Next.js + SQLite, public `/`, `/projects/[slug]`, `/cv`, plus `/admin`). The owner's name, portrait, and GitHub account are real; every other name, metric, screenshot, and achievement in the mockup is synthetic and must be replaced (see the content checklist in Do's and Don'ts).\n\nThe two-colourway world replaced the original single ultramarine ground on 2026-11-14 at the owner's request (the ultramarine read as too loud). The home page and the CV carry the revision. The case study page has not been migrated yet (see below).",
+    "overview": "Recruiters meet this engineer the way they meet candidates at a career fair: by reading the badge. The page is sewn from two woven lanyard colourways, navy and concrete, panel to panel, with a stitched seam at every join; everything readable is printed on off-white PVC badge stock in near-black ink, hung from silver clip metal. Project screenshots are die-cut stickers with white kiss-cut borders slapped onto the webbing; metrics hang off them on die-cut tags tied with leader lines; achievements are photo passes hanging from a navy strap that rides slowly past, rank told by the cut of a tag; activities are the event agenda; experience is the itinerary. One vertical cord runs down the left of the page and every section clips onto it.\n\nThe system is physical, not digital. Depth comes from objects lying on fabric (neutral dark drop shadows under hung or stuck things), never from glow, gloss, or a metallic sheen. State is told by form (a tag's cut, a sticker lifting) and printed words, never by hue alone. The only saturated surfaces are the two webbings themselves; content never gets its own accent colour. One type family, Archivo variable, does everything by moving along its width axis: expanded black for names and display, normal width for reading, condensed caps for printed labels.\n\nThis file is derived from the shipped mockup (`mockup/index.html`, `mockup/styles.css`, `mockup/main.js`, `mockup/cv.html`). It is the spec for the production build (Next.js + SQLite, public `/`, `/projects/[slug]`, `/cv`, plus `/admin`). The owner's name, portrait, and GitHub account are real; every other name, metric, screenshot, and achievement in the mockup is synthetic and must be replaced (see the content checklist in Do's and Don'ts).\n\nThe two-colourway world replaced the original single ultramarine ground on 2026-11-14 at the owner's request (the ultramarine read as too loud). The home page and the CV carry the revision. The case study page has not been migrated yet (see below).",
     "keyCharacteristics": [
       "Two woven webbing colourways, navy and concrete, alternating section by section with the raster twill on every panel and a stitched seam at every join.",
       "Content on off-white badge stock in near-black ink; 18px card corners, 16px sticker corners, full pills for buttons.",
@@ -1015,7 +1012,7 @@
       },
       {
         "name": "The Printed Label Rule",
-        "body": "Uppercase tracked condensed caps exist only as print on a physical object (ribbon band, role tag, itinerary list label, strap, seal, the badge's header band, and on the CV the section tabs, cut tags, and dates). They never float above a heading as a section label.",
+        "body": "Uppercase tracked condensed caps exist only as print on a physical object (rank tag, role tag, itinerary list label, strap, seal, the badge's header band, and on the CV the section tabs, cut tags, and dates). They never float above a heading as a section label.",
         "section": "typography"
       },
       {
@@ -1035,68 +1032,68 @@
       }
     ],
     "dos": [
-      "**Do** put the weave on each section panel: the panel's ground colour plus `assets/textures/twill.png` at 24px, and on concrete panels a flat 55% concrete layer over the tile (written as a single-colour `linear-gradient`, which is a flat tint, not a gradient). Alternate navy and concrete in story order and sew every join with the seam.",
-      "**Do** produce woven materials as raster tiles from `mockup/assets-src/make_textures.py`: a 48px 2/2 twill (white thread highlight and deep `rgb(4,6,30)` shade as alpha over the ground, displayed at 24px) and a 32px ribbed webbing (displayed at 16px over concrete for the strap, its folded end, and the cord fill, and over ink for the fan stubs). Regenerate rather than hand-draw or approximate with CSS gradients.",
-      "**Do** draw the strap hardware as flat SVG facets from the four metal tokens, with the ring's top bar hidden inside the folded strap end and the clasp tip shown through the badge slot.",
-      "**Do** make seals, foils, and medals as flat one-ink discs with a stock ring; the \"foil\" on the winner badge is ink, not metallic.",
-      "**Do** tell state by form: ribbon tails and band width for rank, tag cut for role, sticker lift for focus, printed word always present.",
-      "**Do** use real raster screenshots of the actual product for stickers and prints (PNG, at least 1440x900 for desktop, 780x1688 for phone), cropped from the top-left, with honest alt text describing what the screen shows.",
-      "**Do** give every project one real metric on its pin, with what it measures in plain words.",
-      "**Do** set every comparable figure with tabular numbers.",
-      "**Do** keep every interaction keyboard reachable with a visible 3px focus ring (offset 3px, radius 6px) in the on-ground colour of its panel (stock on navy, ink on concrete), and ink on stock surfaces. Stock cards (project cards, the itinerary, event badges) keep an ink ring on either colourway.",
-      "**Do** use these motion constants: Lenis `lerp: 0.11, wheelMultiplier: 0.95`; pendulum `K = 36, C = 2.4` integrated per GSAP tick (dt capped at 40ms, sleeps when `|a| < 0.02` and `|v| < 0.05`), drag clamped to +/-38deg with velocity smoothed 0.6/0.4 and capped at 260deg/s on release, scroll velocity tugging the strap (`velocity * 0.9`, clamped +/-6) only while the hero is visible.",
-      "**Do** run the one authored entrance exactly once, defaults `expo.out`, after 0.12s: nav fades in (0.6s, at 0); the pendulum drops from -95vh (0.78s `power3.in`, at 0.05s) then kicks the spring by 58deg/s; stickers slap down from `scale 1.22, rotation 9, opacity 0` (0.5s `back.out(1.5)`, stagger 0.075s, at 0.62s); lede lines rise from `yPercent 108` (0.9s, stagger 0.09s, at 0.78s); hero buttons rise 14px (0.6s, stagger 0.07s, at 1.0s).",
-      "**Do** slap the stack chips on once at 82% viewport (from `scale 1.3, rotation +=10, opacity 0`, 0.45s `back.out(1.6)`, stagger 0.045s).",
-      "**Do** use the two CSS easings for state changes: `ease-out` `cubic-bezier(0.16, 1, 0.3, 1)` and `ease-in` `cubic-bezier(0.7, 0, 0.84, 0)`.",
-      "**Do** honour `prefers-reduced-motion: reduce` with the final state: no Lenis, no pendulum ticker, no entrance, no chip slap, leader lines and pins already drawn, cord fully drawn, fan laid out with zero duration, preview following with zero duration, CSS transitions at 1ms, and the badge flip replaced by a 180ms opacity cross-fade between faces with no 3D rotation.",
-      "**Do** keep the page fully readable with scripts off: GSAP absent means the badge, stickers, cards, fan row, and agenda all render static.",
-      "**Do** measure and fit the first name to the badge width in production (Next.js), stepping size or `wdth` down until it fits.",
-      "**Do** keep the owner's real details as they are: the name (Muhammad Jafar Fadli; the badge prints \"Jafar\" over \"Fadli\", the nav brand and strap read \"Jafar Fadli\"), the portrait (`mockup/assets/photos/owner-badge.jpg` and `owner-cutout.png`, provenance in `SOURCES.txt`), and the GitHub account `github.com/jafarfadli`.",
-      "**Do** replace the deliberate placeholders before launch: the email `hello@jafarfadli.example`, the domain `jafarfadli.example` (badge header band, CV contact list), and the LinkedIn URL `linkedin.example/in/jafarfadli` and its empty `#` link in the closing.",
-      "**Do** replace all remaining synthetic content before launch: the role, stack, location, and availability lines (confirm them with the owner); the four projects (Ledgerly, Rute, Kanbo, Pantau) with their copy, metrics, tags, and per-project field colours; `mockup/assets/screens/*.png` (generated mock screens); `mockup/assets/photos/act-*.jpg` (Unsplash stand-ins listed in `SOURCES.txt`); `mockup/assets/qr-cv.svg` (must encode the real `/cv` URL, stock background); the five achievements, six activities, three experience stops, education, GPA, and the CV text; remove the \"Mockup with sample content\" note and every \"(sample)\" marker.",
-      "**Do** keep provenance for every shipping raster (source or generator next to the asset).",
-      "**Do** print a result's before value as a legible line (\"from 13.1 days\") above the value, in `clip-metal` on the ink tag.",
-      "**Do** describe every architecture cord in the flows list under the diagram, in drawing order, and draw the cords from that list and the booth placements; never hand-draw connector paths.",
-      "**Do** drive the program index from scroll position (35% of the viewport, rAF-throttled), not IntersectionObserver.",
-      "**Do** render Live site and Code only when the project record has those URLs.",
-      "**Do** end a case study's pages with \"What I'd do next\" (index label \"Next steps\"), followed by the Next project section on the ground.",
-      "**Do** use a mid-flow frame of the demo recording as its poster, and keep its provenance next to the video.",
-      "**Do** autoplay a demo only muted, looping, while at least half visible, and with motion allowed; pause it when it leaves view and let a user pause stick.",
-      "**Do** draw lines (architecture cords) with `cubic-bezier(0.65, 0, 0.35, 1)`, the CSS twin of the leader lines' `power2.inOut`."
+      "- **Do** put the weave on each section panel: the panel's ground colour plus `assets/textures/twill.png` at 24px, and on concrete panels a flat 55% concrete layer over the tile (written as a single-colour `linear-gradient`, which is a flat tint, not a gradient). Alternate navy and concrete in story order and sew every join with the seam.",
+      "- **Do** produce woven materials as raster tiles from `mockup/assets-src/make_textures.py`: a 48px 2/2 twill (white thread highlight and deep `rgb(4,6,30)` shade as alpha over the ground, displayed at 24px) and a 32px ribbed webbing (displayed at 16px over concrete for the strap, its tab, and the cord fill, and over navy for the reel strap and each pass's short strap). Regenerate rather than hand-draw or approximate with CSS gradients.",
+      "- **Do** draw the strap hardware as flat SVG facets from the four metal tokens, with the ring's top bar hidden inside the tab's fold and the clasp's hook tip dropping into the badge slot.",
+      "- **Do** make seals and medals as flat one-ink discs with a stock ring; none is metallic.",
+      "- **Do** tell state by form: tag cut for rank and role, sticker lift for focus, printed word always present.",
+      "- **Do** use real raster screenshots of the actual product for stickers and prints (PNG, at least 1440x900 for desktop, 780x1688 for phone), cropped from the top-left, with honest alt text describing what the screen shows.",
+      "- **Do** give every project one real metric on its pin, with what it measures in plain words.",
+      "- **Do** set every comparable figure with tabular numbers.",
+      "- **Do** keep every interaction keyboard reachable with a visible 3px focus ring (offset 3px, radius 6px) in the on-ground colour of its panel (stock on navy, ink on concrete), and ink on stock surfaces. Stock cards (project cards, the itinerary) keep an ink ring on either colourway.",
+      "- **Do** use these motion constants: Lenis `lerp: 0.11, wheelMultiplier: 0.95`; pendulum `K = 36, C = 2.4` integrated per GSAP tick (dt capped at 40ms, sleeps when `|a| < 0.02` and `|v| < 0.05`), drag clamped to +/-38deg with velocity smoothed 0.6/0.4 and capped at 260deg/s on release, scroll velocity tugging the strap (`velocity * 0.9`, clamped +/-6) only while the hero is visible.",
+      "- **Do** run the one authored entrance exactly once, defaults `expo.out`, after 0.12s: nav fades in (0.6s, at 0); the pendulum drops from -95vh (0.78s `power3.in`, at 0.05s) then kicks the spring by 58deg/s; stickers slap down from `scale 1.22, rotation 9, opacity 0` (0.5s `back.out(1.5)`, stagger 0.075s, at 0.62s); lede lines rise from `yPercent 108` (0.9s, stagger 0.09s, at 0.78s); hero buttons rise 14px (0.6s, stagger 0.07s, at 1.0s).",
+      "- **Do** slap the stack chips on once at 82% viewport (from `scale 1.3, rotation +=10, opacity 0`, 0.45s `back.out(1.6)`, stagger 0.045s).",
+      "- **Do** use the two CSS easings for state changes: `ease-out` `cubic-bezier(0.16, 1, 0.3, 1)` and `ease-in` `cubic-bezier(0.7, 0, 0.84, 0)`.",
+      "- **Do** honour `prefers-reduced-motion: reduce` with the final state: no Lenis, no pendulum ticker, no entrance, no chip slap, leader lines and pins already drawn, cord fully drawn, the achievements reel standing still as a snap row, preview following with zero duration, CSS transitions at 1ms, and the badge flip replaced by a 180ms opacity cross-fade between faces with no 3D rotation.",
+      "- **Do** keep the page fully readable with scripts off: GSAP absent means the badge, stickers, cards, the achievements reel (without its second copy), and agenda all render static.",
+      "- **Do** measure and fit the first name to the badge width in production (Next.js), stepping size or `wdth` down until it fits.",
+      "- **Do** keep the owner's real details as they are: the name (Muhammad Jafar Fadli; the badge prints \"Jafar\" over \"Fadli\", the nav brand and strap read \"Jafar Fadli\"), the portrait (`mockup/assets/photos/owner-badge.jpg` and `owner-cutout.png`, provenance in `SOURCES.txt`), and the GitHub account `github.com/jafarfadli`.",
+      "- **Do** replace the deliberate placeholders before launch: the email `hello@jafarfadli.example`, the domain `jafarfadli.example` (badge header band, CV contact list), and the LinkedIn URL `linkedin.example/in/jafarfadli` and its empty `#` link in the closing.",
+      "- **Do** replace all remaining synthetic content before launch: the role, stack, location, and availability lines (confirm them with the owner); the four projects (Ledgerly, Rute, Kanbo, Pantau) with their copy, metrics, tags, and per-project field colours; `mockup/assets/screens/*.png` (generated mock screens); `mockup/assets/photos/act-*.jpg` (Unsplash stand-ins listed in `SOURCES.txt`); the achievement photos, which are temporary reuses of activity photos (act-stage, act-mentor, act-hackathon, act-workshop, act-conf) until the owner supplies real ones or approves dedicated placeholders; `mockup/assets/qr-cv.svg` (must encode the real `/cv` URL, stock background); the five achievements, six activities, three experience stops, education, GPA, and the CV text; remove the \"Mockup with sample content\" note and every \"(sample)\" marker.",
+      "- **Do** keep provenance for every shipping raster (source or generator next to the asset).",
+      "- **Do** print a result's before value as a legible line (\"from 13.1 days\") above the value, in `clip-metal` on the ink tag.",
+      "- **Do** describe every architecture cord in the flows list under the diagram, in drawing order, and draw the cords from that list and the booth placements; never hand-draw connector paths.",
+      "- **Do** drive the program index from scroll position (35% of the viewport, rAF-throttled), not IntersectionObserver.",
+      "- **Do** render Live site and Code only when the project record has those URLs.",
+      "- **Do** end a case study's pages with \"What I'd do next\" (index label \"Next steps\"), followed by the Next project section on the ground.",
+      "- **Do** use a mid-flow frame of the demo recording as its poster, and keep its provenance next to the video.",
+      "- **Do** autoplay a demo only muted, looping, while at least half visible, and with motion allowed; pause it when it leaves view and let a user pause stick.",
+      "- **Do** draw lines (architecture cords) with `cubic-bezier(0.65, 0, 0.35, 1)`, the CSS twin of the leader lines' `power2.inOut`."
     ],
     "donts": [
-      "**Don't** put eyebrow or kicker labels (small uppercase tracked text) above section headings or titles; printed labels live only on physical objects (ribbons, role tags, strap, seals, itinerary list labels).",
-      "**Don't** use gradient text, gradient fills, conic or holographic gradients, or a fake metallic or foil sheen on any surface, seal, ribbon, or clip.",
-      "**Don't** use glow, tinted halos, or coloured shadows; shadows are neutral near-black and offset down.",
-      "**Don't** introduce an accent colour or give roles or ranks their own hue; sections differ only by the two webbing colourways in fixed alternation, and everything else by cut, length, and the printed word.",
-      "**Don't** fake screenshots with styled divs or CSS mock UIs; use real raster screenshots.",
-      "**Don't** use monospace type as costume (no terminal prompts, no code-styled labels); there is no monospace in the system.",
-      "**Don't** add a marquee or ticker; at most one marquee may ever exist and none is used.",
-      "**Don't** use em dashes in copy; use commas, colons, or full stops.",
-      "**Don't** present synthetic or estimated metrics as real; a metric without a source does not ship.",
-      "**Don't** add a second type family or swap Archivo for a system display face.",
-      "**Don't** add a third colourway, a theme toggle, a dark-mode inversion, or a gradient between panels; navy and concrete are the whole set, and a join is always a stitched seam.",
-      "**Don't** give the strap, cord, or hardware their own per-panel colour; they are one material that crosses both colourways.",
-      "**Don't** render any copy in canvas, WebGL, or images; all text is DOM text.",
-      "**Don't** add hero stickers beyond the five slots or let them cross into the lanyard's half of the hero; the badge hangs alone on the right.",
-      "**Don't** show a sticker caption at rest; captions appear on hover or focus only (touch-only wide screens excepted).",
-      "**Don't** reintroduce leader lines, hero stickers, sticker captions, the fanned layout, the cursor preview, the cord, or clip marks under 860px.",
-      "**Don't** add a second column, a sidebar, skill bars or meters, or any colour beyond navy, ink, metal, and white to the CV, and never let it run past one A4 page. Icons on the CV are the small navy contact icons only.",
-      "**Don't** strike through before values or show change as struck-out text.",
-      "**Don't** repeat a screenshot within one page.",
-      "**Don't** title the last case study section \"Next\" or anything that reads as the next project; it is \"What I'd do next\".",
-      "**Don't** add a floating table of contents, a hero banner, or a reading progress bar other than the cord.",
-      "**Don't** tell booth kinds apart by colour; people, systems, and external services differ by form.",
-      "**Don't** autoplay a demo with sound or under reduced motion.",
-      "**Don't** show the \"Reading\" tag anywhere except the current index row on wide screens."
+      "- **Don't** put eyebrow or kicker labels (small uppercase tracked text) above section headings or titles; printed labels live only on physical objects (rank tags, role tags, strap, seals, itinerary list labels).",
+      "- **Don't** use gradient text, gradient fills, conic or holographic gradients, or a fake metallic or foil sheen on any surface, seal, tag, or clip. The only gradients are the shades named under Fold and hole shading and the mask that fades phone strap tops.",
+      "- **Don't** use glow, tinted halos, or coloured shadows; shadows are neutral near-black and offset down.",
+      "- **Don't** introduce an accent colour or give roles or ranks their own hue; sections differ only by the two webbing colourways in fixed alternation, and everything else by cut, length, and the printed word.",
+      "- **Don't** fake screenshots with styled divs or CSS mock UIs; use real raster screenshots.",
+      "- **Don't** use monospace type as costume (no terminal prompts, no code-styled labels); there is no monospace in the system.",
+      "- **Don't** add a marquee or ticker beyond the achievements reel. That reel is the one marquee, built because the owner asked for the motion (reference: danielsun.space); it must keep a visible pause button, pause on hover, focus and off screen, and stand still under reduced motion. A second moving strip is refused.",
+      "- **Don't** use em dashes in copy; use commas, colons, or full stops.",
+      "- **Don't** present synthetic or estimated metrics as real; a metric without a source does not ship.",
+      "- **Don't** add a second type family or swap Archivo for a system display face.",
+      "- **Don't** add a third colourway, a theme toggle, a dark-mode inversion, or a gradient between panels; navy and concrete are the whole set, and a join is always a stitched seam.",
+      "- **Don't** give the strap, cord, or hardware their own per-panel colour; they are one material that crosses both colourways.",
+      "- **Don't** render any copy in canvas, WebGL, or images; all text is DOM text.",
+      "- **Don't** add hero stickers beyond the five slots or let them cross into the lanyard's half of the hero; the badge hangs alone on the right.",
+      "- **Don't** show a sticker caption at rest; captions appear on hover or focus only (touch-only wide screens excepted).",
+      "- **Don't** reintroduce leader lines, hero stickers, sticker captions, the cursor preview, the cord, or clip marks under 860px.",
+      "- **Don't** add a second column, a sidebar, skill bars or meters, or any colour beyond navy, ink, metal, and white to the CV, and never let it run past one A4 page. Icons on the CV are the small navy contact icons only.",
+      "- **Don't** strike through before values or show change as struck-out text.",
+      "- **Don't** repeat a screenshot within one page.",
+      "- **Don't** title the last case study section \"Next\" or anything that reads as the next project; it is \"What I'd do next\".",
+      "- **Don't** add a floating table of contents, a hero banner, or a reading progress bar other than the cord.",
+      "- **Don't** tell booth kinds apart by colour; people, systems, and external services differ by form.",
+      "- **Don't** autoplay a demo with sound or under reduced motion.",
+      "- **Don't** show the \"Reading\" tag anywhere except the current index row on wide screens."
     ],
     "detectorExceptions": [
       "Nested cards: architecture booths are cards inside the twill field inside a stock page; the nesting is physical (objects on fabric on a sheet).",
       "Display headings at line-height 1.0: page headlines and program index rows set line-height 1; running paragraphs never go under 1.45.",
-      "Per-project field colour on the next-project card: record data outside the palette tokens, contained to the field."
+      "Per-project field colour on the next-project card: record data outside the palette tokens, contained to the field.",
+      "Marquee (achievements reel): the detector's marquee rule is ignored for mockup/index.html in .impeccable/config.json because the owner asked for this motion. For mockup/project.html the same ignore is a false positive: it loads the shared styles.css but has no reel element."
     ],
     "openIdeas": [
-      "Achievement badges could hang from short stubs of the two webbing colourways with the hero's metal clip, instead of the ink webbing stubs.",
       "The closing panel could show the strap's other end, closing the loop the hero opens.",
       "Seams could gain a fold edge (a thin shaded lip on the upper panel) so the join reads as sewn fabric rather than a dashed line alone."
     ],
