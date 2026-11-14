@@ -32,7 +32,7 @@
 /* ---------- header: the badge front ---------- */
 .cv-head { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 24mm; gap: 0 8mm; align-items: end; padding-bottom: 3mm; border-bottom: 2.5pt solid var(--navy); }
 .cv-head.cv-head-solo { grid-template-columns: minmax(0, 1fr); }
-.cv-head h1 { margin: 0; font-size: 28pt; white-space: nowrap; line-height: 0.9; font-weight: 900; font-variation-settings: "wdth" 125; letter-spacing: -0.03em; }
+.cv-head h1 { margin: 0; font-size: 28pt; text-wrap: balance; line-height: 0.9; font-weight: 900; font-variation-settings: "wdth" 125; letter-spacing: -0.03em; }
 .cv-head .cv-role { margin: 2.2mm 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 2.5mm; font-size: 12.5pt; font-weight: 750; text-transform: none; }
 .cv-head .contact { display: flex; flex-wrap: wrap; gap: 1.4mm 4.5mm; margin: 3mm 0 0; padding: 0; list-style: none; font-size: 8.8pt; color: var(--ink-2); }
 .cv-head .contact li { display: inline-flex; align-items: center; gap: 1.4mm; }
@@ -75,12 +75,12 @@
 .cv-lines li { display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; align-items: center; padding: 0.5mm 0; }
 .cv-lines .when { justify-self: end; }
 /* rank and role tags, told by their cut as on the site */
-.tag-cut { display: block; white-space: normal; line-height: 1.15; padding: 0.5mm 2mm 0.4mm; text-align: center; font-size: 6.8pt; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; font-variation-settings: "wdth" 85; background: var(--ink); color: var(--stock); border-radius: 0.5mm; }
-.tag-cut.winner, .tag-cut.speaker { clip-path: polygon(0 0, 100% 0, calc(100% - 1.6mm) 50%, 100% 100%, 0 100%); padding-right: 3mm; }
-.tag-cut.finalist, .tag-cut.volunteer { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 0.8pt var(--ink); }
-.tag-cut.award { background: var(--stock); color: var(--ink); }
-.tag-cut.organizer, .tag-cut.host { border-radius: 99px; }
-.tag-cut.mentor { border-radius: 0.5mm 0.5mm 2mm 2mm; }
+.cv-sheet .tag-cut { display: block; white-space: normal; line-height: 1.15; padding: 0.5mm 2mm 0.4mm; text-align: center; font-size: 6.8pt; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; font-variation-settings: "wdth" 85; background: var(--ink); color: var(--stock); border-radius: 0.5mm; }
+.cv-sheet .tag-cut.winner, .cv-sheet .tag-cut.speaker { clip-path: polygon(0 0, 100% 0, calc(100% - 1.6mm) 50%, 100% 100%, 0 100%); padding-right: 3mm; }
+.cv-sheet .tag-cut.finalist, .cv-sheet .tag-cut.volunteer { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 0.8pt var(--ink); }
+.cv-sheet .tag-cut.award { background: var(--stock); color: var(--ink); }
+.cv-sheet .tag-cut.organizer, .cv-sheet .tag-cut.host { border-radius: 99px; }
+.cv-sheet .tag-cut.mentor { border-radius: 0.5mm 0.5mm 2mm 2mm; }
 .cv-skills p { margin: 0 0 1.2mm; }
 .cv-skills b { display: inline-block; width: 24mm; font-size: 8.4pt; font-weight: 800; }
 .cv-skills .chips { display: inline; }

@@ -242,7 +242,14 @@ export function initHomeMotion(doc: Document): () => void {
     const track = reel?.querySelector<HTMLElement>("[data-reel-track]");
     const toggle = doc.querySelector<HTMLButtonElement>("[data-reel-toggle]");
     if (reel && track && toggle) {
-      const pace = () => track.style.setProperty("--reel-dur", `${Math.round(track.scrollWidth / 2 / 38)}s`); // about 38px a second
+      // About 38px a second. Rewriting the same value on resize would restart the running loop, so write only a change.
+      let paced = "";
+      const pace = () => {
+        const dur = `${Math.round(track.scrollWidth / 2 / 38)}s`;
+        if (dur === paced) return;
+        paced = dur;
+        track.style.setProperty("--reel-dur", dur);
+      };
       pace();
       on(win, "resize", pace);
       if (reduce) {

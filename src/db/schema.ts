@@ -98,10 +98,10 @@ export const achievements = sqliteTable("achievements", {
   rankLabel: text("rank_label").notNull(),
   description: text("description").notNull(),
   year: text("year").notNull(),
-  /** When set: foil seal on the fan badge and the hero seal sticker. */
+  /** When set: the foil seal on the hero seal sticker. */
   sealText: text("seal_text"),
   sealCaption: text("seal_caption"),
-  /** Bold lead of the fan caption, e.g. "Winner, Nusantara Code Cup 2024, software development". */
+  /** The seal sticker caption, e.g. "Winner, Nusantara Code Cup 2024, software development". */
   caption: text("caption").notNull(),
   /** Sentence after the caption. */
   story: text("story").notNull(),

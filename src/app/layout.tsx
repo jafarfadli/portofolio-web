@@ -18,7 +18,7 @@ const archivo = localFont({
 const MOTION_PENDING =
   '(function(){try{if(location.pathname==="/"&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion-pending")}catch(e){}})()';
 
-export const viewport: Viewport = { themeColor: "#2132d6" };
+export const viewport: Viewport = { themeColor: "#1d2640" };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const nonce = (await headers()).get("x-nonce") ?? undefined;

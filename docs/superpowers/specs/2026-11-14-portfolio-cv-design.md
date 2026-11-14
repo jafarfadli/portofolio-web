@@ -166,7 +166,7 @@ Rules:
   - Motion code loads only on the client and only for the islands present.
 - Accessibility:
   - WCAG 2.2 AA.
-  - Every interaction reachable by keyboard: flip button, fan buttons with arrow keys, agenda rows on focus, sticker links.
+  - Keyboard covers the achievements reel pause button, the agenda rows on focus, and the sticker links. The badge flip is pointer-only by the owner's decision (a short press, no flip button); everything on its back (Download CV, email, GitHub) is repeated elsewhere on the page.
   - `prefers-reduced-motion` renders final states, as the mockup does.
 - Content replaced at launch: every sample name, metric, screenshot, photo, and the QR target (the list is in DESIGN.md).
 
@@ -190,7 +190,7 @@ Rules:
 - **Integration**: role guard. Admin routes and actions return 404 or throw in `ROLE=public`. The revalidate endpoint rejects non-loopback requests and requests without the secret.
 - **E2E (Playwright)**:
   - Public home renders seeded content.
-  - Flip, fan, and agenda work by keyboard.
+  - The achievements reel pause button, the agenda rows, and the sticker links work by keyboard. The badge flip is pointer-only by the owner's decision, and everything on its back is repeated elsewhere on the page.
   - `/cv.pdf` downloads and is one page.
   - Admin flow: login, edit a project, public page shows the change after revalidate, build a CV profile, export PDF.
 - **Visual**: desktop 1440, mobile 390, and the CV page compared against the mockup review captures, with reduced motion for full pages.
