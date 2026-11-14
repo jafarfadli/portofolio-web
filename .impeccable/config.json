@@ -128,6 +128,28 @@
         ],
         "createdAt": "2026-11-14T13:29:24.899Z",
         "reason": "False positive: project.html loads the shared styles.css, whose .reel-track rule belongs to the home achievements reel; project.html has no reel element"
+      },
+      {
+        "rule": "undersized-ui-text",
+        "value": "*",
+        "files": [
+          "mockup/cv.html",
+          "src/app/cv/cv.css",
+          "src/components/cv/CvDocument.tsx"
+        ],
+        "createdAt": "2026-11-14T14:11:04.619Z",
+        "reason": "Sanctioned: the CV is an A4 print document sized in pt (DESIGN.md CV component, owner-approved); tags 6.8pt, chips 7.4pt, dates 7.8pt are print metadata, read zoomed as PDF; the 11px screen floor does not apply"
+      },
+      {
+        "rule": "line-length",
+        "value": "*",
+        "files": [
+          "mockup/cv.html",
+          "src/app/cv/cv.css",
+          "src/components/cv/CvDocument.tsx"
+        ],
+        "createdAt": "2026-11-14T14:11:04.644Z",
+        "reason": "Sanctioned: one-page A4 CV summary runs the full 180mm measure at 9.6pt, standard for a resume and needed for the one-page fit"
       }
     ]
   }
