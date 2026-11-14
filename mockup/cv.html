@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dimas Arkana, CV</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
+  <style>
+    :root { --ground:#2132d6; --ground-deep:#1a27ad; --stock:#f2f2ee; --paper:#ffffff; --ink:#111216; --ink-2:#45474d; --rule:#d9d9d4; --font:"Archivo", ui-sans-serif, system-ui, sans-serif; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body { background: var(--ground); font-family: var(--font); color: var(--ink); font-variation-settings: "wdth" 100; }
+    ::selection { background: var(--ground); color: var(--stock); }
+    a { color: inherit; text-underline-offset: 0.2em; }
+    :focus-visible { outline: 3px solid var(--stock); outline-offset: 3px; border-radius: 6px; }
+
+    .bar { position: sticky; top: 0; z-index: 5; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px clamp(16px, 4vw, 48px); background: rgba(26, 39, 173, 0.94); color: var(--stock); }
+    .bar a.back { display: inline-flex; align-items: center; gap: 8px; font-weight: 650; text-decoration: none; min-height: 44px; }
+    .bar a.back:hover { text-decoration: underline; }
+    .bar .note { font-size: 14px; color: #c8cef6; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 999px; border: 0; background: var(--stock); color: var(--ink); font: 700 15px var(--font); cursor: pointer; }
+    .btn:hover { background: #fff; }
+    .icon { width: 1.1em; height: 1.1em; fill: currentColor; }
+
+    .stage { padding: clamp(24px, 4vw, 56px) 16px 80px; }
+    .sheet { width: 210mm; min-height: 297mm; margin: 0 auto; background: var(--paper); padding: 12mm 15mm 11mm; box-shadow: 0 30px 70px -20px rgba(10, 11, 18, 0.6); font-size: 9.4pt; line-height: 1.33; }
+
+    header.cv { padding-bottom: 8px; border-bottom: 2.5pt solid var(--ground); }
+    header.cv h1 { margin: 0; font-size: 27pt; line-height: 1; font-weight: 900; font-variation-settings: "wdth" 120; letter-spacing: -0.02em; }
+    header.cv .role { margin: 5px 0 0; font-size: 12pt; font-weight: 700; }
+    header.cv .contact { display: flex; flex-wrap: wrap; gap: 3px 16px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 9.2pt; color: var(--ink-2); }
+
+    section.cv { margin-top: 9px; }
+    section.cv h2 { margin: 0 0 4px; font-size: 9pt; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; font-variation-settings: "wdth" 85; color: var(--ground); }
+    .summary { margin: 0; max-width: 64em; }
+    .entry { margin: 0 0 6px; }
+    .entry:last-child { margin-bottom: 0; }
+    .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+    .row b { font-weight: 750; }
+    .row .org { color: var(--ink-2); font-weight: 500; }
+    .row time, .row .when { flex: none; font-size: 9pt; color: var(--ink-2); font-feature-settings: "tnum" 1; }
+    ul.points { margin: 3px 0 0; padding-left: 14px; }
+    ul.points li { margin: 1px 0; }
+    ul.points li::marker { color: var(--ink-2); }
+    .stack { color: var(--ink-2); font-size: 9pt; }
+    ul.lines { margin: 0; padding: 0; list-style: none; }
+    ul.lines li { display: flex; justify-content: space-between; gap: 12px; padding: 1px 0; }
+    .skills p { margin: 0 0 2px; }
+    .skills b { font-weight: 750; }
+    
+    @media (max-width: 860px) {
+      .stage { padding: 16px 0 48px; overflow-x: auto; }
+      .sheet { transform-origin: top left; }
+      .bar .note { display: none; }
+    }
+    @page { size: A4; margin: 0; }
+    @media print {
+      body { background: #fff; }
+      .bar { display: none; }
+      .stage { padding: 0; }
+      .sheet { box-shadow: none; margin: 0; width: auto; min-height: 0; }
+      a { text-decoration: none; }
+      section.cv, .entry { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-left" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"/></symbol>
+    <symbol id="i-download" viewBox="0 0 256 256"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"/></symbol>
+  </svg>
+
+  <div class="bar">
+    <a class="back" href="index.html"><svg class="icon" aria-hidden="true"><use href="#i-left"/></svg>Back to the site</a>
+    <span class="note">Generated from the same records as the site. Sample content.</span>
+    <button class="btn" type="button" onclick="window.print()">Download CV <svg class="icon" aria-hidden="true"><use href="#i-download"/></svg></button>
+  </div>
+
+  <main class="stage">
+    <article class="sheet" aria-label="Curriculum vitae">
+      <header class="cv">
+        <h1>Dimas Arkana</h1>
+        <p class="role">Full-stack Engineer</p>
+        <ul class="contact">
+          <li>Jakarta, Indonesia (open to remote)</li>
+          <li><a href="mailto:hello@dimasarkana.example">hello@dimasarkana.example</a></li>
+          <li>dimasarkana.example</li>
+          <li>github.com/dimasarkana</li>
+          <li>linkedin.com/in/dimasarkana</li>
+        </ul>
+      </header>
+
+      <section class="cv">
+        <h2>Summary</h2>
+        <p class="summary">Full-stack engineer who owns features from database migration to interface. Ships TypeScript and Go products used by small businesses and commuters; strongest in Next.js, PostgreSQL, and API performance work.</p>
+      </section>
+
+      <section class="cv">
+        <h2>Experience</h2>
+        <div class="entry">
+          <div class="row"><span><b>Software Engineer</b>, <span class="org">Arunika Labs, Jakarta</span></span><time>Feb 2025 to present</time></div>
+          <ul class="points">
+            <li>Built the billing service in Go and the customer dashboard in Next.js for 3,000 business accounts.</li>
+            <li>Cut p95 API latency from 840 ms to 210 ms by reshaping queries and adding a Redis read-through cache.</li>
+          </ul>
+        </div>
+        <div class="entry">
+          <div class="row"><span><b>Software Engineer Intern</b>, <span class="org">Lumbung Data, remote</span></span><time>Jun 2024 to Dec 2024</time></div>
+          <ul class="points">
+            <li>Shipped a CSV import pipeline with column mapping and validation, now used by 40 enterprise clients.</li>
+          </ul>
+        </div>
+        <div class="entry">
+          <div class="row"><span><b>Teaching Assistant, Web Programming</b>, <span class="org">Institut Teknologi Nusantara</span></span><time>Jul 2023 to May 2024</time></div>
+          <ul class="points">
+            <li>Ran weekly labs for 120 students and rewrote the automated grading scripts.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="cv">
+        <h2>Selected projects</h2>
+        <div class="entry">
+          <div class="row"><span><b>Ledgerly</b>, invoicing for small shops</span><span class="when">2025</span></div>
+          <ul class="points"><li>Used by 1,200 shops; average time to get paid dropped from 13.1 to 9.4 days. <span class="stack">Next.js, Go, PostgreSQL, Midtrans</span></li></ul>
+        </div>
+        <div class="entry">
+          <div class="row"><span><b>Rute</b>, live bus arrivals for Jakarta commuters</span><span class="when">2024</span></div>
+          <ul class="points"><li>Arrival times refresh every 15 seconds from GPS feeds. <span class="stack">React Native, Go, Redis</span></li></ul>
+        </div>
+        <div class="entry">
+          <div class="row"><span><b>Kanbo</b>, realtime team boards</span><span class="when">2024</span></div>
+          <ul class="points"><li>Presence updates under 120 ms for teams of 3 to 30. <span class="stack">Next.js, WebSockets, PostgreSQL</span></li></ul>
+        </div>
+        <div class="entry">
+          <div class="row"><span><b>Pantau</b>, open-source uptime monitor and status page</span><span class="when">2023 to present</span></div>
+          <ul class="points"><li>Single-binary deploy; 640 GitHub stars and 31 contributors. <span class="stack">Go, SQLite, HTMX</span></li></ul>
+        </div>
+      </section>
+
+      <section class="cv">
+          <h2>Achievements</h2>
+          <ul class="lines">
+            <li><span><b>Winner</b>, Nusantara Code Cup, software development</span><span class="when">2024</span></li>
+            <li><span>AWS Certified Developer, Associate</span><span class="when">2025</span></li>
+            <li><span><b>Finalist</b>, Hackathon Jakarta Pintar (top 10 of 214)</span><span class="when">2023</span></li>
+            <li><span>Honorable mention, Regional Programming Contest</span><span class="when">2023</span></li>
+            <li><span>Dean's List, five semesters</span><span class="when">2021 to 2023</span></li>
+          </ul>
+        </section>
+      <section class="cv">
+          <h2>Activities</h2>
+          <ul class="lines">
+            <li><span>Speaker, JakWeb Meetup #42</span><span class="when">2025</span></li>
+            <li><span>Organizer, Ruang Kode Hackathon (300 participants)</span><span class="when">2024</span></li>
+            <li><span>Mentor, Campus Code Camp</span><span class="when">2024</span></li>
+            <li><span>Host, Open Source Saturday</span><span class="when">2023</span></li>
+          </ul>
+        </section>
+
+      <section class="cv">
+          <h2>Education</h2>
+          <div class="entry">
+            <div class="row"><span><b>B.Sc. Computer Science</b></span><span class="when">2020 to 2024</span></div>
+            <div>Institut Teknologi Nusantara, GPA 3.71 / 4.00</div>
+          </div>
+        </section>
+        <section class="cv skills">
+          <h2>Skills</h2>
+          <p><b>Languages:</b> TypeScript, Go, SQL, Python</p>
+          <p><b>Web:</b> Next.js, React, React Native, Tailwind CSS</p>
+          <p><b>Data and infra:</b> PostgreSQL, Redis, Docker, Playwright</p>
+        </section>
+    </article>
+  </main>
+</body>
+</html>

@@ -1,0 +1,741 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-14T06:13:37+00:00",
+  "title": "Design System: Lanyard & Badge",
+  "extensions": {
+    "colorMeta": {
+      "lanyard-ultramarine": {
+        "role": "primary",
+        "displayName": "Lanyard Ultramarine",
+        "canonical": "#2132d6",
+        "oklch": "oklch(44.3% 0.243 267.7)",
+        "tonalRamp": [
+          "#030726",
+          "#0e1b5c",
+          "#1d3399",
+          "#2e4cda",
+          "#4b72ff",
+          "#789eff",
+          "#a8c7ff",
+          "#dbeeff"
+        ]
+      },
+      "lanyard-deep": {
+        "role": "primary",
+        "displayName": "Lanyard Deep",
+        "canonical": "#1a27ad",
+        "oklch": "oklch(37.9% 0.206 268.0)",
+        "tonalRamp": [
+          "#030822",
+          "#111f54",
+          "#23388c",
+          "#3653c8",
+          "#5377ef",
+          "#7fa0fe",
+          "#adc7ff",
+          "#deeeff"
+        ]
+      },
+      "badge-stock": {
+        "role": "neutral",
+        "displayName": "Badge Stock",
+        "canonical": "#f2f2ee",
+        "oklch": "oklch(96.0% 0.005 106.5)",
+        "tonalRamp": [
+          "#0b0b09",
+          "#252522",
+          "#42423f",
+          "#61615e",
+          "#82827f",
+          "#a5a5a1",
+          "#c9c9c5",
+          "#efefeb"
+        ]
+      },
+      "kiss-cut-white": {
+        "role": "neutral",
+        "displayName": "Kiss-cut White",
+        "canonical": "#ffffff",
+        "oklch": "oklch(100.0% 0.000 89.9)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "print-ink": {
+        "role": "neutral",
+        "displayName": "Print Ink",
+        "canonical": "#111216",
+        "oklch": "oklch(18.3% 0.008 274.4)",
+        "tonalRamp": [
+          "#0a0b0f",
+          "#242529",
+          "#404247",
+          "#606166",
+          "#818287",
+          "#a3a5aa",
+          "#c7c9cf",
+          "#edeef4"
+        ]
+      },
+      "print-ink-soft": {
+        "role": "neutral",
+        "displayName": "Print Ink Soft",
+        "canonical": "#45474d",
+        "oklch": "oklch(39.8% 0.010 271.1)",
+        "tonalRamp": [
+          "#090b10",
+          "#23252a",
+          "#404248",
+          "#5f6167",
+          "#808289",
+          "#a2a5ac",
+          "#c6c9d0",
+          "#eceef6"
+        ]
+      },
+      "ink-raised": {
+        "role": "neutral",
+        "displayName": "Ink Raised",
+        "canonical": "#24262e",
+        "oklch": "oklch(27.0% 0.015 274.3)",
+        "tonalRamp": [
+          "#090b12",
+          "#23252d",
+          "#3f424a",
+          "#5e616a",
+          "#7f828c",
+          "#a2a5af",
+          "#c6c9d3",
+          "#ebeef9"
+        ]
+      },
+      "ribbon-tail": {
+        "role": "neutral",
+        "displayName": "Ribbon Tail",
+        "canonical": "#26282f",
+        "oklch": "oklch(27.8% 0.013 272.9)",
+        "tonalRamp": [
+          "#090b11",
+          "#23252c",
+          "#3f4249",
+          "#5f6169",
+          "#7f828b",
+          "#a2a5ae",
+          "#c6c9d2",
+          "#ebeef8"
+        ]
+      },
+      "clip-metal": {
+        "role": "neutral",
+        "displayName": "Clip Metal",
+        "canonical": "#c9ccd6",
+        "oklch": "oklch(84.6% 0.014 272.7)",
+        "tonalRamp": [
+          "#090b11",
+          "#23252c",
+          "#3f424a",
+          "#5e616a",
+          "#7f828b",
+          "#a2a5ae",
+          "#c6c9d3",
+          "#ebeef8"
+        ]
+      },
+      "on-ground": {
+        "role": "neutral",
+        "displayName": "On-ground",
+        "canonical": "#f2f2ee",
+        "oklch": "oklch(96.0% 0.005 106.5)",
+        "tonalRamp": [
+          "#0b0b09",
+          "#252522",
+          "#42423f",
+          "#61615e",
+          "#82827f",
+          "#a5a5a1",
+          "#c9c9c5",
+          "#efefeb"
+        ]
+      },
+      "on-ground-soft": {
+        "role": "neutral",
+        "displayName": "On-ground Soft",
+        "canonical": "#c8cef6",
+        "oklch": "oklch(86.0% 0.056 278.4)",
+        "tonalRamp": [
+          "#0a0b12",
+          "#222432",
+          "#3d4057",
+          "#5a5f7e",
+          "#7b80a1",
+          "#9fa3be",
+          "#c5c8db",
+          "#eceef9"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "badge-name": {
+        "displayName": "Badge Name",
+        "purpose": "First name on the badge front; sized at 22% of badge width and must be measured to fit."
+      },
+      "closing-display": {
+        "displayName": "Closing Display",
+        "purpose": "The closing headline only."
+      },
+      "section-headline": {
+        "displayName": "Section Headline",
+        "purpose": "One per section, expanded black."
+      },
+      "section-headline-mobile": {
+        "displayName": "Section Headline (under 860px)",
+        "purpose": "Section headline on small screens, narrower width axis."
+      },
+      "agenda-title": {
+        "displayName": "Agenda Title",
+        "purpose": "Condensed uppercase poster line of each activity row."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "Hero statement, max two lines."
+      },
+      "statement-large": {
+        "displayName": "Statement Large",
+        "purpose": "About paragraph."
+      },
+      "metric": {
+        "displayName": "Metric",
+        "purpose": "The number on a pin; tabular figures."
+      },
+      "metric-big": {
+        "displayName": "Metric Big",
+        "purpose": "The number on pins of full-width project cards."
+      },
+      "event-year": {
+        "displayName": "Event Year",
+        "purpose": "Year at the bottom of each achievement badge."
+      },
+      "project-title": {
+        "displayName": "Project Title",
+        "purpose": "Outcome sentence on a project card."
+      },
+      "project-title-name": {
+        "displayName": "Project Title Name",
+        "purpose": "Leading product name inside the project title."
+      },
+      "event-title": {
+        "displayName": "Event Title",
+        "purpose": "Achievement badge title."
+      },
+      "stop-title": {
+        "displayName": "Stop Title",
+        "purpose": "Role on an itinerary stop."
+      },
+      "badge-role": {
+        "displayName": "Badge Role",
+        "purpose": "Role line on the badge front."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Reading text on the ground."
+      },
+      "body-card": {
+        "displayName": "Body Card",
+        "purpose": "Reading text on stock cards, max 60ch."
+      },
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "Project year/role line and pin explanations."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "Pill button label."
+      },
+      "brand": {
+        "displayName": "Brand",
+        "purpose": "Owner wordmark in the nav."
+      },
+      "nav-link": {
+        "displayName": "Nav Link",
+        "purpose": "Section links in the nav."
+      },
+      "printed-label": {
+        "displayName": "Printed Label",
+        "purpose": "Condensed caps printed on a physical object: ribbon bands, role tags. Never above a heading."
+      },
+      "strap-print": {
+        "displayName": "Strap Print",
+        "purpose": "Owner name printed vertically on the lanyard strap."
+      },
+      "cv-name": {
+        "displayName": "CV Name",
+        "purpose": "Name at the top of the CV sheet."
+      },
+      "cv-section-label": {
+        "displayName": "CV Section Label",
+        "purpose": "Ultramarine uppercase section labels on the CV."
+      },
+      "cv-body": {
+        "displayName": "CV Body",
+        "purpose": "CV reading text."
+      }
+    },
+    "shadows": [
+      {
+        "name": "hang",
+        "value": "0 28px 60px -18px rgba(10,11,18,.62), 0 6px 14px -6px rgba(10,11,18,.4)",
+        "purpose": "Hanging or lying cards: badge faces, project cards, event badges, itinerary."
+      },
+      {
+        "name": "sticker",
+        "value": "0 14px 28px -10px rgba(10,11,18,.55), 0 2px 4px rgba(10,11,18,.25)",
+        "purpose": "Stickers at rest, chips, the sample note."
+      },
+      {
+        "name": "lift",
+        "value": "0 30px 50px -16px rgba(10,11,18,.7), 0 6px 12px -4px rgba(10,11,18,.35)",
+        "purpose": "Peeled sticker and agenda photo preview."
+      },
+      {
+        "name": "print",
+        "value": "0 26px 50px -18px rgba(0,0,0,.55)",
+        "purpose": "Screenshot prints inside a project field."
+      },
+      {
+        "name": "button-stock",
+        "value": "0 6px 16px -8px rgba(10,11,18,.7)",
+        "purpose": "Stock pill at rest."
+      },
+      {
+        "name": "button-stock-hover",
+        "value": "0 10px 22px -8px rgba(10,11,18,.75)",
+        "purpose": "Stock pill on hover."
+      },
+      {
+        "name": "clip-mark",
+        "value": "0 3px 6px rgba(10,11,18,.4)",
+        "purpose": "Clip marks on the cord."
+      },
+      {
+        "name": "clasp",
+        "value": "0 4px 8px rgba(10,11,18,.45)",
+        "purpose": "Metal clasp ring."
+      },
+      {
+        "name": "ribbon-band",
+        "value": "0 6px 10px -4px rgba(0,0,0,.4)",
+        "purpose": "Achievement ribbon band."
+      },
+      {
+        "name": "cv-sheet",
+        "value": "0 30px 70px -20px rgba(10,11,18,.6)",
+        "purpose": "CV sheet on screen only; removed in print."
+      },
+      {
+        "name": "slot-inset",
+        "value": "inset 0 2px 3px rgba(0,0,0,.35)",
+        "purpose": "Punched slot hole in badge stock."
+      },
+      {
+        "name": "strap-edges",
+        "value": "inset 3px 0 0 rgba(255,255,255,.05), inset -3px 0 0 rgba(0,0,0,.35)",
+        "purpose": "Webbing strap edges."
+      },
+      {
+        "name": "seal-ring",
+        "value": "inset 0 0 0 5px #111216, inset 0 0 0 7px #f2f2ee",
+        "purpose": "Stock ring inside flat ink seals."
+      },
+      {
+        "name": "chip-kiss-cut",
+        "value": "0 0 0 5px #ffffff",
+        "purpose": "White kiss-cut outline on stack chips, combined with the sticker shadow."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Default CSS easing for every state change."
+      },
+      {
+        "name": "ease-in",
+        "value": "cubic-bezier(0.7, 0, 0.84, 0)",
+        "purpose": "Exits."
+      },
+      {
+        "name": "button-press",
+        "value": "160ms ease-out; active translateY(1px) scale(0.98)",
+        "purpose": "Button press."
+      },
+      {
+        "name": "button-colour",
+        "value": "200ms ease-out",
+        "purpose": "Button background, border, colour, shadow."
+      },
+      {
+        "name": "badge-flip",
+        "value": "760ms ease-out rotateY(180deg), perspective 1400px; focus moves after 380ms",
+        "purpose": "Badge front/back flip."
+      },
+      {
+        "name": "sticker-peel",
+        "value": "420ms ease-out; rotate(rot*0.3) translateY(-8px) scale(1.04); others opacity .38 saturate(.6) 300ms",
+        "purpose": "Hero sticker peek."
+      },
+      {
+        "name": "sticker-caption",
+        "value": "opacity 220ms, transform 320ms ease-out, 6px slide",
+        "purpose": "Caption pill in/out."
+      },
+      {
+        "name": "print-straighten",
+        "value": "600ms ease-out; rotate(0) translateY(-6px)",
+        "purpose": "Screenshot print on project card hover."
+      },
+      {
+        "name": "nav",
+        "value": "hide translateY(-100%) 380ms; solid bg 300ms; underline 260ms; solid after 40px; hide when scrolling down past 0.8vh",
+        "purpose": "Nav behaviour."
+      },
+      {
+        "name": "agenda-row",
+        "value": "row opacity 260ms to .4; title translateX clamp(12px,2vw,32px) 520ms",
+        "purpose": "Agenda hover/focus."
+      },
+      {
+        "name": "lenis",
+        "value": "lerp 0.11, wheelMultiplier 0.95; anchor scrollTo offset -24, duration 1.1",
+        "purpose": "Smooth scroll (off under reduced motion)."
+      },
+      {
+        "name": "pendulum",
+        "value": "acc = -36*a - 2.4*v; dt cap 40ms; sleep |a|<0.02 and |v|<0.05; drag clamp +/-38deg; velocity smoothing 0.6/0.4; release cap 260deg/s; click = <6px travel and <350ms; flip kick +/-34; entrance kick 58; scroll tug velocity*0.9 clamped +/-6 while hero visible",
+        "purpose": "Badge spring physics (K=36, C=2.4)."
+      },
+      {
+        "name": "entrance",
+        "value": "delay .12, defaults expo.out: nav opacity 0.6s@0; pendulum from y -95vh 0.78s power3.in @0.05 then kick 58; stickers from opacity 0 scale 1.22 rot 9, 0.5s back.out(1.5) stagger .075 @0.62; lede lines yPercent 108 0.9s stagger .09 @0.78; hero buttons y 14 opacity 0 0.6s stagger .07 @1.0",
+        "purpose": "The one authored first-viewport entrance."
+      },
+      {
+        "name": "chip-slap",
+        "value": "from opacity 0 scale 1.3 rotation +=10, 0.45s back.out(1.6), stagger .045, once at top 82%",
+        "purpose": "Stack chips."
+      },
+      {
+        "name": "leader-draw",
+        "value": "once at top 72%: dot scale 0>1 0.35s back.out(2); path dashoffset 1>0 0.8s power2.inOut @0.05; pin from y10 scale .96 opacity 0, 0.55s expo.out @0.62",
+        "purpose": "Metric pin leader lines."
+      },
+      {
+        "name": "fan-layout",
+        "value": "spread clamp(innerWidth*.135,150,220); x d*spread; y |d|*26; rot d*7.5deg; scale 1-|d|*.075; hidden |d|>2; z 10-|d|; 0.7s expo.out; deal-in 0.95s at top 78% from y60 scale .9 opacity 0; drag step >48px; origin 50% -60px",
+        "purpose": "Achievement fan."
+      },
+      {
+        "name": "agenda-preview",
+        "value": "quickTo x/y 0.55s power3, offset +28px x; show 0.4s expo.out random rot -4..4; hide 0.25s power2.in to scale .85",
+        "purpose": "Cursor-trailing activity photo."
+      },
+      {
+        "name": "cord-draw",
+        "value": "scaleY 0>1 scrub 0.4 from #about top-bottom to #contact bottom-bottom; fade-in 400ms",
+        "purpose": "The page cord."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "no Lenis, no pendulum, no entrance; transitions 1ms; flip becomes 180ms linear opacity cross-fade; cord full; leaders drawn; fan and preview duration 0",
+        "purpose": "prefers-reduced-motion: final readable state."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide-hero-tune",
+        "value": "max-width: 1100px",
+        "purpose": "Statement to left 52%, phone sticker to left 44%."
+      },
+      {
+        "name": "compact",
+        "value": "max-width: 860px",
+        "purpose": "Single-column hero, 2 stickers, no captions, pins re-anchored, no leaders, fan as scroll-snap row, inline agenda photos, no clip marks, nav brand + CV only."
+      },
+      {
+        "name": "wide-js",
+        "value": "min-width: 861px",
+        "purpose": "JS 'wide' test: fan enabled."
+      },
+      {
+        "name": "touch-wide",
+        "value": "(hover: none) and (min-width: 861px)",
+        "purpose": "Sticker captions always visible, smaller."
+      },
+      {
+        "name": "print",
+        "value": "@page A4, margin 0",
+        "purpose": "CV prints on one A4 page."
+      }
+    ],
+    "zIndex": [
+      {
+        "name": "weave",
+        "value": 0
+      },
+      {
+        "name": "main",
+        "value": 1
+      },
+      {
+        "name": "cord",
+        "value": 2
+      },
+      {
+        "name": "hero-sticker",
+        "value": 2
+      },
+      {
+        "name": "pendulum",
+        "value": 3
+      },
+      {
+        "name": "hero-sticker-peeled",
+        "value": 5
+      },
+      {
+        "name": "field-slot",
+        "value": 2
+      },
+      {
+        "name": "leader",
+        "value": 3
+      },
+      {
+        "name": "pin",
+        "value": 4
+      },
+      {
+        "name": "fan-item",
+        "value": "10 - distance"
+      },
+      {
+        "name": "agenda-preview",
+        "value": 40
+      },
+      {
+        "name": "nav",
+        "value": 50
+      },
+      {
+        "name": "sample-note",
+        "value": 60
+      },
+      {
+        "name": "skip-link",
+        "value": 100
+      }
+    ],
+    "materials": [
+      {
+        "name": "twill",
+        "source": "mockup/assets/textures/twill.png",
+        "generator": "mockup/assets-src/make_textures.py twill(size=48, tw=2, seed=7)",
+        "display": "background-size 24px 24px over #2132d6, on a position:fixed layer"
+      },
+      {
+        "name": "webbing",
+        "source": "mockup/assets/textures/webbing.png",
+        "generator": "mockup/assets-src/make_textures.py webbing(w=32, h=32, rib=3, seed=11)",
+        "display": "background-size 16px 16px over #111216 (strap, cord fill, fan stubs)"
+      }
+    ],
+    "fonts": [
+      {
+        "family": "Archivo",
+        "axes": {
+          "wdth": "62..125",
+          "wght": "100..900"
+        },
+        "load": "https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Stock Button",
+      "kind": "button",
+      "refersTo": "button-stock",
+      "description": "Primary action on the ultramarine ground.",
+      "html": "<div class=\"ds-ground\"><a class=\"ds-btn ds-btn-stock\" href=\"#\">Download CV <svg viewBox=\"0 0 256 256\" width=\"18\" height=\"18\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.320,0l40-40a8,8,0,0,0-11.320-11.320L136,124.690V32a8,8,0,0,0-16,0v92.690L93.660,98.340a8,8,0,0,0-11.320,11.320Z\"/></svg></a></div>",
+      "css": ":host{--ground:#2132d6;--ground-deep:#1a27ad;--stock:#f2f2ee;--ink:#111216;--ink-2:#45474d;--metal:#c9ccd6;--ease-out:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-ground{background:var(--ground);padding:24px;}.ds-btn{display:inline-flex;align-items:center;gap:.5em;min-height:48px;padding:0 1.25em;border-radius:999px;border:2px solid transparent;font:700 16px/1 Archivo,ui-sans-serif,system-ui,sans-serif;letter-spacing:.005em;text-decoration:none;cursor:pointer;transition:transform 160ms var(--ease-out),background-color 200ms var(--ease-out),color 200ms var(--ease-out),border-color 200ms var(--ease-out),box-shadow 200ms var(--ease-out);}.ds-btn:active{transform:translateY(1px) scale(.98);}.ds-btn-stock{background:var(--stock);color:var(--ink);box-shadow:0 6px 16px -8px rgba(10,11,18,.7);}.ds-btn-stock:hover{background:#fff;box-shadow:0 10px 22px -8px rgba(10,11,18,.75);}.ds-btn-stock:focus-visible{outline:3px solid var(--stock);outline-offset:3px;}"
+    },
+    {
+      "name": "Line Button",
+      "kind": "button",
+      "refersTo": "button-line",
+      "description": "Secondary action on the ground, beside a stock button.",
+      "html": "<div class=\"ds-ground\"><a class=\"ds-btn ds-btn-line\" href=\"#\">Download CV <svg viewBox=\"0 0 256 256\" width=\"18\" height=\"18\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.320,0l40-40a8,8,0,0,0-11.320-11.320L136,124.690V32a8,8,0,0,0-16,0v92.690L93.660,98.340a8,8,0,0,0-11.320,11.320Z\"/></svg></a></div>",
+      "css": ":host{--ground:#2132d6;--ground-deep:#1a27ad;--stock:#f2f2ee;--ink:#111216;--ink-2:#45474d;--metal:#c9ccd6;--ease-out:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-ground{background:var(--ground);padding:24px;}.ds-btn{display:inline-flex;align-items:center;gap:.5em;min-height:48px;padding:0 1.25em;border-radius:999px;border:2px solid transparent;font:700 16px/1 Archivo,ui-sans-serif,system-ui,sans-serif;letter-spacing:.005em;text-decoration:none;cursor:pointer;transition:transform 160ms var(--ease-out),background-color 200ms var(--ease-out),color 200ms var(--ease-out),border-color 200ms var(--ease-out),box-shadow 200ms var(--ease-out);}.ds-btn:active{transform:translateY(1px) scale(.98);}.ds-btn-line{background:none;border-color:rgba(242,242,238,.75);color:var(--stock);}.ds-btn-line:hover{border-color:var(--stock);background:rgba(242,242,238,.08);}.ds-btn-line:focus-visible{outline:3px solid var(--stock);outline-offset:3px;}"
+    },
+    {
+      "name": "Ink Button",
+      "kind": "button",
+      "refersTo": "button-ink",
+      "description": "Primary action on stock surfaces (Case study, badge-back Download CV).",
+      "html": "<div class=\"ds-stock\"><a class=\"ds-btn ds-btn-ink\" href=\"#\">Case study <svg viewBox=\"0 0 256 256\" width=\"18\" height=\"18\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z\"/></svg></a></div>",
+      "css": ":host{--ground:#2132d6;--ground-deep:#1a27ad;--stock:#f2f2ee;--ink:#111216;--ink-2:#45474d;--metal:#c9ccd6;--ease-out:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-stock{background:var(--stock);padding:24px;border-radius:18px;}.ds-btn{display:inline-flex;align-items:center;gap:.5em;min-height:48px;padding:0 1.25em;border-radius:999px;border:2px solid transparent;font:700 16px/1 Archivo,ui-sans-serif,system-ui,sans-serif;letter-spacing:.005em;text-decoration:none;cursor:pointer;transition:transform 160ms var(--ease-out),background-color 200ms var(--ease-out),color 200ms var(--ease-out),border-color 200ms var(--ease-out),box-shadow 200ms var(--ease-out);}.ds-btn:active{transform:translateY(1px) scale(.98);}.ds-btn-ink{background:var(--ink);color:var(--stock);}.ds-btn-ink:hover{background:#24262e;}.ds-btn-ink:focus-visible{outline:3px solid var(--ink);outline-offset:3px;}"
+    },
+    {
+      "name": "Navigation",
+      "kind": "nav",
+      "refersTo": "nav",
+      "description": "72px fixed bar: owner wordmark, section links with scale-in underline, stock CV pill.",
+      "html": "<header class=\"ds-nav\"><a class=\"ds-brand\" href=\"#\">Dimas Arkana</a><nav class=\"ds-links\"><a href=\"#\" aria-current=\"true\">Work</a><a href=\"#\">Achievements</a><a href=\"#\">Activities</a><a href=\"#\">Experience</a></nav><a class=\"ds-btn ds-btn-stock\" href=\"#\">Download CV</a></header>",
+      "css": ":host{--ground:#2132d6;--ground-deep:#1a27ad;--stock:#f2f2ee;--ink:#111216;--ink-2:#45474d;--metal:#c9ccd6;--ease-out:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-btn{display:inline-flex;align-items:center;gap:.5em;min-height:48px;padding:0 1.25em;border-radius:999px;border:2px solid transparent;font:700 16px/1 Archivo,ui-sans-serif,system-ui,sans-serif;letter-spacing:.005em;text-decoration:none;cursor:pointer;transition:transform 160ms var(--ease-out),background-color 200ms var(--ease-out),color 200ms var(--ease-out),border-color 200ms var(--ease-out),box-shadow 200ms var(--ease-out);}.ds-btn:active{transform:translateY(1px) scale(.98);}.ds-nav{display:flex;align-items:center;justify-content:space-between;gap:24px;height:72px;padding:0 24px;background:var(--ground);color:var(--stock);}.ds-brand{font-weight:800;font-variation-settings:'wdth' 118;font-size:17px;letter-spacing:.01em;color:inherit;text-decoration:none;white-space:nowrap;}.ds-links{display:flex;gap:28px;}.ds-links a{position:relative;padding:8px 0;color:inherit;text-decoration:none;font-weight:600;font-size:15px;}.ds-links a::after{content:'';position:absolute;left:0;right:0;bottom:2px;height:2px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform 260ms var(--ease-out);}.ds-links a:hover::after,.ds-links a[aria-current='true']::after{transform:scaleX(1);}.ds-links a:focus-visible{outline:3px solid var(--stock);outline-offset:3px;}.ds-btn-stock{min-height:42px;font-size:15px;background:var(--stock);color:var(--ink);}"
+    },
+    {
+      "name": "Stack Chip",
+      "kind": "chip",
+      "refersTo": "stack-chip",
+      "description": "Stack items as stock pill stickers with a white kiss-cut outline, each at its own small angle.",
+      "html": "<ul class=\"ds-ground ds-chips\"><li class=\"ds-chip\" style=\"--rot:-3deg\">TypeScript</li><li class=\"ds-chip\" style=\"--rot:2deg\">Next.js</li><li class=\"ds-chip\" style=\"--rot:4deg\">Go</li></ul>",
+      "css": ":host{--ground:#2132d6;--ground-deep:#1a27ad;--stock:#f2f2ee;--ink:#111216;--ink-2:#45474d;--metal:#c9ccd6;--ease-out:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-ground{background:var(--ground);padding:28px;}.ds-chips{display:flex;flex-wrap:wrap;gap:14px 12px;list-style:none;margin:0;}.ds-chip{display:inline-flex;align-items:center;min-height:46px;padding:0 18px;border-radius:999px;background:var(--stock);color:var(--ink);font-weight:700;font-size:16.5px;box-shadow:0 0 0 5px #fff,0 14px 28px -10px rgba(10,11,18,.55),0 2px 4px rgba(10,11,18,.25);transform:rotate(var(--rot,0deg));}"
+    },
+    {
+      "name": "Role Tags",
+      "kind": "chip",
+      "refersTo": "role-tag",
+      "description": "Activity roles told apart by cut, not colour: speaker notch, organizer pill, mentor rounded bottom, volunteer outline.",
+      "html": "<div class=\"ds-ground\"><span class=\"ds-role\" data-role=\"speaker\">Speaker</span><span class=\"ds-role\" data-role=\"organizer\">Organizer</span><span class=\"ds-role\" data-role=\"mentor\">Mentor</span><span class=\"ds-role\" data-role=\"volunteer\">Volunteer</span></div>",
+      "css": ":host{--ground:#2132d6;--ground-deep:#1a27ad;--stock:#f2f2ee;--ink:#111216;--ink-2:#45474d;--metal:#c9ccd6;--ease-out:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-ground{background:var(--ground);padding:24px;display:flex;gap:12px;flex-wrap:wrap;}.ds-role{display:inline-flex;align-items:center;min-height:34px;padding:0 14px;background:var(--stock);color:var(--ink);font-size:12.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-variation-settings:'wdth' 85;border-radius:3px;}.ds-role[data-role='speaker']{clip-path:polygon(0 0,100% 0,calc(100% - 10px) 50%,100% 100%,0 100%);padding-right:22px;}.ds-role[data-role='organizer']{border-radius:999px;}.ds-role[data-role='mentor']{border-radius:3px 3px 14px 14px;}.ds-role[data-role='volunteer']{background:transparent;color:var(--stock);box-shadow:inset 0 0 0 2px var(--stock);}"
+    },
+    {
+      "name": "Hero Badge Front",
+      "kind": "card",
+      "refersTo": "badge-face",
+      "description": "PVC badge face: punched slot, ink rule, expanded black first name, role, stack, flip pill, ink availability band.",
+      "html": "<div class=\"ds-ground\"><div class=\"ds-badge\"><span class=\"ds-slot\"></span><div class=\"ds-rule\"></div><h1 class=\"ds-name\"><span>Dimas</span><small>Arkana</small></h1><p class=\"ds-role\">Full-stack Engineer</p><p class=\"ds-stack\">TypeScript, Next.js, Go, PostgreSQL</p><div class=\"ds-foot\"><div class=\"ds-fliprow\"><span>CV and contact on the back</span><button class=\"ds-flip\" type=\"button\">Flip</button></div><p class=\"ds-avail\"><span>Open to full-time roles</span><span>Jakarta or remote</span></p></div></div></div>",
+      "css": ":host{--ground:#2132d6;--ground-deep:#1a27ad;--stock:#f2f2ee;--ink:#111216;--ink-2:#45474d;--metal:#c9ccd6;--ease-out:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-ground{background:var(--ground);padding:32px;}.ds-badge{--w:300px;width:var(--w);aspect-ratio:360/510;background:var(--stock);color:var(--ink);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;padding:0 22px;box-shadow:0 28px 60px -18px rgba(10,11,18,.62),0 6px 14px -6px rgba(10,11,18,.4);}.ds-slot{width:74px;height:13px;border-radius:8px;background:var(--ground-deep);margin:18px auto;box-shadow:inset 0 2px 3px rgba(0,0,0,.35);}.ds-rule{border-bottom:2px solid var(--ink);margin-top:6px;}.ds-name{margin:22px 0 0;line-height:.86;}.ds-name span{display:block;font-size:calc(var(--w)*.22);font-weight:900;font-variation-settings:'wdth' 125;letter-spacing:-.035em;}.ds-name small{display:block;margin-top:8px;font-size:28px;font-weight:500;letter-spacing:-.01em;}.ds-role{margin:18px 0 0;font-size:19px;font-weight:750;}.ds-stack{margin:6px 0 0;font-size:15px;color:var(--ink-2);}.ds-foot{margin:auto -22px 0;}.ds-fliprow{display:flex;justify-content:space-between;align-items:center;padding:0 22px 12px;font-size:13px;font-weight:650;color:var(--ink-2);}.ds-flip{min-height:40px;padding:0 14px;border-radius:999px;border:2px solid var(--ink);background:transparent;color:var(--ink);font:700 13.5px Archivo,sans-serif;cursor:pointer;transition:background-color 180ms var(--ease-out),color 180ms var(--ease-out);}.ds-flip:hover{background:var(--ink);color:var(--stock);}.ds-flip:focus-visible{outline:3px solid var(--ink);outline-offset:3px;}.ds-avail{display:flex;justify-content:space-between;gap:12px;margin:0;background:var(--ink);color:var(--stock);padding:15px 22px;font-size:14.5px;font-weight:700;}"
+    },
+    {
+      "name": "Sticker with Caption",
+      "kind": "custom",
+      "refersTo": "sticker",
+      "description": "Die-cut screenshot sticker with white kiss-cut border; peels on hover/focus and shows an ink caption pill.",
+      "html": "<div class=\"ds-ground\"><a class=\"ds-sticker\" href=\"#\" style=\"--rot:-7deg\"><span class=\"ds-shot\"></span><span class=\"ds-cap\">Ledgerly: invoicing for 1,200 small shops</span></a></div>",
+      "css": ":host{--ground:#2132d6;--ground-deep:#1a27ad;--stock:#f2f2ee;--ink:#111216;--ink-2:#45474d;--metal:#c9ccd6;--ease-out:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-ground{background:var(--ground);padding:40px 40px 80px;}.ds-sticker{position:relative;display:block;width:240px;aspect-ratio:1.6;background:#fff;padding:7px;border-radius:16px;box-shadow:0 14px 28px -10px rgba(10,11,18,.55),0 2px 4px rgba(10,11,18,.25);transform:rotate(var(--rot));transition:transform 420ms var(--ease-out),box-shadow 420ms var(--ease-out);text-decoration:none;}.ds-shot{display:block;width:100%;height:100%;border-radius:10px;background:#e9e9e4;}.ds-cap{position:absolute;left:50%;top:calc(100% + 14px);transform:translate(-50%,-6px);opacity:0;white-space:nowrap;background:var(--ink);color:var(--stock);border-radius:999px;padding:9px 14px;font-size:14px;font-weight:650;transition:opacity 220ms var(--ease-out),transform 320ms var(--ease-out);}.ds-sticker:hover,.ds-sticker:focus-visible{transform:rotate(calc(var(--rot)*.3)) translateY(-8px) scale(1.04);box-shadow:0 30px 50px -16px rgba(10,11,18,.7),0 6px 12px -4px rgba(10,11,18,.35);outline:none;}.ds-sticker:hover .ds-cap,.ds-sticker:focus-visible .ds-cap{opacity:1;transform:translate(-50%,0);}"
+    },
+    {
+      "name": "Metric Pin",
+      "kind": "custom",
+      "refersTo": "metric-pin",
+      "description": "Die-cut hang tag pointing at the screenshot, eyelet showing the field colour; one real metric with tabular figures.",
+      "html": "<div class=\"ds-field\"><p class=\"ds-pin\"><b>9.4 days</b><span>average time to get paid</span></p></div>",
+      "css": ":host{--ground:#2132d6;--ground-deep:#1a27ad;--stock:#f2f2ee;--ink:#111216;--ink-2:#45474d;--metal:#c9ccd6;--ease-out:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-field{--field:#0E2A22;background:var(--field);padding:40px;}.ds-pin{position:relative;display:inline-block;margin:0;background:var(--stock);color:var(--ink);line-height:1.15;max-width:300px;padding:12px 18px 13px 34px;border-radius:0 6px 6px 0;clip-path:polygon(16px 0,100% 0,100% 100%,16px 100%,0 50%);}.ds-pin::before{content:'';position:absolute;left:13px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:var(--field);box-shadow:inset 0 0 0 2px rgba(17,18,22,.35);}.ds-pin b{display:block;white-space:nowrap;font-size:38px;font-weight:850;font-variation-settings:'wdth' 112;letter-spacing:-.02em;font-feature-settings:'tnum' 1;}.ds-pin span{display:block;margin-top:4px;font-size:13.5px;font-weight:600;color:var(--ink-2);}"
+    },
+    {
+      "name": "Achievement Ribbons",
+      "kind": "custom",
+      "refersTo": "ribbon-band",
+      "description": "Rank ramp by tails and band width, same ink: winner two splayed tails full band, finalist one tail 88%, award no tail 76%.",
+      "html": "<div class=\"ds-ground\"><div class=\"ds-ev\"><div class=\"ds-ribbon is-winner\"><span class=\"ds-tail l\"></span><span class=\"ds-tail r\"></span><span class=\"ds-band\">Winner</span></div></div><div class=\"ds-ev\"><div class=\"ds-ribbon is-finalist\"><span class=\"ds-tail\"></span><span class=\"ds-band\">Finalist</span></div></div><div class=\"ds-ev\"><div class=\"ds-ribbon is-award\"><span class=\"ds-band\">Certified</span></div></div></div>",
+      "css": ":host{--ground:#2132d6;--ground-deep:#1a27ad;--stock:#f2f2ee;--ink:#111216;--ink-2:#45474d;--metal:#c9ccd6;--ease-out:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-ground{background:var(--ground);padding:24px 32px 150px;display:flex;gap:40px;}.ds-ev{position:relative;width:180px;height:110px;background:var(--stock);border-radius:18px;}.ds-ribbon{position:absolute;left:-12px;right:-12px;bottom:-18px;display:flex;justify-content:center;}.ds-band{position:relative;z-index:2;background:var(--ink);color:var(--stock);width:100%;text-align:center;padding:9px 8px;font-size:13px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;font-variation-settings:'wdth' 85;border-radius:3px;box-shadow:0 6px 10px -4px rgba(0,0,0,.4);}.ds-tail{position:absolute;top:28px;width:34px;background:#26282f;clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%);}.is-winner .ds-tail{height:118px;}.is-winner .ds-tail.l{left:34%;transform:rotate(7deg);}.is-winner .ds-tail.r{right:34%;transform:rotate(-7deg);}.is-finalist .ds-tail{height:74px;left:50%;margin-left:-17px;}.is-finalist .ds-band{width:88%;}.is-award .ds-band{width:76%;padding:7px 8px;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Badge at the Fair",
+    "overview": "Recruiters meet this engineer the way they meet candidates at a career fair: by reading the badge. The whole page is a woven ultramarine lanyard; everything readable is printed on off-white PVC badge stock in near-black ink, hung from silver clip metal. Project screenshots are die-cut stickers with white kiss-cut borders slapped onto the ground; metrics hang off them on die-cut tags tied with leader lines; achievements are a fanned collection of event badges whose satin ribbons carry rank by cut and length; activities are the event agenda; experience is the itinerary. One vertical cord runs down the left of the page and every section clips onto it.\n\nThe system is physical, not digital. Depth comes from objects lying on fabric (neutral dark drop shadows under hung or stuck things), never from glow, gloss, or gradient. State is told by form (a ribbon's tails, a tag's cut, a sticker lifting) and printed words, never by hue alone. There is one accent world, ultramarine, and it is the ground itself; content never gets its own accent colour. One type family, Archivo variable, does everything by moving along its width axis: expanded black for names and display, normal width for reading, condensed caps for printed labels.\n\nThis file is derived from the shipped mockup (`mockup/index.html`, `mockup/styles.css`, `mockup/main.js`, `mockup/cv.html`). It is the spec for the production build (Next.js + SQLite, public `/`, `/projects/[slug]`, `/cv`, plus `/admin`). Every name, metric, photo, screenshot, and achievement in the mockup is synthetic and must be replaced (see Content rules in Do's and Don'ts).",
+    "keyCharacteristics": [
+      "Full-bleed woven ultramarine ground, raster twill tile, fixed behind every scroll.",
+      "Content on off-white badge stock in near-black ink; 18px card corners, 16px sticker corners, full pills for buttons.",
+      "One family, Archivo variable (wdth 62 to 125, wght 100 to 900), roles separated by width as much as weight.",
+      "Physical motion: a damped pendulum badge, stickers that slap down, leader lines that draw to the result.",
+      "State by form and printed word, never by colour alone.",
+      "Every creative moment has a plain readable path; reduced motion renders every section in its final state."
+    ],
+    "rules": [
+      {
+        "name": "The One Ground Rule",
+        "body": "Ultramarine is the ground, not a highlight. Never put ultramarine text, borders, or fills on the web page's stock surfaces; on the CV it appears only as the header rule and section labels.",
+        "section": "colors"
+      },
+      {
+        "name": "The State By Form Rule",
+        "body": "Rank, role, and status are told by cut, length, and the printed word. Two items that differ only by hue are a defect.",
+        "section": "colors"
+      },
+      {
+        "name": "The Press Palette Rule",
+        "body": "Stock, white, ink, metal. A new colour needs a physical reason (it is a material on a badge or lanyard), or it does not ship.",
+        "section": "colors"
+      },
+      {
+        "name": "The Width Axis Rule",
+        "body": "Hierarchy moves on `wdth` as much as on weight: names and display at 118 to 125, reading at 96 to 100, printed labels at 72 to 85. Never fake width with `transform: scaleX` or letter-spacing.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Numbers Rule",
+        "body": "Any figure the eye compares (metrics, years, dates, GPA, latency) sets `font-feature-settings: \"tnum\" 1`.",
+        "section": "typography"
+      },
+      {
+        "name": "The Printed Label Rule",
+        "body": "Uppercase tracked condensed caps exist only as print on a physical object (ribbon band, role tag, itinerary list label, strap, seal). They never float above a heading as a section label.",
+        "section": "typography"
+      },
+      {
+        "name": "The Neutral Shadow Rule",
+        "body": "Every shadow is near-black and offset down. A shadow tinted with the ground, the field colour, or white is a glow and is banned.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Hole Not Light Rule",
+        "body": "Insets are only for things cut into material (slots, eyelets, webbing edges). Never use an inset as a highlight or rim light.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** keep the woven ground fixed and full-bleed: `lanyard-ultramarine` plus `assets/textures/twill.png` at 24px on a `position: fixed` layer behind everything (never on a scrolling layer).",
+      "**Do** produce woven materials as raster tiles from `mockup/assets-src/make_textures.py`: a 48px 2/2 twill (white thread highlight and deep `rgb(4,6,30)` shade as alpha over the ground, displayed at 24px) and a 32px ribbed webbing (displayed at 16px over ink for the strap, cord fill, and fan stubs). Regenerate rather than hand-draw or approximate with CSS gradients.",
+      "**Do** make seals, foils, and medals as flat one-ink discs with a stock ring; the \"foil\" on the winner badge is ink, not metallic.",
+      "**Do** tell state by form: ribbon tails and band width for rank, tag cut for role, sticker lift for focus, printed word always present.",
+      "**Do** use real raster screenshots of the actual product for stickers and prints (PNG, at least 1440x900 for desktop, 780x1688 for phone), cropped from the top-left, with honest alt text describing what the screen shows.",
+      "**Do** give every project one real metric on its pin, with what it measures in plain words.",
+      "**Do** set every comparable figure with tabular numbers.",
+      "**Do** keep every interaction keyboard reachable with a visible 3px focus ring (stock on the ground, ink on stock surfaces, offset 3px, radius 6px).",
+      "**Do** use these motion constants: Lenis `lerp: 0.11, wheelMultiplier: 0.95`; pendulum `K = 36, C = 2.4` integrated per GSAP tick (dt capped at 40ms, sleeps when `|a| < 0.02` and `|v| < 0.05`), drag clamped to +/-38deg with velocity smoothed 0.6/0.4 and capped at 260deg/s on release, scroll velocity tugging the strap (`velocity * 0.9`, clamped +/-6) only while the hero is visible.",
+      "**Do** run the one authored entrance exactly once, defaults `expo.out`, after 0.12s: nav fades in (0.6s, at 0); the pendulum drops from -95vh (0.78s `power3.in`, at 0.05s) then kicks the spring by 58deg/s; stickers slap down from `scale 1.22, rotation 9, opacity 0` (0.5s `back.out(1.5)`, stagger 0.075s, at 0.62s); lede lines rise from `yPercent 108` (0.9s, stagger 0.09s, at 0.78s); hero buttons rise 14px (0.6s, stagger 0.07s, at 1.0s).",
+      "**Do** slap the stack chips on once at 82% viewport (from `scale 1.3, rotation +=10, opacity 0`, 0.45s `back.out(1.6)`, stagger 0.045s).",
+      "**Do** use the two CSS easings for state changes: `ease-out` `cubic-bezier(0.16, 1, 0.3, 1)` and `ease-in` `cubic-bezier(0.7, 0, 0.84, 0)`.",
+      "**Do** honour `prefers-reduced-motion: reduce` with the final state: no Lenis, no pendulum ticker, no entrance, no chip slap, leader lines and pins already drawn, cord fully drawn, fan laid out with zero duration, preview following with zero duration, CSS transitions at 1ms, and the badge flip replaced by a 180ms opacity cross-fade between faces with no 3D rotation.",
+      "**Do** keep the page fully readable with scripts off: GSAP absent means the badge, stickers, cards, fan row, and agenda all render static.",
+      "**Do** measure and fit the first name to the badge width in production (Next.js), stepping size or `wdth` down until it fits.",
+      "**Do** replace all synthetic content before launch: the owner name \"Dimas Arkana\", role, stack, location, availability, email `hello@dimasarkana.example` and social URLs; the four projects (Ledgerly, Rute, Kanbo, Pantau) with their copy, metrics, tags, and per-project field colours; `mockup/assets/screens/*.png` (generated mock screens); `mockup/assets/photos/act-*.jpg` (Unsplash stand-ins listed in `SOURCES.txt`); `mockup/assets/qr-cv.svg` (must encode the real `/cv` URL, stock background); the five achievements, six activities, three experience stops, education, GPA, and the CV text; remove the \"Mockup with sample content\" note and every \"(sample)\" marker.",
+      "**Do** keep provenance for every shipping raster (source or generator next to the asset)."
+    ],
+    "donts": [
+      "**Don't** put eyebrow or kicker labels (small uppercase tracked text) above section headings or titles; printed labels live only on physical objects (ribbons, role tags, strap, seals, itinerary list labels).",
+      "**Don't** use gradient text, gradient fills, conic or holographic gradients, or a fake metallic or foil sheen on any surface, seal, ribbon, or clip.",
+      "**Don't** use glow, tinted halos, or coloured shadows; shadows are neutral near-black and offset down.",
+      "**Don't** introduce a second accent colour or give sections, roles, or ranks their own hue; differentiate by cut, length, and the printed word.",
+      "**Don't** fake screenshots with styled divs or CSS mock UIs; use real raster screenshots.",
+      "**Don't** use monospace type as costume (no terminal prompts, no code-styled labels); there is no monospace in the system.",
+      "**Don't** add a marquee or ticker; at most one marquee may ever exist and none is used.",
+      "**Don't** use em dashes in copy; use commas, colons, or full stops.",
+      "**Don't** present synthetic or estimated metrics as real; a metric without a source does not ship.",
+      "**Don't** add a second type family or swap Archivo for a system display face.",
+      "**Don't** add a dark-mode inversion of the ground; the ultramarine lanyard is the one theme.",
+      "**Don't** render any copy in canvas, WebGL, or images; all text is DOM text.",
+      "**Don't** add hero stickers beyond the five slots or let them cover the badge name at rest.",
+      "**Don't** reintroduce leader lines, sticker captions, the fanned layout, the cursor preview, or clip marks under 860px.",
+      "**Don't** use ultramarine on the CV beyond the header rule and section labels, add a second column, icons, photos, or skill bars, or let it run past one A4 page."
+    ]
+  }
+}

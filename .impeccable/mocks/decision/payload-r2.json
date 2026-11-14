@@ -1,0 +1,63 @@
+{
+  "title": "Choose the visual world",
+  "question": "Re-roll 1 assigned Bench Notebook. Keep it, take my pick or the category standard, or re-roll again.",
+  "options": [
+    {
+      "id": "assigned",
+      "kind": "assigned",
+      "label": "Bench Notebook",
+      "kicker": "THE ROLL",
+      "lineage": "engineering computation pads and dated lab notebooks",
+      "thesis": "The portfolio is the engineer's own notebook sheet: work taped in, results annotated, every entry dated.",
+      "palette": ["#E4ECD6", "#9DBF8A", "#25292B", "#2546B8"],
+      "materials": ["pale green computation paper with grid", "translucent tape", "graphite lettering", "blue ballpoint annotation"],
+      "viewport": "A notebook sheet whose title block is the nav; the name is lettered across the grid and project prints are taped over its edge.",
+      "risk": "Tips into scrapbook kitsch if tape and annotations appear everywhere instead of where proof lives.",
+      "raised": [
+        {"from": "growth-metamorphosis-branching-ikebana-ma-arrangement", "raise": "Each view keeps one primary print and leaves a charged field of empty grid."},
+        {"from": "architecture-inhabitable-space-daylight-section", "raise": "Dates are the structural ruler: every entry hangs off one tabular date rule."},
+        {"from": "signals-instruments-seven-segment-alarm-clock", "raise": "Absent states are designed: a missing screenshot shows a labelled 'print pending' frame."},
+        {"from": "medium-native-fluid-ink-basin", "raise": "Motion obeys paper physics: tape tension, sheet weight, settle, never arbitrary easing."},
+        {"from": "eboy-pixorama-metropolis", "raise": "Closer inspection rewards: hovering a print reveals its annotations, never required to understand."},
+        {"from": "variety-telop-caption-field", "raise": "Annotation size maps to impact; the biggest result gets the biggest note."}
+      ],
+      "html": ".impeccable/mocks/decision/assigned-r2.html",
+      "comp": ".impeccable/mocks/decision/assigned-r2.webp"
+    },
+    {
+      "id": "model-pick",
+      "kind": "pick",
+      "label": "Sticker Lid",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "engineers' laptop lids covered in die-cut stickers",
+      "thesis": "Every project is a die-cut sticker on the engineer's laptop lid.",
+      "palette": ["#C9CCD1", "#F7F7F7", "#141518", "#FF4F1F"],
+      "materials": ["bead-blasted aluminium", "white-bordered vinyl stickers"],
+      "viewport": "A brushed aluminium lid full-bleed; the name is a vinyl lettering sticker, projects are stickers around it.",
+      "risk": "Laptop stickers are the first idea many dev portfolios reach for when they want personality.",
+      "html": ".impeccable/mocks/decision/model-pick-r2.html",
+      "comp": ".impeccable/mocks/decision/model-pick-r2.webp"
+    },
+    {"id": "challenger-ikebana", "kind": "challenger", "catalogId": "growth-metamorphosis-branching-ikebana-ma-arrangement", "label": "Ikebana Ma", "verdict": "declined", "lineage": "tokonoma ikebana", "thesis": "Three projects arranged as primary, secondary, supporting stems.", "palette": ["#ECE8DF", "#6E6253", "#3E5BA9"], "materials": ["plaster", "bronze"], "viewport": "An alcove with one dominant project print.", "case": "Fuses as a sparse showcase, but recruiters gain nothing from the metaphor.", "risk": "Too quiet to scan.", "kept": "Active emptiness, one primary line."},
+    {"id": "challenger-daylight", "kind": "challenger", "catalogId": "architecture-inhabitable-space-daylight-section", "label": "Daylight Section", "verdict": "declined", "lineage": "architectural sections", "thesis": "A career read as rooms lit by moving light.", "palette": ["#F1EFEA", "#2B2B2B", "#E8B547"], "materials": ["limewash", "poche"], "viewport": "One long building section with years as light bands.", "case": "Fuses as a timeline with mood; recruiters do not read sections.", "risk": "Atmosphere over facts.", "kept": "Time stamps as structure."},
+    {"id": "challenger-segment", "kind": "challenger", "catalogId": "signals-instruments-seven-segment-alarm-clock", "label": "Seven-Segment", "verdict": "declined", "lineage": "LED clocks and scoreboards", "thesis": "Career stats lit on a scoreboard mask.", "palette": ["#0D0D0D", "#FF3B2F", "#2A1B1A"], "materials": ["LED cells", "matte panel"], "viewport": "A scoreboard of years, projects, wins.", "case": "Fuses into stat theatre and the dark-tech rut; hides the work.", "risk": "Numbers without proof.", "kept": "Absent states are designed too."},
+    {"id": "challenger-inkbasin", "kind": "challenger", "catalogId": "medium-native-fluid-ink-basin", "label": "Ink Basin", "verdict": "declined", "lineage": "suminagashi marbling", "thesis": "The page is a liquid surface the cursor stirs.", "palette": ["#F4F3EF", "#22305E", "#1A1A1A"], "materials": ["sumi ink", "water"], "viewport": "A marbled basin with the name in the still margin.", "case": "Fuses as a WebGL toy; heavy and unrelated to shipped work.", "risk": "Performance and relevance.", "kept": "Motion obeys physical law."},
+    {"id": "challenger-pixorama", "kind": "challenger", "catalogId": "eboy-pixorama-metropolis", "label": "Pixorama City", "verdict": "declined", "lineage": "eBoy isometric pixel cities", "thesis": "Projects as buildings in a zoomable pixel city.", "palette": ["#FF2E4C", "#00C2FF", "#FFD400", "#1B1B1B"], "materials": ["hard pixels", "isometric blocks"], "viewport": "A pixel city block with project buildings.", "case": "Fuses as a playful map, but screenshots cannot live in its pixel grid.", "risk": "Novelty over clarity.", "kept": "Detail rewards deeper zoom."},
+    {"id": "challenger-telop", "kind": "challenger", "catalogId": "variety-telop-caption-field", "label": "Telop Captions", "verdict": "declined", "lineage": "Japanese variety-show captions", "thesis": "Outlined captions shout the highlights over the work.", "palette": ["#FFE600", "#FF2A2A", "#1E1E1E", "#FFFFFF"], "materials": ["outlined type", "drop shadows"], "viewport": "Project video with captions sized by excitement.", "case": "Fuses as loud overlays; undermines a professional read.", "risk": "Reads as a joke.", "kept": "Scale maps to importance."}
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "buildPath": {"value": "code", "toggle": false},
+  "canon": true,
+  "canonCard": {
+    "kind": "canon",
+    "label": "The category standard",
+    "thesis": "A clean developer portfolio, executed carefully.",
+    "palette": ["#FAFAFA", "#0A0A0A", "#2563EB"],
+    "materials": ["neutral grid", "product screenshots"],
+    "viewport": "Name and role top-left, a short bio, a project grid, experience list.",
+    "risk": "Indistinguishable from every other engineer's site by design.",
+    "html": ".impeccable/mocks/decision/canon-r2.html",
+    "comp": ".impeccable/mocks/decision/canon-r2.webp"
+  },
+  "steer": true
+}

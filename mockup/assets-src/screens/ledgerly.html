@@ -1,0 +1,27 @@
+<!doctype html><html><head><meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"><style>
+*{box-sizing:border-box;margin:0}body{width:1440px;height:900px;font-family:Manrope,sans-serif;background:#F5F7F6;color:#14211C;display:grid;grid-template-columns:232px 1fr;font-size:14px}
+aside{background:#0E2A22;color:#CFE3DA;padding:22px 16px}aside .logo{display:flex;gap:10px;align-items:center;font-weight:800;font-size:19px;color:#fff;margin-bottom:30px}
+aside .logo i{width:28px;height:28px;border-radius:8px;background:#2BD08A;display:block}
+aside a{display:block;padding:10px 12px;border-radius:8px;margin-bottom:2px;font-weight:500}aside a.on{background:#18443A;color:#fff}
+aside .shop{position:absolute;bottom:22px;left:16px;width:200px;background:#18443A;border-radius:10px;padding:12px;font-size:13px}aside .shop b{display:block;color:#fff}
+main{padding:26px 34px}header{display:flex;justify-content:space-between;align-items:center}h1{font-size:26px;font-weight:800}header .r{display:flex;gap:10px}
+.btn{background:#14211C;color:#fff;padding:10px 16px;border-radius:9px;font-weight:600}.btn.g{background:#fff;color:#14211C;border:1px solid #DDE5E1}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:22px}.k{background:#fff;border:1px solid #E3EAE6;border-radius:12px;padding:16px 18px}
+.k small{color:#5B6D66;font-weight:600}.k b{display:block;font-size:26px;font-weight:800;margin-top:8px}.k em{font-style:normal;font-size:12px;font-weight:700;color:#169B63}.k em.bad{color:#C2410C}
+.row{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-top:16px}.panel{background:#fff;border:1px solid #E3EAE6;border-radius:12px;padding:18px}
+.panel h3{font-size:15px;font-weight:700;display:flex;justify-content:space-between}.panel h3 span{color:#5B6D66;font-weight:500;font-size:13px}
+.bars{display:flex;align-items:flex-end;gap:14px;height:180px;margin-top:18px;border-bottom:1px solid #E3EAE6;padding:0 6px}
+.bars div{flex:1;background:#2BD08A;border-radius:6px 6px 0 0;position:relative}.bars div.p{background:#BFEBD6}
+.lbl{display:flex;gap:14px;padding:6px 6px 0;color:#7B8C85;font-size:12px}.lbl span{flex:1;text-align:center}
+table{width:100%;border-collapse:collapse;margin-top:12px}td,th{text-align:left;padding:11px 8px;border-bottom:1px solid #EEF2F0}th{font-size:12px;color:#7B8C85;font-weight:600}
+.s{padding:3px 9px;border-radius:99px;font-size:12px;font-weight:700}.paid{background:#DDF6EA;color:#0F7A4C}.due{background:#FFF1D6;color:#9A5B00}.over{background:#FDE3D7;color:#B4380B}
+.list div{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #EEF2F0}.list b{font-weight:700}
+</style></head><body><aside><div class="logo"><i></i>Ledgerly</div><a class="on">Overview</a><a>Invoices</a><a>Customers</a><a>Payments</a><a>Reports</a><a>Settings</a><div class="shop"><b>Toko Sumber Rejeki</b>Pro plan</div></aside>
+<main><header><h1>Overview, November</h1><div class="r"><span class="btn g">Export</span><span class="btn">New invoice</span></div></header>
+<div class="kpis"><div class="k"><small>Outstanding</small><b>Rp 48,2 jt</b><em>12 invoices open</em></div><div class="k"><small>Paid this month</small><b>Rp 131,7 jt</b><em>+18% vs Oct</em></div><div class="k"><small>Overdue</small><b>7</b><em class="bad">Rp 9,4 jt late</em></div><div class="k"><small>Avg. days to pay</small><b>9.4</b><em>down from 13.1</em></div></div>
+<div class="row"><div class="panel"><h3>Payments received <span>Last 8 weeks</span></h3><div class="bars"><div style="height:42%"></div><div style="height:55%"></div><div style="height:48%"></div><div style="height:63%"></div><div style="height:71%"></div><div style="height:66%"></div><div style="height:84%"></div><div class="p" style="height:58%"></div></div><div class="lbl"><span>W40</span><span>W41</span><span>W42</span><span>W43</span><span>W44</span><span>W45</span><span>W46</span><span>W47</span></div></div>
+<div class="panel"><h3>Top customers <span>This month</span></h3><div class="list"><div><span>CV Maju Bersama</span><b>Rp 22,4 jt</b></div><div><span>Kopi Senja Kemang</span><b>Rp 17,9 jt</b></div><div><span>Apotek Sehat Selalu</span><b>Rp 14,1 jt</b></div><div><span>Bengkel Pak Darto</span><b>Rp 9,8 jt</b></div><div><span>Laundry Kilat 24</span><b>Rp 6,3 jt</b></div></div></div></div>
+<div class="panel" style="margin-top:16px"><h3>Recent invoices <span>View all</span></h3><table><tr><th>Invoice</th><th>Customer</th><th>Amount</th><th>Due</th><th>Status</th></tr>
+<tr><td>INV-2611-0412</td><td>Kopi Senja Kemang</td><td>Rp 3.450.000</td><td>20 Nov</td><td><span class="s due">Due</span></td></tr>
+<tr><td>INV-2611-0411</td><td>CV Maju Bersama</td><td>Rp 12.800.000</td><td>18 Nov</td><td><span class="s paid">Paid</span></td></tr>
+<tr><td>INV-2611-0407</td><td>Bengkel Pak Darto</td><td>Rp 1.275.000</td><td>9 Nov</td><td><span class="s over">Overdue</span></td></tr></table></div></main></body></html>

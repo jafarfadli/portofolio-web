@@ -1,0 +1,21 @@
+# dependencies and build output
+node_modules/
+.next/
+# local data
+.data/
+.data-e2e/
+# test output
+test-results/
+playwright-report/
+# local tool state
+.claude/settings.local.json
+.impeccable/review/
+.impeccable/questions/
+.impeccable/hook.cache.json
+# env
+.env*
+!.env.example
+# macOS
+.DS_Store
+# macOS folder icon file (name ends with two carriage returns)
+Icon

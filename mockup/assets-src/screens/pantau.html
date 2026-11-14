@@ -1,0 +1,12 @@
+<!doctype html><html><head><meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet"><style>
+*{box-sizing:border-box;margin:0}body{width:1440px;height:900px;font-family:Sora,sans-serif;background:#FBFBFD;color:#16161D;padding:44px 240px;font-size:14px}
+.top{display:flex;justify-content:space-between;align-items:center}.top b{font-size:22px}.top span{border:1px solid #DCDCE6;padding:9px 16px;border-radius:9px;font-weight:600}
+.ok{margin-top:30px;background:#16A34A;color:#fff;border-radius:12px;padding:20px 24px;font-size:20px;font-weight:700}
+.svc{margin-top:22px;background:#fff;border:1px solid #E6E6EE;border-radius:12px;padding:6px 24px}
+.s{padding:16px 0;border-bottom:1px solid #F0F0F5}.s:last-child{border:0}.s .h{display:flex;justify-content:space-between;font-weight:600}.s .h span{color:#16A34A}
+.bars{display:flex;gap:2px;margin-top:10px;height:30px}.bars i{flex:1;background:#4ADE80;border-radius:2px}.bars i.w{background:#FACC15}.bars i.d{background:#F87171}
+.meta{display:flex;justify-content:space-between;color:#8A8AA0;font-size:12px;margin-top:6px}
+h3{margin-top:28px;font-size:17px}.inc{margin-top:10px;color:#55556A;line-height:1.6}
+</style></head><body><div class="top"><b>Ruang Belajar status</b><span>Subscribe to updates</span></div><div class="ok">All systems operational</div>
+<div class="svc" id="svc"></div><h3>Past incidents</h3><div class="inc"><b>Nov 9</b> Elevated API latency in ap-southeast-3. Resolved in 23 minutes.</div>
+<script>const names=[["Website","99.98%"],["API","99.94%"],["Video streaming","99.91%"],["Payments","100.0%"]];const el=document.getElementById('svc');names.forEach(([n,u],k)=>{let b='';for(let i=0;i<90;i++){let c='';if((k==1&&(i==61||i==62))||(k==2&&i==34))c='w';if(k==2&&i==35)c='d';b+=`<i class="${c}"></i>`}el.innerHTML+=`<div class="s"><div class="h">${n}<span>Operational</span></div><div class="bars">${b}</div><div class="meta"><span>90 days ago</span><span>${u} uptime</span><span>Today</span></div></div>`});</script></body></html>
