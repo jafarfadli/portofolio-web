@@ -14,6 +14,15 @@ test("CV lists sections in order, ranks achievements, and prints to one A4 page"
   await expect(page.locator(".cv-head .cv-role")).toHaveCSS("text-transform", "none");
   await expect(page.locator(".cv-bar .cv-back")).toHaveCSS("transform", "none");
 
+  await expect(page.locator(".cv-photo img")).toHaveAttribute("alt", "Portrait of Muhammad Jafar Fadli");
+  // The cut-out is 31mm tall (117px at 96dpi); the owner rejected the larger 34mm version.
+  const h = await page.locator(".cv-photo").evaluate((el) => el.getBoundingClientRect().height);
+  expect(h).toBeGreaterThan(112);
+  expect(h).toBeLessThan(122);
+  await expect(page.locator(".cv-sheet .tag-cut").first()).toHaveText("Winner");
+  // Literal spaces between chips keep the printed text readable for ATS.
+  expect(await page.locator(".cv-sheet").innerText()).toContain("Next.js Go PostgreSQL Midtrans");
+
   const pdf = await page.pdf({ format: "A4", preferCSSPageSize: true, printBackground: true });
   const pages = (pdf.toString("latin1").match(/\/Type\s*\/Page[^s]/g) ?? []).length;
   expect(pages).toBe(1);

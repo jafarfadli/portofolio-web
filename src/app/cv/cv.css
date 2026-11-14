@@ -1,7 +1,13 @@
-.cv-page { --paper: #ffffff; min-height: 100vh; background: var(--ground); color: var(--ink); }
+/* The CV sheet, ported from mockup/cv.html. Every class is cv-prefixed or scoped under .cv-sheet so the global
+   site.css rules (.chip, .icon, .when, .role ...) cannot leak in. */
+.cv-page {
+  --paper: #ffffff; --rule: #d9d9d4;
+  min-height: 100vh; color: var(--ink);
+  background: var(--navy) url("/textures/twill.png") 0 0 / 24px 24px;
+}
 .cv-bar {
   position: sticky; top: 0; z-index: 5; display: flex; justify-content: space-between; align-items: center; gap: 16px;
-  padding: 14px clamp(16px, 4vw, 48px); background: rgba(26, 39, 173, 0.94); color: var(--stock);
+  padding: 14px clamp(16px, 4vw, 48px); background: rgba(21, 28, 49, 0.94); color: var(--stock);
 }
 .cv-bar { font-size: 16px; line-height: normal; }
 .cv-bar .btn { gap: 8px; min-height: 44px; padding: 0 18px; border-width: 0; font-size: 15px; }
@@ -9,32 +15,78 @@
 .cv-bar .cv-back:hover { text-decoration: underline; }
 .cv-bar .note { font-size: 14px; color: var(--on-ground-2); }
 .cv-stage { padding: clamp(24px, 4vw, 56px) 16px 80px; }
+
 .cv-sheet {
-  width: 210mm; min-height: 297mm; margin: 0 auto; background: var(--paper); color: var(--ink);
-  padding: 12mm 15mm 11mm; box-shadow: 0 30px 70px -20px rgba(10, 11, 18, 0.6);
-  font-size: 9.4pt; line-height: 1.33;
+  position: relative; width: 210mm; min-height: 297mm; margin: 0 auto; background: var(--paper); color: var(--ink);
+  padding: 0 15mm 6.5mm; box-shadow: 0 30px 70px -20px rgba(10, 11, 18, 0.6);
+  font-size: 9.2pt; line-height: 1.32; font-feature-settings: normal;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
 }
-.cv-sheet ::selection { background: var(--ground); color: var(--stock); }
+.cv-sheet ::selection { background: var(--navy); color: var(--stock); }
 .cv-sheet :focus-visible { outline-color: var(--ink); }
-.cv-head { padding-bottom: 8px; border-bottom: 2.5pt solid var(--ground); }
-.cv-head h1 { font-size: 27pt; line-height: 1; font-weight: 900; font-variation-settings: "wdth" 120; letter-spacing: -0.02em; }
-.cv-head .cv-role { margin-top: 5px; font-size: 12pt; font-weight: 700; }
-.cv-head .contact { display: flex; flex-wrap: wrap; gap: 3px 16px; margin-top: 8px; font-size: 9.2pt; color: var(--ink-2); }
-.cv-sec { margin-top: 9px; }
-.cv-sec h2 { margin-bottom: 4px; font-size: 9pt; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; font-variation-settings: "wdth" 85; color: var(--ground); }
-.cv-entry { margin-bottom: 6px; }
+/* the strap end: a band of navy webbing across the top of the sheet */
+.cv-sheet::before { content: ""; display: block; height: 6mm; margin: 0 -15mm; background: var(--navy) url("/textures/twill.png") 0 0 / 24px 24px; }
+/* punched slot, as on the badge */
+.cv-slot { display: block; width: 17mm; height: 3mm; margin: 3mm auto 2mm; border-radius: 2mm; background: var(--navy-deep); }
+
+/* ---------- header: the badge front ---------- */
+.cv-head { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 24mm; gap: 0 8mm; align-items: end; padding-bottom: 3mm; border-bottom: 2.5pt solid var(--navy); }
+.cv-head.cv-head-solo { grid-template-columns: minmax(0, 1fr); }
+.cv-head h1 { margin: 0; font-size: 28pt; white-space: nowrap; line-height: 0.9; font-weight: 900; font-variation-settings: "wdth" 125; letter-spacing: -0.03em; }
+.cv-head .cv-role { margin: 2.2mm 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 2.5mm; font-size: 12.5pt; font-weight: 750; text-transform: none; }
+.cv-head .contact { display: flex; flex-wrap: wrap; gap: 1.4mm 4.5mm; margin: 3mm 0 0; padding: 0; list-style: none; font-size: 8.8pt; color: var(--ink-2); }
+.cv-head .contact li { display: inline-flex; align-items: center; gap: 1.4mm; }
+.cv-head .contact svg { width: 3.3mm; height: 3.3mm; fill: var(--navy); flex: none; }
+/* the portrait stands in front of the strap band, cut out from its background;
+   small, and lifted 4mm as the owner asked; the torso fades into the paper so the lift reads as a vignette, not a pasted box */
+.cv-photo { position: relative; margin: -9mm 0 -3mm; height: 31mm; transform: translateY(-4mm); display: flex; align-items: flex-end; justify-content: center; }
+.cv-photo img { display: block; height: 100%; width: auto; max-width: none; -webkit-mask-image: linear-gradient(#000 72%, transparent); mask-image: linear-gradient(#000 72%, transparent); }
+
+/* ---------- body: one cord down the left margin; every section clips onto it ---------- */
+.cv-body { position: relative; padding-left: 7mm; }
+.cv-body::before { content: ""; position: absolute; left: 1.7mm; top: 3mm; bottom: 1mm; width: 1.6pt; background: var(--navy); border-radius: 1pt; }
+.cv-sec { margin-top: 3.5mm; }
+/* section label: a printed tab, then a hairline across the sheet */
+.cv-sec h2 { position: relative; display: flex; align-items: center; gap: 2.5mm; margin: 0 0 1.8mm; font-size: 8.4pt; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; font-variation-settings: "wdth" 85; }
+.cv-sec h2 span { background: var(--navy); color: var(--stock); padding: 0.9mm 2.6mm 0.8mm; border-radius: 0.8mm; }
+.cv-sec h2::after { content: ""; flex: 1; height: 0; border-top: 0.6pt solid var(--rule); }
+.cv-sec h2::before { content: ""; position: absolute; left: calc(-7mm + 0.3mm); top: 50%; width: 2.8mm; height: 4.4mm; margin-top: -2.2mm; border: 1.1pt solid var(--metal); border-radius: 1mm; background: var(--paper); }
+.cv-summary { margin: 0; max-width: 64em; font-size: 9.6pt; }
+.cv-entry { position: relative; margin: 0 0 1.6mm; }
 .cv-entry:last-child { margin-bottom: 0; }
+/* each stop on the experience itinerary is a knot on the cord */
+.cv-sec.stops .cv-entry::before { content: ""; position: absolute; left: calc(-7mm + 0.65mm); top: 1.2mm; width: 2.1mm; height: 2.1mm; border-radius: 50%; background: var(--paper); border: 1.2pt solid var(--navy); }
 .cv-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-.cv-row b { font-weight: 750; }
+.cv-row b { font-weight: 800; font-variation-settings: "wdth" 106; }
 .cv-row .org { color: var(--ink-2); font-weight: 500; }
-.cv-sheet .when { flex: none; font-size: 9pt; color: var(--ink-2); font-feature-settings: "tnum" 1; }
-.cv-points { margin-top: 3px; padding-left: 14px; list-style: disc; }
-.cv-points li { margin: 1px 0; }
-.cv-points li::marker { color: var(--ink-2); }
-.cv-stack { color: var(--ink-2); font-size: 9pt; }
-.cv-lines li { display: flex; justify-content: space-between; gap: 12px; padding: 1px 0; }
-.cv-skills p { margin-bottom: 2px; }
-.cv-skills b { font-weight: 750; }
+.cv-sheet .when { flex: none; font-size: 7.8pt; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-variation-settings: "wdth" 85; color: var(--ink-2); font-feature-settings: "tnum" 1; }
+.cv-points { margin: 0.8mm 0 0; padding-left: 14px; list-style: disc; }
+.cv-points li { margin: 0.3mm 0; }
+.cv-points li::marker { color: var(--metal); }
+/* metrics read first: bold navy, tabular */
+.cv-sheet strong { font-weight: 800; color: var(--navy); font-feature-settings: "tnum" 1; }
+.cv-sheet .tags { display: inline; margin-left: 1mm; }
+.cv-sheet .tags span, .cv-sheet .chip {
+  display: inline-block; min-height: 0; margin: 0 0.4mm 0.5mm 0; padding: 0.2mm 1.8mm; border-radius: 99px; border: 0.7pt solid #b9bcc6;
+  background: none; box-shadow: none; transform: none; font-size: 7.4pt; font-weight: 650; color: var(--ink-2); line-height: 1.35;
+}
+/* one three-column grid shared by every row, so every tag is as wide as the widest label */
+.cv-lines { display: grid; grid-template-columns: max-content minmax(0, 1fr) max-content; column-gap: 1.4mm; margin: 0; padding: 0; list-style: none; }
+.cv-lines li { display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; align-items: center; padding: 0.5mm 0; }
+.cv-lines .when { justify-self: end; }
+/* rank and role tags, told by their cut as on the site */
+.tag-cut { display: inline-block; min-width: 21mm; white-space: nowrap; padding: 0.5mm 2mm 0.4mm; text-align: center; font-size: 6.8pt; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; font-variation-settings: "wdth" 85; background: var(--ink); color: var(--stock); border-radius: 0.5mm; }
+.tag-cut.winner, .tag-cut.speaker { clip-path: polygon(0 0, 100% 0, calc(100% - 1.6mm) 50%, 100% 100%, 0 100%); padding-right: 3mm; }
+.tag-cut.finalist, .tag-cut.volunteer { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 0.8pt var(--ink); }
+.tag-cut.award { background: var(--stock); color: var(--ink); }
+.tag-cut.organizer, .tag-cut.host { border-radius: 99px; }
+.tag-cut.mentor { border-radius: 0.5mm 0.5mm 2mm 2mm; }
+.cv-skills p { margin: 0 0 1.2mm; }
+.cv-skills b { display: inline-block; width: 24mm; font-size: 8.4pt; font-weight: 800; }
+.cv-skills .chips { display: inline; }
+/* foot: the other end of the strap */
+.cv-foot { position: absolute; left: 0; right: 0; bottom: 0; height: 3mm; background: var(--navy) url("/textures/twill.png") 0 0 / 24px 24px; }
+
 @media (max-width: 860px) {
   .cv-stage { padding: 16px 0 48px; overflow-x: auto; }
   .cv-bar .note { display: none; }
@@ -44,7 +96,7 @@
   body, .cv-page { background: #fff; min-height: 0; }
   .cv-bar { display: none; }
   .cv-stage { padding: 0; }
-  .cv-sheet { box-shadow: none; margin: 0; width: auto; min-height: 0; }
+  .cv-sheet { box-shadow: none; margin: 0; width: auto; min-height: 296.4mm; } /* a hair under A4, so rounding never spills a blank page */
   .cv-sheet a { text-decoration: none; }
   .cv-sec, .cv-entry { break-inside: avoid; }
 }
