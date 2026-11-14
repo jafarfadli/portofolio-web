@@ -124,8 +124,8 @@ type SeedAchievement = {
   sealText: string | null; sealCaption: string | null; caption: string; story: string; cvLine: string; cvYear: string;
   /** Media key. Temporary reuse of an activity photo until the owner supplies achievement photos. */
   photo: string;
-  /** Media keys for photo2Id to photo4Id, in order (at most 3). */
-  morePhotos: string[];
+  /** Media keys for photo2Id to photo4Id, in order. A tuple, so a fourth key is a compile error rather than silently dropped. */
+  morePhotos: [] | [string] | [string, string] | [string, string, string];
 };
 
 /** Reel order: the winner first, then the CV order. */

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ICON_STICKERS, iconCount, parseInline, toPlain } from "@/lib/inline";
+import { ICON_STICKERS, iconCount, parseInline } from "@/lib/inline";
 import { displayUrl } from "@/lib/url";
 
 describe("parseInline", () => {
@@ -83,20 +83,6 @@ describe("parseInline icons", () => {
 
   it("knows all eight stickers", () => {
     expect(ICON_STICKERS).toHaveLength(8);
-  });
-});
-
-describe("toPlain", () => {
-  it("drops icon tokens and line-break slashes", () => {
-    expect(toPlain("Web products :browsers:, / end to end.")).toBe("Web products, end to end.");
-  });
-
-  it("drops strong and em markers", () => {
-    expect(toPlain("**Winner**, _soft_ text")).toBe("Winner, soft text");
-  });
-
-  it("keeps unknown tokens and slashes inside words", () => {
-    expect(toPlain("A/B :nope: test")).toBe("A/B :nope: test");
   });
 });
 

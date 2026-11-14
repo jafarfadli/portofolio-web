@@ -142,8 +142,11 @@
   });
 
   /* ---------------- First viewport: the one authored entrance ---------------- */
+  // the sticker lean waits for the entrance: while the slots' from() runs, GSAP folds their individual transforms into
+  // `transform` and writes `translate: none` on them, which would hold the lean back and then let it jump
+  let entered = false, onEntered = () => {};
   if (!reduce) {
-    const tl = gsap.timeline({ delay: 0.12, defaults: { ease: "expo.out" } });
+    const tl = gsap.timeline({ delay: 0.12, defaults: { ease: "expo.out" }, onComplete: () => { entered = true; onEntered(); } });
     tl.from(nav, { opacity: 0, duration: 0.6 }, 0)
       .from(pendulum, {
         y: () => -window.innerHeight * 0.95, duration: 0.78, ease: "power3.in",
@@ -161,16 +164,22 @@
     const items = [...stickerList.querySelectorAll(".slot-li")].map((el, i) => ({ el, depth: [1.3, 0.7, 1, 0.55, 1.6][i] ?? 1, x: 0, y: 0 }));
     const aim = { x: 0, y: 0 };
     let leaning = false;
+    const wake = () => { if (entered && !leaning) { leaning = true; gsap.ticker.add(lean); } };
+    onEntered = () => { if (aim.x || aim.y) wake(); };
+    // the viewport size is read on resize, not per move: reading it right after the lean wrote --px would force a layout
+    let vw = window.innerWidth, vh = window.innerHeight;
+    window.addEventListener("resize", () => { vw = window.innerWidth; vh = window.innerHeight; });
     hero.addEventListener("pointermove", (e) => {
-      aim.x = (e.clientX / window.innerWidth) * 2 - 1;
-      aim.y = (e.clientY / window.innerHeight) * 2 - 1;
-      if (!leaning) { leaning = true; gsap.ticker.add(lean); }
+      aim.x = (e.clientX / vw) * 2 - 1;
+      aim.y = (e.clientY / vh) * 2 - 1;
+      wake();
     });
     // leaving the hero eases every sticker home, even when the lean had come to rest and taken itself off the ticker
     hero.addEventListener("pointerleave", () => {
       aim.x = 0; aim.y = 0;
-      if (!leaning) { leaning = true; gsap.ticker.add(lean); }
+      wake();
     });
+    // runs only while a sticker is still travelling; back home at rest, the slots drop the inline offsets
     function lean() {
       let still = true;
       items.forEach((it) => {
@@ -180,95 +189,108 @@
         it.el.style.setProperty("--px", `${it.x.toFixed(2)}px`);
         it.el.style.setProperty("--py", `${it.y.toFixed(2)}px`);
       });
-      if (still) { leaning = false; gsap.ticker.remove(lean); }
+      if (!still) return;
+      leaning = false;
+      gsap.ticker.remove(lean);
+      if (!aim.x && !aim.y) items.forEach((it) => { it.x = 0; it.y = 0; it.el.style.removeProperty("--px"); it.el.style.removeProperty("--py"); });
     }
   }
 
   /* ---------------- Hero: a field of punched dust that leans toward the mouse ---------------- */
   // specks a hole punch leaves (stock dots, the odd slot-shaped chad) scattered over the hero ground. Each sits at its
   // own depth: it wanders slowly on its own, and the whole field leans toward the cursor, near specks further than far ones.
+  // It is decoration: if anything in it throws, it fails alone and leaves the canvas empty, while the rest runs on.
   const dust = document.querySelector("[data-dust]");
   if (dust) {
-    const hero = dust.parentElement;
-    const ctx = dust.getContext("2d");
-    const INK = ["242,242,238", "242,242,238", "229,228,223", "201,204,214"];
-    const LEAN_X = 150, LEAN_Y = 90, PAD_X = LEAN_X, PAD_Y = LEAN_Y; // px the nearest speck travels at the hero's edge
-    let w = 0, h = 0, dpr = 1, specks = [];
-    const seed = () => {
-      // scattered past every edge by the most a speck can lean, so leaning never uncovers a bare strip
-      const n = Math.round(Math.min(300, ((w + 2 * PAD_X) * (h + 2 * PAD_Y)) / 7200)); // about one speck per 85px square
-      specks = Array.from({ length: n }, () => {
-        const z = 0.15 + Math.random() * 0.85; // depth: 1 is nearest
-        const chad = Math.random() < 0.12;
-        return {
-          x: Math.random() * (w + 2 * PAD_X) - PAD_X, y: Math.random() * (h + 2 * PAD_Y) - PAD_Y, z, chad,
-          r: 0.6 + z * 1.5, rot: Math.random() * Math.PI, spin: (Math.random() - 0.5) * 0.4,
-          vx: (Math.random() - 0.5) * 6, vy: (Math.random() - 0.5) * 6, // px per second, a slow wander
-          ink: chad ? INK[3] : INK[Math.floor(Math.random() * 3)], alpha: 0.18 + z * 0.42,
-        };
-      });
-    };
-    const size = () => {
-      const r = hero.getBoundingClientRect();
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const grew = Math.abs(r.width - w) > 40 || Math.abs(r.height - h) > 40;
-      w = r.width; h = r.height;
-      dust.width = Math.round(w * dpr); dust.height = Math.round(h * dpr);
-      if (grew || !specks.length) seed();
-      draw(0);
-    };
-    const lean = { x: 0, y: 0 }, aim = { x: 0, y: 0 };
-    const draw = (dt) => {
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, w, h);
-      lean.x += (aim.x - lean.x) * Math.min(1, dt * 2.2); // the field trails the cursor a little
-      lean.y += (aim.y - lean.y) * Math.min(1, dt * 2.2);
-      for (const s of specks) {
-        s.x = ((s.x + PAD_X + s.vx * dt + w + 2 * PAD_X) % (w + 2 * PAD_X)) - PAD_X;
-        s.y = ((s.y + PAD_Y + s.vy * dt + h + 2 * PAD_Y) % (h + 2 * PAD_Y)) - PAD_Y;
-        s.rot += s.spin * dt;
-        const x = s.x + lean.x * LEAN_X * s.z, y = s.y + lean.y * LEAN_Y * s.z;
-        ctx.globalAlpha = s.alpha;
-        ctx.fillStyle = `rgb(${s.ink})`;
-        if (s.chad) {
-          ctx.save(); ctx.translate(x, y); ctx.rotate(s.rot);
-          ctx.beginPath(); ctx.roundRect(-3.2, -1, 6.4, 2, 1); ctx.fill(); ctx.restore();
-        } else {
-          ctx.beginPath(); ctx.arc(x, y, s.r, 0, Math.PI * 2); ctx.fill();
-        }
-      }
-    };
-    size();
-    new ResizeObserver(size).observe(hero);
-    if (!reduce) {
-      // the field leans toward the cursor: -1..1 across the hero, eased in draw()
-      if (finePointer) {
-        hero.addEventListener("pointermove", (e) => {
-          const r = hero.getBoundingClientRect();
-          aim.x = ((e.clientX - r.left) / r.width) * 2 - 1;
-          aim.y = ((e.clientY - r.top) / r.height) * 2 - 1;
+    try {
+      const hero = dust.parentElement;
+      const ctx = dust.getContext("2d");
+      const INK = ["242,242,238", "242,242,238", "229,228,223", "201,204,214"];
+      const LEAN_X = 150, LEAN_Y = 90, PAD_X = LEAN_X, PAD_Y = LEAN_Y; // px the nearest speck travels at the hero's edge
+      let w = 0, h = 0, dpr = 1, specks = [];
+      let left = 0, top = 0; // the hero's place on the page, measured with its size, so a pointer move reads no layout
+      const seed = () => {
+        // scattered past every edge by the most a speck can lean, so leaning never uncovers a bare strip
+        const n = Math.round(Math.min(300, ((w + 2 * PAD_X) * (h + 2 * PAD_Y)) / 7200)); // about one speck per 85px square
+        specks = Array.from({ length: n }, () => {
+          const z = 0.15 + Math.random() * 0.85; // depth: 1 is nearest
+          const chad = Math.random() < 0.12;
+          return {
+            x: Math.random() * (w + 2 * PAD_X) - PAD_X, y: Math.random() * (h + 2 * PAD_Y) - PAD_Y, z, chad,
+            r: 0.6 + z * 1.5, rot: Math.random() * Math.PI, spin: (Math.random() - 0.5) * 0.4,
+            vx: (Math.random() - 0.5) * 6, vy: (Math.random() - 0.5) * 6, // px per second, a slow wander
+            ink: chad ? INK[3] : INK[Math.floor(Math.random() * 3)], alpha: 0.18 + z * 0.42,
+          };
         });
-        hero.addEventListener("pointerleave", () => { aim.x = 0; aim.y = 0; });
+      };
+      const size = () => {
+        const r = hero.getBoundingClientRect();
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const grew = Math.abs(r.width - w) > 40 || Math.abs(r.height - h) > 40;
+        w = r.width; h = r.height;
+        left = r.left + window.scrollX; top = r.top + window.scrollY;
+        dust.width = Math.round(w * dpr); dust.height = Math.round(h * dpr);
+        if (grew || !specks.length) seed();
+        draw(0);
+      };
+      // a chad is a rounded slot; browsers without roundRect (Firefox before 112, Safari before 16) get a plain rect
+      const slot = typeof ctx.roundRect === "function" ? () => ctx.roundRect(-3.2, -1, 6.4, 2, 1) : () => ctx.rect(-3.2, -1, 6.4, 2);
+      const lean = { x: 0, y: 0 }, aim = { x: 0, y: 0 };
+      const draw = (dt) => {
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, w, h);
+        lean.x += (aim.x - lean.x) * Math.min(1, dt * 2.2); // the field trails the cursor a little
+        lean.y += (aim.y - lean.y) * Math.min(1, dt * 2.2);
+        for (const s of specks) {
+          s.x = ((s.x + PAD_X + s.vx * dt + w + 2 * PAD_X) % (w + 2 * PAD_X)) - PAD_X;
+          s.y = ((s.y + PAD_Y + s.vy * dt + h + 2 * PAD_Y) % (h + 2 * PAD_Y)) - PAD_Y;
+          s.rot += s.spin * dt;
+          const x = s.x + lean.x * LEAN_X * s.z, y = s.y + lean.y * LEAN_Y * s.z;
+          ctx.globalAlpha = s.alpha;
+          ctx.fillStyle = `rgb(${s.ink})`;
+          if (s.chad) {
+            ctx.save(); ctx.translate(x, y); ctx.rotate(s.rot);
+            ctx.beginPath(); slot(); ctx.fill(); ctx.restore();
+          } else {
+            ctx.beginPath(); ctx.arc(x, y, s.r, 0, Math.PI * 2); ctx.fill();
+          }
+        }
+      };
+      size();
+      new ResizeObserver(size).observe(hero);
+      if (!reduce) {
+        // the field leans toward the cursor: -1..1 across the hero, eased in draw(); the pointer's page position against
+        // the hero's cached page box needs no layout read, whatever the lean ticker has just written
+        if (finePointer) {
+          hero.addEventListener("pointermove", (e) => {
+            aim.x = ((e.pageX - left) / w) * 2 - 1;
+            aim.y = ((e.pageY - top) / h) * 2 - 1;
+          });
+          hero.addEventListener("pointerleave", () => { aim.x = 0; aim.y = 0; });
+        }
+        // its own frame loop; it schedules no frame at all while the hero is off screen or the tab is hidden, and the hero
+        // observer and visibilitychange start it again
+        let on = true, prev = 0, frame = 0; // frame is 0 while none is scheduled
+        const tick = (now) => {
+          frame = 0;
+          if (!on || document.hidden) return;
+          draw(Math.min((now - prev) / 1000, 0.05));
+          prev = now;
+          frame = requestAnimationFrame(tick);
+        };
+        const run = () => {
+          if (frame || !on || document.hidden) return;
+          prev = performance.now();
+          frame = requestAnimationFrame(tick);
+        };
+        // the latest entry wins
+        new IntersectionObserver((es) => { on = es[es.length - 1].isIntersecting; run(); }).observe(hero);
+        document.addEventListener("visibilitychange", run);
+        run();
       }
-      // its own frame loop; it schedules no frame at all while the hero is off screen or the tab is hidden, and the hero
-      // observer and visibilitychange start it again
-      let on = true, prev = 0, frame = 0; // frame is 0 while none is scheduled
-      const tick = (now) => {
-        frame = 0;
-        if (!on || document.hidden) return;
-        draw(Math.min((now - prev) / 1000, 0.05));
-        prev = now;
-        frame = requestAnimationFrame(tick);
-      };
-      const run = () => {
-        if (frame || !on || document.hidden) return;
-        prev = performance.now();
-        frame = requestAnimationFrame(tick);
-      };
-      // the latest entry wins
-      new IntersectionObserver((es) => { on = es[es.length - 1].isIntersecting; run(); }).observe(hero);
-      document.addEventListener("visibilitychange", run);
-      run();
+    } catch (err) {
+      console.error("dust field failed", err);
+      dust.width = 0; // an empty canvas, as with scripts off
     }
   }
 
@@ -325,7 +347,8 @@
     reel.addEventListener("pointerleave", () => ease(1));
   }
   // each pass flips through its photos, a few seconds apart and out of step with its neighbours;
-  // a pass and its clone turn together, so the loop's seam never shows two different photos
+  // a pass and its clone turn together, so the loop's seam never shows two different photos;
+  // nothing turns while the strip is stopped: focus within it, off screen, or a hidden tab
   const stacks = [...track.querySelectorAll("[data-photos]")];
   const half = stacks.length / 2;
   if (!reduce) {
@@ -335,7 +358,7 @@
       if (count < 2) return;
       let at = 0;
       const turn = () => {
-        if (reel.classList.contains("is-offscreen") || document.hidden) return;
+        if (reel.matches(":focus-within") || reel.classList.contains("is-offscreen") || document.hidden) return;
         at = (at + 1) % count;
         pair.forEach((st) => {
           st.querySelectorAll(".ach-photo").forEach((im, i) => im.classList.toggle("is-on", i === at));
@@ -360,10 +383,18 @@
   // before any move inside the agenda
   let px = -1, py = -1;
   window.addEventListener("pointermove", (e) => { px = e.clientX; py = e.clientY; }, { passive: true });
-  const show = (row, e) => {
+  // `pointer` is set on the pointer paths (entering a row, or a row arriving under a still cursor by scrolling); keyboard
+  // focus has already aimed the preview at its row, and must not send it to a stale mouse position
+  const show = (row, pointer, e) => {
     if (e && e.clientX !== undefined) { px = e.clientX; py = e.clientY; }
-    // a hidden preview appears at the cursor, not tweening in from wherever it last was (at first load: the top left)
-    if (gsap.getProperty(preview, "opacity") < 0.05 && px >= 0) gsap.set(preview, { x: px + 28, y: py - preview.offsetHeight / 2 });
+    // a pointer entering the agenda opens the preview at the cursor, every time, instead of sliding it in from wherever it
+    // was hidden (at first load: the top left); the trailing tweens restart from the cursor itself, since a plain set
+    // would hold only until the next move, which resumes each tween from its own last value
+    if (pointer && px >= 0 && !agenda.classList.contains("is-hovering")) {
+      const h = preview.offsetHeight;
+      xTo(px + 28, px + 28);
+      yTo(py - h / 2, py - h / 2);
+    }
     rows.forEach((r) => r.classList.toggle("is-active", r === row));
     agenda.classList.add("is-hovering");
     if (pimg.getAttribute("src") !== row.dataset.photo) pimg.src = row.dataset.photo;
@@ -375,12 +406,12 @@
     gsap.to(preview, { opacity: 0, scale: 0.85, duration: reduce ? 0 : 0.25, ease: "power2.in", overwrite: "auto" });
   };
   rows.forEach((r) => {
-    r.addEventListener("pointerenter", (e) => show(r, e));
+    r.addEventListener("pointerenter", (e) => show(r, true, e));
     r.addEventListener("focus", () => {
       const b = r.getBoundingClientRect();
       xTo(Math.min(b.right - preview.offsetWidth - 180, window.innerWidth - preview.offsetWidth - 24));
       yTo(b.top + b.height / 2 - preview.offsetHeight / 2);
-      show(r);
+      show(r, false);
     });
     r.addEventListener("blur", hide);
   });
@@ -390,7 +421,7 @@
   const recheck = () => {
     if (px < 0 || !finePointer) return;
     const row = document.elementFromPoint(px, py)?.closest("[data-agenda] a");
-    if (row) { if (!row.classList.contains("is-active")) show(row); } else if (agenda.classList.contains("is-hovering")) hide();
+    if (row) { if (!row.classList.contains("is-active")) show(row, true); } else if (agenda.classList.contains("is-hovering")) hide();
   };
   ScrollTrigger.create({ trigger: agenda, start: "top bottom", end: "bottom top", onUpdate: recheck, onLeave: hide, onLeaveBack: hide });
 })();

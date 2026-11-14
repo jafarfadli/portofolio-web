@@ -197,9 +197,13 @@ export function initHomeMotion(doc: Document): () => void {
     // Release the CSS start state (html.motion-pending) in this same task, before the from() tweens read their
     // end values from computed style: they must see the real resting state, and no frame paints in between.
     doc.documentElement.classList.remove("motion-pending");
+    // The sticker lean waits for the entrance. While the slots' from() runs, GSAP folds their individual transforms
+    // into `transform` and writes `translate: none` on them, which would hold the lean back and then let it jump.
+    let entered = false;
+    let onEntered = () => {};
     if (!reduce) {
       gsap
-        .timeline({ delay: 0.12, defaults: { ease: "expo.out" } })
+        .timeline({ delay: 0.12, defaults: { ease: "expo.out" }, onComplete: () => { entered = true; onEntered(); } })
         .from(nav, { opacity: 0, duration: 0.6 }, 0)
         .from(
           pendulum,
@@ -229,8 +233,10 @@ export function initHomeMotion(doc: Document): () => void {
         el, depth: DEPTH.find(([c]) => el.classList.contains(c))?.[1] ?? 1, x: 0, y: 0,
       }));
       const aim = { x: 0, y: 0 };
+      const clear = () => items.forEach(({ el }) => { el.style.removeProperty("--px"); el.style.removeProperty("--py"); });
       let leaning = false;
-      // Runs only while a sticker is still travelling; it takes itself off the ticker once they all rest.
+      // Runs only while a sticker is still travelling; it takes itself off the ticker once they all rest. Back home at
+      // rest, the slots drop the inline offsets and sit on their stylesheet place again.
       const lean: Ticker = () => {
         let still = true;
         items.forEach((it) => {
@@ -242,134 +248,154 @@ export function initHomeMotion(doc: Document): () => void {
           it.el.style.setProperty("--px", `${it.x.toFixed(2)}px`);
           it.el.style.setProperty("--py", `${it.y.toFixed(2)}px`);
         });
-        if (still) { leaning = false; gsap.ticker.remove(lean); }
+        if (!still) return;
+        leaning = false;
+        gsap.ticker.remove(lean);
+        if (!aim.x && !aim.y) { items.forEach((it) => { it.x = 0; it.y = 0; }); clear(); }
       };
       tickers.push(lean); // teardown takes it off the ticker if it is still running
+      const wake = () => { if (entered && !leaning) { leaning = true; gsap.ticker.add(lean); } };
+      onEntered = () => { if (aim.x || aim.y) wake(); };
+      // The viewport size is read on resize, not per move: reading it right after the lean wrote --px would force a layout.
+      let vw = win.innerWidth;
+      let vh = win.innerHeight;
+      on(win, "resize", () => { vw = win.innerWidth; vh = win.innerHeight; });
       on(hero, "pointermove", (ev) => {
         const e = ev as PointerEvent;
-        aim.x = (e.clientX / win.innerWidth) * 2 - 1;
-        aim.y = (e.clientY / win.innerHeight) * 2 - 1;
-        if (!leaning) { leaning = true; gsap.ticker.add(lean); }
+        aim.x = (e.clientX / vw) * 2 - 1;
+        aim.y = (e.clientY / vh) * 2 - 1;
+        wake();
       });
       // Leaving the hero eases every sticker home, even when the lean had come to rest and taken itself off the ticker.
       on(hero, "pointerleave", () => {
         aim.x = 0;
         aim.y = 0;
-        if (!leaning) { leaning = true; gsap.ticker.add(lean); }
+        wake();
       });
-      ac.signal.addEventListener("abort", () =>
-        items.forEach(({ el }) => { el.style.removeProperty("--px"); el.style.removeProperty("--py"); }),
-      );
+      ac.signal.addEventListener("abort", clear);
     }
 
     /* ---------- Hero: a field of punched dust that leans toward the mouse ---------- */
     // Specks a hole punch leaves (stock dots, the odd slot-shaped chad) scattered over the hero ground. Each sits at its
     // own depth: it wanders slowly on its own, and the whole field leans toward the cursor, near specks further than far
     // ones. Under reduced motion the field is drawn once, still, and redrawn only when the hero resizes.
+    // It is decoration: if anything in it throws, it fails alone and leaves the canvas empty, while the rest runs on.
     const dust = doc.querySelector<HTMLCanvasElement>("[data-dust]");
     const pen = dust?.getContext("2d");
     if (dust && pen && hero) {
-      const INK = ["242,242,238", "242,242,238", "229,228,223", "201,204,214"];
-      const LEAN_X = 150; // px the nearest speck travels at the hero's edge
-      const LEAN_Y = 90;
-      const PAD_X = LEAN_X; // specks scatter past every edge by the most one can lean, so leaning never uncovers a bare strip
-      const PAD_Y = LEAN_Y;
-      type Speck = { x: number; y: number; z: number; chad: boolean; r: number; rot: number; spin: number; vx: number; vy: number; ink: string; alpha: number };
-      let w = 0;
-      let h = 0;
-      let dpr = 1;
-      let specks: Speck[] = [];
-      const seed = () => {
-        const n = Math.round(Math.min(300, ((w + 2 * PAD_X) * (h + 2 * PAD_Y)) / 7200)); // about one speck per 85px square
-        specks = Array.from({ length: n }, () => {
-          const z = 0.15 + Math.random() * 0.85; // depth: 1 is nearest
-          const chad = Math.random() < 0.12;
-          return {
-            x: Math.random() * (w + 2 * PAD_X) - PAD_X, y: Math.random() * (h + 2 * PAD_Y) - PAD_Y, z, chad,
-            r: 0.6 + z * 1.5, rot: Math.random() * Math.PI, spin: (Math.random() - 0.5) * 0.4,
-            vx: (Math.random() - 0.5) * 6, vy: (Math.random() - 0.5) * 6, // px per second, a slow wander
-            ink: chad ? INK[3] : INK[Math.floor(Math.random() * 3)], alpha: 0.18 + z * 0.42,
-          };
-        });
-      };
-      const lean = { x: 0, y: 0 };
-      const aim = { x: 0, y: 0 };
-      const draw = (dt: number) => {
-        pen.setTransform(dpr, 0, 0, dpr, 0, 0);
-        pen.clearRect(0, 0, w, h);
-        lean.x += (aim.x - lean.x) * Math.min(1, dt * 2.2); // the field trails the cursor a little
-        lean.y += (aim.y - lean.y) * Math.min(1, dt * 2.2);
-        for (const s of specks) {
-          s.x = ((s.x + PAD_X + s.vx * dt + w + 2 * PAD_X) % (w + 2 * PAD_X)) - PAD_X;
-          s.y = ((s.y + PAD_Y + s.vy * dt + h + 2 * PAD_Y) % (h + 2 * PAD_Y)) - PAD_Y;
-          s.rot += s.spin * dt;
-          const x = s.x + lean.x * LEAN_X * s.z;
-          const y = s.y + lean.y * LEAN_Y * s.z;
-          pen.globalAlpha = s.alpha;
-          pen.fillStyle = `rgb(${s.ink})`;
-          if (s.chad) {
-            pen.save();
-            pen.translate(x, y);
-            pen.rotate(s.rot);
-            pen.beginPath();
-            pen.roundRect(-3.2, -1, 6.4, 2, 1);
-            pen.fill();
-            pen.restore();
-          } else {
-            pen.beginPath();
-            pen.arc(x, y, s.r, 0, Math.PI * 2);
-            pen.fill();
-          }
-        }
-      };
-      const size = () => {
-        const r = hero.getBoundingClientRect();
-        dpr = Math.min(win.devicePixelRatio || 1, 2);
-        const grew = Math.abs(r.width - w) > 40 || Math.abs(r.height - h) > 40;
-        w = r.width;
-        h = r.height;
-        dust.width = Math.round(w * dpr);
-        dust.height = Math.round(h * dpr);
-        if (grew || !specks.length) seed();
-        draw(0);
-      };
-      size();
-      const ro = new ResizeObserver(size);
-      ro.observe(hero);
-      ac.signal.addEventListener("abort", () => ro.disconnect());
-      if (!reduce) {
-        // The field leans toward the cursor: -1..1 across the hero, eased in draw().
-        if (finePointer) {
-          on(hero, "pointermove", (ev) => {
-            const e = ev as PointerEvent;
-            const r = hero.getBoundingClientRect();
-            aim.x = ((e.clientX - r.left) / r.width) * 2 - 1;
-            aim.y = ((e.clientY - r.top) / r.height) * 2 - 1;
+      try {
+        const INK = ["242,242,238", "242,242,238", "229,228,223", "201,204,214"];
+        const LEAN_X = 150; // px the nearest speck travels at the hero's edge
+        const LEAN_Y = 90;
+        const PAD_X = LEAN_X; // specks scatter past every edge by the most one can lean, so leaning never uncovers a bare strip
+        const PAD_Y = LEAN_Y;
+        type Speck = { x: number; y: number; z: number; chad: boolean; r: number; rot: number; spin: number; vx: number; vy: number; ink: string; alpha: number };
+        let w = 0;
+        let h = 0;
+        let dpr = 1;
+        let left = 0; // the hero's place on the page, measured with its size, so a pointer move reads no layout
+        let top = 0;
+        let specks: Speck[] = [];
+        const seed = () => {
+          const n = Math.round(Math.min(300, ((w + 2 * PAD_X) * (h + 2 * PAD_Y)) / 7200)); // about one speck per 85px square
+          specks = Array.from({ length: n }, () => {
+            const z = 0.15 + Math.random() * 0.85; // depth: 1 is nearest
+            const chad = Math.random() < 0.12;
+            return {
+              x: Math.random() * (w + 2 * PAD_X) - PAD_X, y: Math.random() * (h + 2 * PAD_Y) - PAD_Y, z, chad,
+              r: 0.6 + z * 1.5, rot: Math.random() * Math.PI, spin: (Math.random() - 0.5) * 0.4,
+              vx: (Math.random() - 0.5) * 6, vy: (Math.random() - 0.5) * 6, // px per second, a slow wander
+              ink: chad ? INK[3] : INK[Math.floor(Math.random() * 3)], alpha: 0.18 + z * 0.42,
+            };
           });
-          on(hero, "pointerleave", () => { aim.x = 0; aim.y = 0; });
+        };
+        // A chad is a rounded slot. Some browsers the build still serves have no roundRect (Firefox before 112, Safari
+        // before 16): there it is a plain rect, too small to tell apart.
+        const slot = typeof pen.roundRect === "function" ? () => pen.roundRect(-3.2, -1, 6.4, 2, 1) : () => pen.rect(-3.2, -1, 6.4, 2);
+        const lean = { x: 0, y: 0 };
+        const aim = { x: 0, y: 0 };
+        const draw = (dt: number) => {
+          pen.setTransform(dpr, 0, 0, dpr, 0, 0);
+          pen.clearRect(0, 0, w, h);
+          lean.x += (aim.x - lean.x) * Math.min(1, dt * 2.2); // the field trails the cursor a little
+          lean.y += (aim.y - lean.y) * Math.min(1, dt * 2.2);
+          for (const s of specks) {
+            s.x = ((s.x + PAD_X + s.vx * dt + w + 2 * PAD_X) % (w + 2 * PAD_X)) - PAD_X;
+            s.y = ((s.y + PAD_Y + s.vy * dt + h + 2 * PAD_Y) % (h + 2 * PAD_Y)) - PAD_Y;
+            s.rot += s.spin * dt;
+            const x = s.x + lean.x * LEAN_X * s.z;
+            const y = s.y + lean.y * LEAN_Y * s.z;
+            pen.globalAlpha = s.alpha;
+            pen.fillStyle = `rgb(${s.ink})`;
+            if (s.chad) {
+              pen.save();
+              pen.translate(x, y);
+              pen.rotate(s.rot);
+              pen.beginPath();
+              slot();
+              pen.fill();
+              pen.restore();
+            } else {
+              pen.beginPath();
+              pen.arc(x, y, s.r, 0, Math.PI * 2);
+              pen.fill();
+            }
+          }
+        };
+        const size = () => {
+          const r = hero.getBoundingClientRect();
+          dpr = Math.min(win.devicePixelRatio || 1, 2);
+          const grew = Math.abs(r.width - w) > 40 || Math.abs(r.height - h) > 40;
+          w = r.width;
+          h = r.height;
+          left = r.left + win.scrollX;
+          top = r.top + win.scrollY;
+          dust.width = Math.round(w * dpr);
+          dust.height = Math.round(h * dpr);
+          if (grew || !specks.length) seed();
+          draw(0);
+        };
+        size();
+        const ro = new ResizeObserver(size);
+        ro.observe(hero);
+        ac.signal.addEventListener("abort", () => ro.disconnect());
+        if (!reduce) {
+          // The field leans toward the cursor: -1..1 across the hero, eased in draw(). The pointer's page position
+          // against the hero's cached page box needs no layout read, whatever the lean ticker has just written.
+          if (finePointer) {
+            on(hero, "pointermove", (ev) => {
+              const e = ev as PointerEvent;
+              aim.x = ((e.pageX - left) / w) * 2 - 1;
+              aim.y = ((e.pageY - top) / h) * 2 - 1;
+            });
+            on(hero, "pointerleave", () => { aim.x = 0; aim.y = 0; });
+          }
+          // Its own frame loop. It schedules no frame at all while the hero is off screen or the tab is hidden: the hero
+          // observer and visibilitychange start it again.
+          let visible = true;
+          let prev = 0;
+          let frame = 0; // 0 while no frame is scheduled
+          const tick = (now: number) => {
+            frame = 0;
+            if (!visible || doc.hidden) return;
+            draw(Math.min((now - prev) / 1000, 0.05));
+            prev = now;
+            frame = win.requestAnimationFrame(tick);
+          };
+          const run = () => {
+            if (frame || !visible || doc.hidden || ac.signal.aborted) return;
+            prev = performance.now();
+            frame = win.requestAnimationFrame(tick);
+          };
+          const io = new IntersectionObserver((entries) => { visible = entries.at(-1)!.isIntersecting; run(); });
+          io.observe(hero);
+          on(doc, "visibilitychange", run);
+          run();
+          ac.signal.addEventListener("abort", () => { io.disconnect(); win.cancelAnimationFrame(frame); frame = 0; });
         }
-        // Its own frame loop. It schedules no frame at all while the hero is off screen or the tab is hidden: the hero
-        // observer and visibilitychange start it again.
-        let visible = true;
-        let prev = 0;
-        let frame = 0; // 0 while no frame is scheduled
-        const tick = (now: number) => {
-          frame = 0;
-          if (!visible || doc.hidden) return;
-          draw(Math.min((now - prev) / 1000, 0.05));
-          prev = now;
-          frame = win.requestAnimationFrame(tick);
-        };
-        const run = () => {
-          if (frame || !visible || doc.hidden || ac.signal.aborted) return;
-          prev = performance.now();
-          frame = win.requestAnimationFrame(tick);
-        };
-        const io = new IntersectionObserver((entries) => { visible = entries.at(-1)!.isIntersecting; run(); });
-        io.observe(hero);
-        on(doc, "visibilitychange", run);
-        run();
-        ac.signal.addEventListener("abort", () => { io.disconnect(); win.cancelAnimationFrame(frame); frame = 0; });
+      } catch (err) {
+        console.error("[HomeMotion] dust field failed", err);
+        dust.width = 0; // an empty canvas, as with scripts off
       }
     }
 
@@ -424,7 +450,8 @@ export function initHomeMotion(doc: Document): () => void {
         ac.signal.addEventListener("abort", () => { speed.r = 1; setRate(); });
       }
       // Each pass flips through its photos, a few seconds apart and out of step with its neighbours. A pass and its
-      // clone turn together, so the loop's seam never shows two different photos. Nothing turns under reduced motion.
+      // clone turn together, so the loop's seam never shows two different photos. Nothing turns under reduced motion,
+      // and nothing turns while the strip is stopped: focus within it, off screen, or a hidden tab.
       if (!reduce) {
         const clones = [...track.querySelectorAll<HTMLElement>(".ach.is-clone [data-photos]")];
         [...track.querySelectorAll<HTMLElement>(".ach:not(.is-clone) [data-photos]")].forEach((stack, k) => {
@@ -433,7 +460,7 @@ export function initHomeMotion(doc: Document): () => void {
           if (count < 2) return;
           let at = 0;
           const turn = () => {
-            if (reel.classList.contains("is-offscreen") || doc.hidden) return;
+            if (reel.matches(":focus-within") || reel.classList.contains("is-offscreen") || doc.hidden) return;
             at = (at + 1) % count;
             pair.forEach((st) => {
               st.querySelectorAll(".ach-photo").forEach((im, i) => im.classList.toggle("is-on", i === at));
@@ -467,10 +494,18 @@ export function initHomeMotion(doc: Document): () => void {
         px = e.clientX;
         py = e.clientY;
       });
-      const show = (row: HTMLElement, e?: PointerEvent) => {
+      // `pointer` is set on the pointer paths (entering a row, or a row arriving under a still cursor by scrolling).
+      // Keyboard focus has already aimed the preview at its row, and must not send it to a stale mouse position.
+      const show = (row: HTMLElement, pointer: boolean, e?: PointerEvent) => {
         if (e) { px = e.clientX; py = e.clientY; }
-        // A hidden preview appears at the cursor, not tweening in from wherever it last was (at first load: the top left).
-        if (Number(gsap.getProperty(preview, "opacity")) < 0.05 && px >= 0) gsap.set(preview, { x: px + 28, y: py - preview.offsetHeight / 2 });
+        // A pointer entering the agenda opens the preview at the cursor, every time, instead of sliding it in from
+        // wherever it was hidden (at first load: the top left). The trailing tweens restart from the cursor itself: a
+        // plain set would hold only until the next move, which resumes each tween from its own last value.
+        if (pointer && px >= 0 && !agenda.classList.contains("is-hovering")) {
+          const h = preview.offsetHeight;
+          xTo(px + 28, px + 28);
+          yTo(py - h / 2, py - h / 2);
+        }
         rows.forEach((r) => r.classList.toggle("is-active", r === row));
         agenda.classList.add("is-hovering");
         const src = row.dataset.photo;
@@ -484,12 +519,12 @@ export function initHomeMotion(doc: Document): () => void {
         gsap.to(preview, { opacity: 0, scale: 0.85, duration: reduce ? 0 : 0.25, ease: "power2.in", overwrite: "auto" });
       };
       rows.forEach((r) => {
-        on(r, "pointerenter", (e) => show(r, e as PointerEvent));
+        on(r, "pointerenter", (e) => show(r, true, e as PointerEvent));
         on(r, "focus", () => {
           const b = r.getBoundingClientRect();
           xTo(Math.min(b.right - preview.offsetWidth - 180, win.innerWidth - preview.offsetWidth - 24));
           yTo(b.top + b.height / 2 - preview.offsetHeight / 2);
-          show(r);
+          show(r, false);
         });
         on(r, "blur", hide);
       });
@@ -502,7 +537,7 @@ export function initHomeMotion(doc: Document): () => void {
       const recheck = () => {
         if (px < 0 || !finePointer) return;
         const row = doc.elementFromPoint(px, py)?.closest<HTMLElement>("[data-agenda] .row");
-        if (row) { if (!row.classList.contains("is-active")) show(row); }
+        if (row) { if (!row.classList.contains("is-active")) show(row, true); }
         else if (agenda.classList.contains("is-hovering")) hide();
       };
       ScrollTrigger.create({ trigger: agenda, start: "top bottom", end: "bottom top", onUpdate: recheck, onLeave: hide, onLeaveBack: hide });

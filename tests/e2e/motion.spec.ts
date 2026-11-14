@@ -55,6 +55,22 @@ test("the reel is its own stop: focusing it pauses the strip, blurring lets it r
   await expect.poll(state).toBe("running");
 });
 
+test("a focused reel holds its photos too; blurring lets them turn again", async ({ page }) => {
+  await page.goto("/");
+  const reel = page.locator("[data-reel]");
+  await reel.scrollIntoViewIfNeeded();
+  await expect(reel).not.toHaveClass(/is-offscreen/);
+  await reel.focus();
+  const onPhoto = page.locator(".ach:not(.is-clone)").first().locator(".ach-photo.is-on");
+  await expect(onPhoto).toHaveCount(1);
+  const first = await onPhoto.getAttribute("src");
+  // The first turn is due 4.8s after load (a 1.2s offset, then every 3.6s): wait past it.
+  await page.waitForTimeout(5500);
+  expect(await onPhoto.getAttribute("src")).toBe(first);
+  await reel.blur();
+  await expect.poll(() => onPhoto.getAttribute("src"), { timeout: 6000 }).not.toBe(first);
+});
+
 test("hero stickers sit above the statement box, so each one can be hovered", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
@@ -68,6 +84,113 @@ test("hero stickers sit above the statement box, so each one can be hovered", as
     });
     expect(hit, (await slot.getAttribute("class")) ?? "slot-li").toBe(true);
   }
+});
+
+// The reverse of the test above: lifted over the statement, no sticker may cover the action row, which is sized in px
+// while the phone and the seal are placed in lede ems. A narrow desktop and a short laptop are where the two meet.
+for (const [width, height] of [[900, 800], [1366, 600]]) {
+  test(`hero stickers never cover the action row at ${width}x${height}`, async ({ page }) => {
+    await page.setViewportSize({ width, height });
+    await page.goto("/");
+    await expect(page.locator("html")).not.toHaveClass(/motion-pending/);
+    await expect(page.locator("[data-stickers] .slot-li")).toHaveCount(5);
+    // The entrance is over once every slot has dropped its inline transform and the buttons are fully shown.
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            [...document.querySelectorAll<HTMLElement>(".stickers .slot-li")].every((li) => !li.style.transform) &&
+            [...document.querySelectorAll(".statement .hero-actions .btn")].every((b) => getComputedStyle(b).opacity === "1"),
+        ),
+      )
+      .toBe(true);
+    const covered = () =>
+      page.evaluate(() => {
+        const row = [...document.querySelectorAll(".statement .hero-actions a, .statement .hero-actions button")].map((el) => el.getBoundingClientRect());
+        return [...document.querySelectorAll(".slot-li .sticker")].flatMap((s) => {
+          const r = s.getBoundingClientRect();
+          return row.some((b) => r.left < b.right && b.left < r.right && r.top < b.bottom && b.top < r.bottom) ? [s.closest(".slot-li")!.className] : [];
+        });
+      });
+    // The stickers keep floating: sample a stretch of the drift, not one frame.
+    for (let i = 0; i < 6; i++) {
+      expect(await covered()).toEqual([]);
+      await page.waitForTimeout(300);
+    }
+  });
+}
+
+test("the agenda preview opens at the cursor on every pointer entry, not only the first", async ({ page }) => {
+  await page.goto("/");
+  const agenda = page.locator("[data-agenda]");
+  await agenda.evaluate((el) => el.scrollIntoView({ block: "start" }));
+  // Measure the rows only once the scroll has settled.
+  let lastTop = NaN;
+  await expect
+    .poll(async () => { const top = await agenda.evaluate((el) => Math.round(el.getBoundingClientRect().top)); const still = top === lastTop; lastTop = top; return still; })
+    .toBe(true);
+  const rows = page.locator("[data-agenda] .row");
+  const preview = page.locator("[data-preview]");
+  const at = () => preview.evaluate((el: HTMLElement) => { const m = new DOMMatrix(getComputedStyle(el).transform); return { x: m.m41, y: m.m42, h: el.offsetHeight }; });
+  const frames = () => page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+  const boxes = (await Promise.all((await rows.all()).map((r) => r.boundingBox()))).filter((b) => b !== null);
+  const onScreen = boxes.filter((b) => b.y >= 0 && b.y + b.height <= page.viewportSize()!.height);
+  // First hover after load, near the left end of the first row on screen.
+  const a = onScreen[0];
+  const ax = a.x + 160;
+  const ay = a.y + a.height / 2;
+  await page.mouse.move(ax, ay);
+  await frames();
+  let p = await at();
+  expect(Math.abs(p.x - (ax + 28))).toBeLessThan(4);
+  expect(Math.abs(p.y - (ay - p.h / 2))).toBeLessThan(4);
+  // Leave the agenda, out past its left edge, and let the preview fade out.
+  await page.mouse.move(a.x - 40, ay);
+  await expect.poll(() => preview.evaluate((el) => Number(getComputedStyle(el).opacity))).toBeLessThan(0.05);
+  // Come back on the last row on screen, far to the right, in one move: the preview starts at the cursor, not where
+  // it was hidden.
+  const d = onScreen.at(-1)!;
+  expect(d.y - a.y).toBeGreaterThan(250);
+  const dx = d.x + d.width * 0.75;
+  const dy = d.y + d.height / 2;
+  await page.mouse.move(dx, dy);
+  await frames();
+  p = await at();
+  expect(Math.abs(p.x - (dx + 28))).toBeLessThan(4);
+  expect(Math.abs(p.y - (dy - p.h / 2))).toBeLessThan(4);
+});
+
+test("the dust field drifts when motion is allowed", async ({ page }) => {
+  await page.goto("/");
+  const dust = page.locator(".hero-dust");
+  await expect.poll(() => dust.evaluate((c: HTMLCanvasElement) => c.width)).toBeGreaterThan(0);
+  const moved = await dust.evaluate(async (c: HTMLCanvasElement) => {
+    const snap = () => c.getContext("2d")!.getImageData(0, 0, c.width, c.height).data;
+    const a = snap();
+    await new Promise((r) => setTimeout(r, 600));
+    const b = snap();
+    return a.length === b.length && a.some((v, i) => v !== b[i]);
+  });
+  expect(moved).toBe(true);
+});
+
+test("on a fine pointer the stickers lean toward the cursor, and ease home when it leaves the hero", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  const slot = page.locator(".slot-li.s-a");
+  const offset = (prop: string) => slot.evaluate((el, p) => el.style.getPropertyValue(p), prop);
+  // The lean starts once the entrance is over: keep the pointer moving over the hero's lower right until it does.
+  let n = 0;
+  await expect
+    .poll(async () => { await page.mouse.move(1360 + (n++ % 2) * 20, 840); return offset("--px"); }, { timeout: 8000 })
+    .not.toBe("");
+  // Toward the lower right, so this slot (depth 1.3) leans right and down.
+  await expect.poll(async () => parseFloat(await offset("--px"))).toBeGreaterThan(5);
+  expect(parseFloat(await offset("--py"))).toBeGreaterThan(0);
+  // Onto the nav, out of the hero: the slot eases home, then drops both inline offsets.
+  await page.mouse.move(720, 36);
+  await expect.poll(() => offset("--px"), { timeout: 5000 }).toBe("");
+  expect(await offset("--py")).toBe("");
 });
 
 test("entrance releases the pre-paint hold and ends with the hero visible", async ({ page }) => {

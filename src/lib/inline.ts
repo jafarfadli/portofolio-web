@@ -46,17 +46,3 @@ export function parseInline(src: string, opts: { icons?: boolean } = {}): Inline
 export function iconCount(src: string): number {
   return parseInline(src, { icons: true }).filter((s) => "icon" in s).length;
 }
-
-/**
- * Owner copy as plain text: no markers, no icon tokens, line-break slashes as a space.
- * Use this, never the raw string, for anything that is not rendered through <Inline>.
- */
-export function toPlain(src: string): string {
-  const segs = parseInline(src, { icons: true });
-  let out = "";
-  segs.forEach((s, i) => {
-    if ("icon" in s) return;
-    out += "icon" in (segs[i + 1] ?? {}) ? s.text.trimEnd() : s.text;
-  });
-  return out.replace(/ \/ /g, " ").replace(/[  ]{2,}/g, " ").trim();
-}
