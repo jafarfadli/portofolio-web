@@ -41,3 +41,13 @@ test("first run sets the password; sign out and sign in work", async ({ page }) 
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
 });
+
+test("keyboard focus is drawn in ink on the stock sheet", async ({ page }) => {
+  await page.goto("/admin/login");
+  await page.getByLabel("Password", { exact: true }).focus();
+  await page.keyboard.press("Tab");
+  const button = page.getByRole("button", { name: "Sign in" });
+  await expect(button).toBeFocused();
+  const color = await button.evaluate((el) => getComputedStyle(el).outlineColor);
+  expect(color).toBe("rgb(17, 18, 22)");
+});

@@ -24,6 +24,8 @@
   min-width: 0; background: var(--stock); color: var(--ink); border-radius: var(--r-card);
   box-shadow: var(--shadow-hang); padding: clamp(24px, 3vw, 44px);
 }
+/* site.css draws focus in stock, which vanishes on the stock sheet. Declared before .adm-input:focus-visible so inputs keep their ground ring. */
+.adm-sheet :focus-visible { outline-color: var(--ink); }
 .adm-sheet h1 { font-size: clamp(30px, 2.9vw, 44px); line-height: 1.05; font-weight: 850; font-variation-settings: "wdth" 112; letter-spacing: -0.02em; }
 .adm-h2 { margin: 40px 0 14px; font-size: 25px; line-height: 1.15; font-weight: 800; font-variation-settings: "wdth" 108; }
 .adm-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
