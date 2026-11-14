@@ -5,6 +5,7 @@ import { Activities } from "./Activities";
 import { Closing } from "./Closing";
 import { Experience } from "./Experience";
 import { Hero } from "./Hero";
+import { HomeMotion } from "./HomeMotion";
 import { Nav } from "./Nav";
 import { Work } from "./Work";
 
@@ -25,6 +26,7 @@ export function HomePage({ content, qrDataUrl }: { content: HomeContent; qrDataU
         <Experience experiences={content.experiences} education={content.education} />
         <Closing profile={p} />
       </main>
+      <HomeMotion />
     </>
   );
 }
