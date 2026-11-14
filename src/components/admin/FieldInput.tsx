@@ -35,13 +35,13 @@ export function FieldInput({ field: f, value, error, media }: Props) {
     );
   } else if (f.kind === "enum") {
     control = (
-      <select className="adm-input" defaultValue={value} {...a11y}>
+      <select key={value} className="adm-input" defaultValue={value} {...a11y}>
         {(f.options ?? []).map((o) => <option key={o} value={o}>{o}</option>)}
       </select>
     );
   } else if (f.kind === "media") {
     control = (
-      <select className="adm-input" defaultValue={value} {...a11y}>
+      <select key={value} className="adm-input" defaultValue={value} {...a11y}>
         <option value="">None</option>
         {media[f.mediaKind ?? "screenshot"].map((o) => <option key={o.id} value={String(o.id)}>{o.label}</option>)}
       </select>

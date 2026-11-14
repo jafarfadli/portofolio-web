@@ -21,10 +21,40 @@ test("a saved project headline shows on the public site at once", async ({ page 
 
   await headline.fill(original); // leave the shared e2e data as seeded
   await page.getByRole("button", { name: "Save changes" }).click();
-  await expect(page.getByRole("status")).toHaveText(""); // the stale "Saved." clears while the save runs
   await expect(page.getByRole("status")).toHaveText("Saved.");
   await pub.reload();
   await expect(pub.getByRole("heading", { name: /edited in e2e/ })).toHaveCount(0);
+  await expect(pub.getByRole("heading", { name: original.replaceAll("**", "") })).toBeVisible();
+});
+
+test("a changed select keeps its value after saving, and the next save does not revert it", async ({ page }) => {
+  await page.goto("/admin/achievements");
+  await page.locator(".adm-title").first().click();
+  const rank = page.getByLabel("Rank", { exact: true });
+  const ribbon = page.getByLabel("Ribbon word");
+  const originalRank = await rank.inputValue();
+  const originalRibbon = await ribbon.inputValue();
+  const changed = originalRank === "finalist" ? "award" : "finalist";
+
+  await rank.selectOption(changed);
+  await page.getByRole("button", { name: "Save changes" }).click();
+  await expect(page.getByRole("status")).toHaveText("Saved.");
+  await expect(rank).toHaveValue(changed);
+
+  await ribbon.fill(`${originalRibbon} e2e`);
+  await page.getByRole("button", { name: "Save changes" }).click();
+  await expect(page.getByRole("status")).toHaveText("Saved.");
+  await page.reload();
+  await expect(page.getByLabel("Rank", { exact: true })).toHaveValue(changed);
+
+  // Leave the shared e2e data as seeded.
+  await page.getByLabel("Rank", { exact: true }).selectOption(originalRank);
+  await page.getByLabel("Ribbon word").fill(originalRibbon);
+  await page.getByRole("button", { name: "Save changes" }).click();
+  await expect(page.getByRole("status")).toHaveText("Saved.");
+  await page.reload();
+  await expect(page.getByLabel("Rank", { exact: true })).toHaveValue(originalRank);
+  await expect(page.getByLabel("Ribbon word")).toHaveValue(originalRibbon);
 });
 
 test("invalid input is refused next to its field and kept for fixing", async ({ page }) => {
