@@ -1,10 +1,13 @@
 import { Icon } from "@/components/Icon";
 import { Inline } from "@/components/Inline";
 import type { HomeContent } from "@/content/home";
+import { iconCount } from "@/lib/inline";
 import { statementLines } from "@/lib/statement";
 import { displayUrl } from "@/lib/url";
 
 const SLOTS = ["s-a", "s-b", "s-c", "s-d"] as const;
+/** The three screens float in a row along the hero's bottom edge, so their captions open above them. */
+const CAP_TOP = new Set<string>(["s-a", "s-c", "s-d"]);
 
 /** The seal prints its caption on two lines: everything before the last word, then the last word (the year). */
 function SealCaption({ text }: { text: string | null }) {
@@ -23,6 +26,8 @@ export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: 
 
   return (
     <section className="hero theme-dark" aria-label="Introduction">
+      {/* punched dust: drawn by home-motion.ts, behind the type and the stickers */}
+      <canvas className="hero-dust" data-dust aria-hidden="true" />
       <div className="hero-stage">
         <div className="pendulum" data-pendulum>
           <div className="strap l" aria-hidden="true"><span>{strap}</span></div>
@@ -122,19 +127,23 @@ export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: 
           {projects.map((pr, i) =>
             pr.screenshot ? (
               <li key={pr.id} className={`slot-li ${SLOTS[i]}`}>
-                <a className="sticker" href={`#p-${pr.slug}`}>
-                  <img src={pr.screenshot.url} srcSet={pr.screenshot.srcSet} sizes="(max-width: 860px) 60vw, 330px" alt={pr.screenshot.alt} width={pr.screenshot.width} height={pr.screenshot.height} loading={i < 2 ? undefined : "lazy"} />
-                  <span className="sticker-cap">{pr.stickerCaption} <Icon name="arrow-ur" /></span>
-                </a>
+                <span className="float">
+                  <a className="sticker" href={`#p-${pr.slug}`}>
+                    <img src={pr.screenshot.url} srcSet={pr.screenshot.srcSet} sizes="(max-width: 860px) 60vw, 330px" alt={pr.screenshot.alt} width={pr.screenshot.width} height={pr.screenshot.height} loading={i < 2 ? undefined : "lazy"} />
+                    <span className={CAP_TOP.has(SLOTS[i]) ? "sticker-cap cap-top" : "sticker-cap"}>{pr.stickerCaption} <Icon name="arrow-ur" /></span>
+                  </a>
+                </span>
               </li>
             ) : null,
           )}
           {seal ? (
             <li className="slot-li s-award">
-              <a className="sticker" href="#achievements">
-                <span className="seal"><span><b>{seal.sealText}</b><small><SealCaption text={seal.sealCaption} /></small></span></span>
-                <span className="sticker-cap">{seal.caption} <Icon name="arrow-ur" /></span>
-              </a>
+              <span className="float">
+                <a className="sticker" href="#achievements">
+                  <span className="seal"><span><b>{seal.sealText}</b><small><SealCaption text={seal.sealCaption} /></small></span></span>
+                  <span className="sticker-cap">{seal.caption} <Icon name="arrow-ur" /></span>
+                </a>
+              </span>
             </li>
           ) : null}
         </ul>
@@ -142,8 +151,8 @@ export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: 
 
       <div className="statement">
         <p className="lede" data-lede>
-          {statementLines(p.statementLine1, p.statementLine2).map((line, i) => (
-            <span key={i} className="line"><span><Inline text={line} icons /></span></span>
+          {statementLines(p.statementLine1, p.statementLine2).map((line, i, lines) => (
+            <span key={i} className="line"><span><Inline text={line} icons tiltFrom={lines.slice(0, i).reduce((n, l) => n + iconCount(l), 0)} /></span></span>
           ))}
         </p>
         <div className="hero-actions">

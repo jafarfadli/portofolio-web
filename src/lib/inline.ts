@@ -42,6 +42,11 @@ export function parseInline(src: string, opts: { icons?: boolean } = {}): Inline
   return out;
 }
 
+/** How many icon stickers the copy sets. */
+export function iconCount(src: string): number {
+  return parseInline(src, { icons: true }).filter((s) => "icon" in s).length;
+}
+
 /**
  * Owner copy as plain text: no markers, no icon tokens, line-break slashes as a space.
  * Use this, never the raw string, for anything that is not rendered through <Inline>.

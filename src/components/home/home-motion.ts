@@ -1,14 +1,13 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
-import { iconPath } from "@/components/Icon";
 
 type Ticker = (time: number, deltaTime: number) => void;
 
 /**
  * Port of mockup/main.js. Motion grammar is physical: the badge is a damped pendulum, stickers slap down,
  * leader lines draw to the result they explain. Under reduced motion everything renders in its final state.
- * Returns a cleanup that undoes every listener, ticker, timeout, tween, ScrollTrigger, and Lenis.
+ * Returns a cleanup that undoes every listener, ticker, timer, observer, frame loop, tween, ScrollTrigger, and Lenis.
  */
 export function initHomeMotion(doc: Document): () => void {
   gsap.registerPlugin(ScrollTrigger);
@@ -24,12 +23,14 @@ export function initHomeMotion(doc: Document): () => void {
   const tickers: Ticker[] = [];
   const addTicker = (fn: Ticker) => { gsap.ticker.add(fn); tickers.push(fn); };
   const timeouts: number[] = [];
+  const intervals: number[] = [];
   let lenis: Lenis | null = null;
 
   const teardown = () => {
     ac.abort();
     tickers.forEach((fn) => gsap.ticker.remove(fn));
     timeouts.forEach((t) => win.clearTimeout(t));
+    intervals.forEach((t) => win.clearInterval(t));
     lenis?.destroy();
     gsap.ticker.lagSmoothing(500, 33);
     ctx.revert();
@@ -218,6 +219,147 @@ export function initHomeMotion(doc: Document): () => void {
       });
     }
 
+    /* ---------- Hero: stickers lean with the mouse ---------- */
+    // Each sticker sits at its own depth: the deeper it is, the further it leans toward the cursor. The depth goes
+    // by slot, not by position in the list, since a project without a screenshot renders no sticker.
+    const hero = doc.querySelector<HTMLElement>(".hero");
+    if (!reduce && finePointer && hero && stickerList) {
+      const DEPTH: [string, number][] = [["s-a", 1.3], ["s-b", 0.7], ["s-c", 1], ["s-d", 0.55], ["s-award", 1.6]];
+      const items = [...stickerList.querySelectorAll<HTMLElement>(".slot-li")].map((el) => ({
+        el, depth: DEPTH.find(([c]) => el.classList.contains(c))?.[1] ?? 1, x: 0, y: 0,
+      }));
+      const aim = { x: 0, y: 0 };
+      let leaning = false;
+      // Runs only while a sticker is still travelling; it takes itself off the ticker once they all rest.
+      const lean: Ticker = () => {
+        let still = true;
+        items.forEach((it) => {
+          const tx = aim.x * 16 * it.depth;
+          const ty = aim.y * 11 * it.depth;
+          it.x += (tx - it.x) * 0.08;
+          it.y += (ty - it.y) * 0.08;
+          if (Math.abs(tx - it.x) > 0.05 || Math.abs(ty - it.y) > 0.05) still = false;
+          it.el.style.setProperty("--px", `${it.x.toFixed(2)}px`);
+          it.el.style.setProperty("--py", `${it.y.toFixed(2)}px`);
+        });
+        if (still) { leaning = false; gsap.ticker.remove(lean); }
+      };
+      tickers.push(lean); // teardown takes it off the ticker if it is still running
+      on(hero, "pointermove", (ev) => {
+        const e = ev as PointerEvent;
+        aim.x = (e.clientX / win.innerWidth) * 2 - 1;
+        aim.y = (e.clientY / win.innerHeight) * 2 - 1;
+        if (!leaning) { leaning = true; gsap.ticker.add(lean); }
+      });
+      on(hero, "pointerleave", () => { aim.x = 0; aim.y = 0; });
+      ac.signal.addEventListener("abort", () =>
+        items.forEach(({ el }) => { el.style.removeProperty("--px"); el.style.removeProperty("--py"); }),
+      );
+    }
+
+    /* ---------- Hero: a field of punched dust that leans toward the mouse ---------- */
+    // Specks a hole punch leaves (stock dots, the odd slot-shaped chad) scattered over the hero ground. Each sits at its
+    // own depth: it wanders slowly on its own, and the whole field leans toward the cursor, near specks further than far
+    // ones. Under reduced motion the field is drawn once, still, and redrawn only when the hero resizes.
+    const dust = doc.querySelector<HTMLCanvasElement>("[data-dust]");
+    const pen = dust?.getContext("2d");
+    if (dust && pen && hero) {
+      const INK = ["242,242,238", "242,242,238", "229,228,223", "201,204,214"];
+      const LEAN_X = 150; // px the nearest speck travels at the hero's edge
+      const LEAN_Y = 90;
+      const PAD_X = LEAN_X; // specks scatter past every edge by the most one can lean, so leaning never uncovers a bare strip
+      const PAD_Y = LEAN_Y;
+      type Speck = { x: number; y: number; z: number; chad: boolean; r: number; rot: number; spin: number; vx: number; vy: number; ink: string; alpha: number };
+      let w = 0;
+      let h = 0;
+      let dpr = 1;
+      let specks: Speck[] = [];
+      const seed = () => {
+        const n = Math.round(Math.min(300, ((w + 2 * PAD_X) * (h + 2 * PAD_Y)) / 7200)); // about one speck per 85px square
+        specks = Array.from({ length: n }, () => {
+          const z = 0.15 + Math.random() * 0.85; // depth: 1 is nearest
+          const chad = Math.random() < 0.12;
+          return {
+            x: Math.random() * (w + 2 * PAD_X) - PAD_X, y: Math.random() * (h + 2 * PAD_Y) - PAD_Y, z, chad,
+            r: 0.6 + z * 1.5, rot: Math.random() * Math.PI, spin: (Math.random() - 0.5) * 0.4,
+            vx: (Math.random() - 0.5) * 6, vy: (Math.random() - 0.5) * 6, // px per second, a slow wander
+            ink: chad ? INK[3] : INK[Math.floor(Math.random() * 3)], alpha: 0.18 + z * 0.42,
+          };
+        });
+      };
+      const lean = { x: 0, y: 0 };
+      const aim = { x: 0, y: 0 };
+      const draw = (dt: number) => {
+        pen.setTransform(dpr, 0, 0, dpr, 0, 0);
+        pen.clearRect(0, 0, w, h);
+        lean.x += (aim.x - lean.x) * Math.min(1, dt * 2.2); // the field trails the cursor a little
+        lean.y += (aim.y - lean.y) * Math.min(1, dt * 2.2);
+        for (const s of specks) {
+          s.x = ((s.x + PAD_X + s.vx * dt + w + 2 * PAD_X) % (w + 2 * PAD_X)) - PAD_X;
+          s.y = ((s.y + PAD_Y + s.vy * dt + h + 2 * PAD_Y) % (h + 2 * PAD_Y)) - PAD_Y;
+          s.rot += s.spin * dt;
+          const x = s.x + lean.x * LEAN_X * s.z;
+          const y = s.y + lean.y * LEAN_Y * s.z;
+          pen.globalAlpha = s.alpha;
+          pen.fillStyle = `rgb(${s.ink})`;
+          if (s.chad) {
+            pen.save();
+            pen.translate(x, y);
+            pen.rotate(s.rot);
+            pen.beginPath();
+            pen.roundRect(-3.2, -1, 6.4, 2, 1);
+            pen.fill();
+            pen.restore();
+          } else {
+            pen.beginPath();
+            pen.arc(x, y, s.r, 0, Math.PI * 2);
+            pen.fill();
+          }
+        }
+      };
+      const size = () => {
+        const r = hero.getBoundingClientRect();
+        dpr = Math.min(win.devicePixelRatio || 1, 2);
+        const grew = Math.abs(r.width - w) > 40 || Math.abs(r.height - h) > 40;
+        w = r.width;
+        h = r.height;
+        dust.width = Math.round(w * dpr);
+        dust.height = Math.round(h * dpr);
+        if (grew || !specks.length) seed();
+        draw(0);
+      };
+      size();
+      const ro = new ResizeObserver(size);
+      ro.observe(hero);
+      ac.signal.addEventListener("abort", () => ro.disconnect());
+      if (!reduce) {
+        // The field leans toward the cursor: -1..1 across the hero, eased in draw().
+        if (finePointer) {
+          on(hero, "pointermove", (ev) => {
+            const e = ev as PointerEvent;
+            const r = hero.getBoundingClientRect();
+            aim.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+            aim.y = ((e.clientY - r.top) / r.height) * 2 - 1;
+          });
+          on(hero, "pointerleave", () => { aim.x = 0; aim.y = 0; });
+        }
+        // Its own frame loop, idle while the hero is off screen or the tab is hidden.
+        let visible = true;
+        let prev = performance.now();
+        let frame = 0;
+        const io = new IntersectionObserver((entries) => { visible = entries.at(-1)!.isIntersecting; });
+        io.observe(hero);
+        const tick = (now: number) => {
+          const dt = Math.min((now - prev) / 1000, 0.05);
+          prev = now;
+          if (visible && !doc.hidden) draw(dt);
+          frame = win.requestAnimationFrame(tick);
+        };
+        frame = win.requestAnimationFrame(tick);
+        ac.signal.addEventListener("abort", () => { io.disconnect(); win.cancelAnimationFrame(frame); });
+      }
+    }
+
     /* ---------- Work: leader lines draw to the result ---------- */
     if (!reduce) {
       doc.querySelectorAll<HTMLElement>(".project").forEach((card) => {
@@ -240,8 +382,7 @@ export function initHomeMotion(doc: Document): () => void {
     // The server renders the second, hidden copy of the list; CSS moves the track by half its width.
     const reel = doc.querySelector<HTMLElement>("[data-reel]");
     const track = reel?.querySelector<HTMLElement>("[data-reel-track]");
-    const toggle = doc.querySelector<HTMLButtonElement>("[data-reel-toggle]");
-    if (reel && track && toggle) {
+    if (reel && track) {
       // About 38px a second. Rewriting the same value on resize would restart the running loop, so write only a change.
       let paced = "";
       const pace = () => {
@@ -258,11 +399,37 @@ export function initHomeMotion(doc: Document): () => void {
         reel.setAttribute("role", "region");
         reel.setAttribute("aria-label", "Achievements, scroll sideways");
       }
-      on(toggle, "click", () => {
-        const paused = reel.classList.toggle("is-paused");
-        toggle.setAttribute("aria-label", paused ? "Play the achievements" : "Pause the achievements");
-        toggle.querySelector("path")?.setAttribute("d", iconPath(paused ? "play" : "pause"));
-      });
+      // Hover slows the strap to a stroll instead of stopping it (keyboard focus and leaving the screen still stop it,
+      // in CSS). The rate is eased on the running CSS animation itself.
+      if (!reduce && finePointer) {
+        const speed = { r: 1 };
+        const setRate = () => track.getAnimations().forEach((a) => { a.playbackRate = speed.r; });
+        const ease = (to: number) => gsap.to(speed, { r: to, duration: 0.8, ease: "power2.out", overwrite: true, onUpdate: setRate });
+        on(reel, "pointerenter", () => ease(0.25));
+        on(reel, "pointerleave", () => ease(1));
+        ac.signal.addEventListener("abort", () => { speed.r = 1; setRate(); });
+      }
+      // Each pass flips through its photos, a few seconds apart and out of step with its neighbours. A pass and its
+      // clone turn together, so the loop's seam never shows two different photos. Nothing turns under reduced motion.
+      if (!reduce) {
+        const clones = [...track.querySelectorAll<HTMLElement>(".ach.is-clone [data-photos]")];
+        [...track.querySelectorAll<HTMLElement>(".ach:not(.is-clone) [data-photos]")].forEach((stack, k) => {
+          const pair = clones[k] ? [stack, clones[k]] : [stack];
+          const count = stack.querySelectorAll(".ach-photo").length;
+          if (count < 2) return;
+          let at = 0;
+          const turn = () => {
+            if (reel.classList.contains("is-offscreen") || doc.hidden) return;
+            at = (at + 1) % count;
+            pair.forEach((st) => {
+              st.querySelectorAll(".ach-photo").forEach((im, i) => im.classList.toggle("is-on", i === at));
+              st.querySelectorAll(".ach-dots i").forEach((d, i) => d.classList.toggle("is-on", i === at));
+            });
+          };
+          timeouts.push(win.setTimeout(() => { intervals.push(win.setInterval(turn, 3600)); }, 1200 + k * 750));
+        });
+      }
+      // The latest entry wins: a jump to #achievements queues "out" and "in" in one batch.
       const io = new IntersectionObserver((entries) => reel.classList.toggle("is-offscreen", !entries.at(-1)!.isIntersecting));
       io.observe(reel);
       ac.signal.addEventListener("abort", () => io.disconnect());
@@ -277,7 +444,19 @@ export function initHomeMotion(doc: Document): () => void {
       rows.forEach((r) => { if (r.dataset.photo) { const im = new Image(); im.src = r.dataset.photo; } });
       const xTo = gsap.quickTo(preview, "x", { duration: reduce ? 0 : 0.55, ease: "power3" });
       const yTo = gsap.quickTo(preview, "y", { duration: reduce ? 0 : 0.55, ease: "power3" });
-      const show = (row: HTMLElement) => {
+      // Where the cursor is, known page-wide: after a reload the first row can arrive under a still cursor by scrolling,
+      // before any move inside the agenda.
+      let px = -1;
+      let py = -1;
+      on(win, "pointermove", (ev) => {
+        const e = ev as PointerEvent;
+        px = e.clientX;
+        py = e.clientY;
+      });
+      const show = (row: HTMLElement, e?: PointerEvent) => {
+        if (e) { px = e.clientX; py = e.clientY; }
+        // A hidden preview appears at the cursor, not tweening in from wherever it last was (at first load: the top left).
+        if (Number(gsap.getProperty(preview, "opacity")) < 0.05 && px >= 0) gsap.set(preview, { x: px + 28, y: py - preview.offsetHeight / 2 });
         rows.forEach((r) => r.classList.toggle("is-active", r === row));
         agenda.classList.add("is-hovering");
         const src = row.dataset.photo;
@@ -291,7 +470,7 @@ export function initHomeMotion(doc: Document): () => void {
         gsap.to(preview, { opacity: 0, scale: 0.85, duration: reduce ? 0 : 0.25, ease: "power2.in", overwrite: "auto" });
       };
       rows.forEach((r) => {
-        on(r, "pointerenter", () => show(r));
+        on(r, "pointerenter", (e) => show(r, e as PointerEvent));
         on(r, "focus", () => {
           const b = r.getBoundingClientRect();
           xTo(Math.min(b.right - preview.offsetWidth - 180, win.innerWidth - preview.offsetWidth - 24));
@@ -300,14 +479,10 @@ export function initHomeMotion(doc: Document): () => void {
         });
         on(r, "blur", hide);
       });
-      let px = -1;
-      let py = -1;
       on(agenda, "pointermove", (ev) => {
         const e = ev as PointerEvent;
-        px = e.clientX;
-        py = e.clientY;
-        xTo(px + 28);
-        yTo(py - preview.offsetHeight / 2);
+        xTo(e.clientX + 28);
+        yTo(e.clientY - preview.offsetHeight / 2);
       });
       on(agenda, "pointerleave", hide);
       const recheck = () => {

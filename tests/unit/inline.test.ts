@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ICON_STICKERS, parseInline, toPlain } from "@/lib/inline";
+import { ICON_STICKERS, iconCount, parseInline, toPlain } from "@/lib/inline";
 import { displayUrl } from "@/lib/url";
 
 describe("parseInline", () => {
@@ -61,6 +61,24 @@ describe("parseInline icons", () => {
       { icon: "team" },
       { text: " that", em: true },
     ]);
+  });
+
+  it("splits adjacent tokens, with or without a space between them", () => {
+    expect(parseInline(":pin::rocket:", { icons: true })).toEqual([{ icon: "pin" }, { icon: "rocket" }]);
+    expect(parseInline(":pin: :rocket:", { icons: true })).toEqual([{ icon: "pin" }, { text: " " }, { icon: "rocket" }]);
+  });
+
+  it("splits a token at the very start, keeping the space after it", () => {
+    expect(parseInline(":pin: start", { icons: true })).toEqual([{ icon: "pin" }, { text: " start" }]);
+  });
+
+  it("splits a token that is the whole of a strong run", () => {
+    expect(parseInline("**:pin:** x", { icons: true })).toEqual([{ icon: "pin" }, { text: " x" }]);
+  });
+
+  it("counts the icon stickers a run sets, ignoring unknown tokens", () => {
+    expect(iconCount("Web products :browsers:, end :nope: to :rocket::pin:")).toBe(3);
+    expect(iconCount("no icons here")).toBe(0);
   });
 
   it("knows all eight stickers", () => {

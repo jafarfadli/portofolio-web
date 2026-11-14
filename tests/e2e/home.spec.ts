@@ -32,8 +32,13 @@ test("owner copy renders icon stickers, statement lines and the closing wave", a
   await expect(lede.locator(".line")).toHaveCount(4);
   await expect(lede.locator(".line > span")).toHaveCount(4);
   await expect(lede.locator(".ico-stk")).toHaveCount(3);
-  const lines = (await lede.locator(".line").allInnerTexts()).map((t) => t.replace(/\u00a0/g, " ").trim());
-  // the no-break space before an icon stays in the text, so each icon reads as a gap before its punctuation
+  // one turn of tilts runs across the whole statement, as in the mockup: it does not restart on each line
+  const tilts = await lede.locator(".ico-stk").evaluateAll((els) => els.map((e) => (e as HTMLElement).style.getPropertyValue("--r")));
+  expect(tilts).toEqual(["-7deg", "5deg", "-4deg"]);
+  // innerText breaks around the sticker (an inline grid, its svg a block-level grid item): collapse every run of
+  // whitespace, no-break space included. The no-break space before an icon stays, so each icon reads as a gap before
+  // its punctuation.
+  const lines = (await lede.locator(".line").allInnerTexts()).map((t) => t.replace(/\s+/g, " ").trim());
   expect(lines).toEqual(["Web products ,", "end to end.", "From schema", "to pixel ."]);
   for (const svg of await page.locator(".ico-stk svg").all()) {
     await expect(svg).toHaveAttribute("aria-hidden", "true");
