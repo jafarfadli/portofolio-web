@@ -2,13 +2,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { moveResource, toggleResource } from "@/admin/actions";
 import { FLAG_LABELS, getResource, type Resource } from "@/admin/resources";
-import { listItems, type Row } from "@/admin/store";
+import { listItems, MAX_FEATURED, type Row } from "@/admin/store";
 import { requireAdminPage } from "@/auth/admin";
 import { getDb } from "@/db/client";
 
 const NOTICES: Record<string, string> = {
   deleted: "Deleted.",
-  "featured-cap": "Only 4 projects can be featured. Unfeature another one first.",
+  "featured-cap": `Only ${MAX_FEATURED} projects can be featured. Unfeature another one first.`,
 };
 
 type Props = {

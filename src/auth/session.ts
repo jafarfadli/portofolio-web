@@ -2,8 +2,9 @@ import crypto from "node:crypto";
 import { eq, lt } from "drizzle-orm";
 import type { Db } from "@/db/client";
 import { sessions } from "@/db/schema";
+import { SESSION_DAYS } from "./cookie";
 
-export const SESSION_DAYS = 14;
+export { SESSION_DAYS };
 const DAY = 86_400_000;
 
 export type Session = { id: string; expiresAt: Date; renewed: boolean };

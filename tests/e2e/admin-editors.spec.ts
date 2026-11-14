@@ -106,3 +106,16 @@ test("the profile saves and the list pages link to every editor", async ({ page 
   }
   expect((await page.request.get("/admin/nonsense")).status()).toBe(404);
 });
+
+test("the session cookie rolls on page loads but not on a POST", async ({ page }) => {
+  const cookieHeaders = async (res: { headersArray(): { name: string; value: string }[] }) =>
+    res.headersArray().filter((h) => h.name.toLowerCase() === "set-cookie" && h.value.startsWith("pf_admin=")).map((h) => h.value);
+  const get = await cookieHeaders(await page.request.get("/admin"));
+  expect(get).toHaveLength(1);
+  expect(get[0]).toMatch(/HttpOnly/i);
+  expect(get[0]).toMatch(/SameSite=strict/i);
+  const expires = Date.parse(/Expires=([^;]+)/i.exec(get[0])![1]);
+  expect(expires).toBeGreaterThan(Date.now() + 13 * 86_400_000);
+  const post = await cookieHeaders(await page.request.post("/admin/nonsense"));
+  expect(post).toHaveLength(0);
+});

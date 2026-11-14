@@ -1,11 +1,13 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { ADMIN_LOGIN_HEADER, guardAdminRequest } from "@/lib/admin-guard";
+import { refreshedSessionCookie, SESSION_COOKIE } from "@/auth/cookie";
+import { ADMIN_LOGIN_HEADER, guardAdminRequest, isAdminPath } from "@/lib/admin-guard";
 import { buildCsp, newNonce } from "@/lib/csp";
 import { role } from "@/lib/role";
 
 /**
  * 1. /admin is a 404 unless ROLE=admin and Tailscale's identity header names the owner.
- * 2. Every rendered page gets a fresh CSP nonce (request header x-nonce + the CSP header on both sides).
+ * 2. A GET or HEAD under /admin that carries the session cookie re-sets it for another 14 days (rolling expiry).
+ * 3. Every rendered page gets a fresh CSP nonce (request header x-nonce + the CSP header on both sides).
  */
 export function proxy(request: NextRequest) {
   const dev = process.env.NODE_ENV === "development";
@@ -27,6 +29,14 @@ export function proxy(request: NextRequest) {
   requestHeaders.set("content-security-policy", csp);
   const response = NextResponse.next({ request: { headers: requestHeaders } });
   response.headers.set("content-security-policy", csp);
+  if (isAdminPath(request.nextUrl.pathname)) {
+    const roll = refreshedSessionCookie({
+      method: request.method,
+      token: request.cookies.get(SESSION_COOKIE)?.value,
+      now: new Date(),
+    });
+    if (roll) response.cookies.set(roll.name, roll.value, roll.options);
+  }
   return response;
 }
 

@@ -4,9 +4,10 @@ import { notFound, redirect } from "next/navigation";
 import { getDb } from "@/db/client";
 import { ADMIN_LOGIN_HEADER, adminIdentityOk, sameOrigin } from "@/lib/admin-guard";
 import { isAdminRole } from "@/lib/role";
+import { SESSION_COOKIE, sessionCookieOptions } from "./cookie";
 import { readSession, type Session } from "./session";
 
-export const SESSION_COOKIE = "pf_admin";
+export { SESSION_COOKIE };
 
 async function identityOk(): Promise<boolean> {
   const h = await headers();
@@ -55,13 +56,7 @@ export async function assertAdminAction({ needSession = true }: { needSession?: 
 }
 
 export async function setSessionCookie(token: string, expiresAt: Date): Promise<void> {
-  (await cookies()).set(SESSION_COOKIE, token, {
-    httpOnly: true,
-    secure: true, // tailscale serve terminates HTTPS; browsers also accept Secure cookies on 127.0.0.1
-    sameSite: "strict",
-    path: "/",
-    expires: expiresAt,
-  });
+  (await cookies()).set(SESSION_COOKIE, token, sessionCookieOptions(expiresAt));
 }
 
 /** Removes the cookie and returns the token it held, so the caller can delete the session row. */
