@@ -4,6 +4,7 @@ import type { Db } from "@/db/client";
 import {
   achievements, activities, cvProfileItems, cvProfiles, education, experiences, media, projects, skills,
 } from "@/db/schema";
+import { withoutLead } from "@/lib/without-lead";
 import { resolveCvSection, type CvPick } from "@/lib/cv-resolve";
 import {
   getProfile, toMediaRef, type Achievement, type Activity, type Education, type Experience, type MediaRef, type Profile, type Project, type Skill,
@@ -54,9 +55,16 @@ export function getCvContent(db: Db, slug?: string): CvContent | null {
     summary: cvProfile?.summaryOverride ?? p.cvSummary,
     experiences: resolveCvSection(db.select().from(experiences).all(), "experience", picks),
     projects: resolveCvSection(db.select().from(projects).all(), "project", picks),
-    achievements: resolveCvSection(db.select().from(achievements).all(), "achievement", picks),
-    activities: resolveCvSection(db.select().from(activities).all(), "activity", picks),
-    education: resolveCvSection(db.select().from(education).all(), "education", picks),
+    // Older rows repeat the rank, role or institution the CV already prints, so the CV drops that lead.
+    achievements: resolveCvSection(db.select().from(achievements).all(), "achievement", picks).map((a) => ({
+      ...a, cvLine: withoutLead(a.cvLine, a.rankLabel),
+    })),
+    activities: resolveCvSection(db.select().from(activities).all(), "activity", picks).map((a) => ({
+      ...a, cvLine: withoutLead(a.cvLine, a.roleLabel),
+    })),
+    education: resolveCvSection(db.select().from(education).all(), "education", picks).map((e) => ({
+      ...e, cvNote: withoutLead(e.cvNote, e.institution),
+    })),
     skillGroups: groupSkills(resolveCvSection(db.select().from(skills).all(), "skill", picks)),
   };
 }

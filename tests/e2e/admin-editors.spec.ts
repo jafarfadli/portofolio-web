@@ -27,6 +27,42 @@ test("a saved project headline shows on the public site at once", async ({ page 
   await expect(pub.getByRole("heading", { name: original.replaceAll("**", "") })).toBeVisible();
 });
 
+test("with no badge or CV photo the public pages fall back to the plain layouts", async ({ page }) => {
+  await page.goto("/admin/profile");
+  const badge = page.getByLabel("Badge photo");
+  const cvPhoto = page.getByLabel("CV photo");
+  const [badgeBefore, cvBefore] = [await badge.inputValue(), await cvPhoto.inputValue()];
+  const save = async () => {
+    await page.getByRole("button", { name: "Save changes" }).click();
+    await expect(page.getByRole("status")).toHaveText("Saved.");
+  };
+
+  try {
+    await badge.selectOption("");
+    await cvPhoto.selectOption("");
+    await save();
+
+    const pub = await page.context().newPage();
+    await pub.goto(`${PUBLIC}/`);
+    await expect(pub.locator(".badge-id.no-photo")).toHaveCount(1);
+    await expect(pub.locator(".badge-photo")).toHaveCount(0);
+    await pub.goto(`${PUBLIC}/cv`);
+    await expect(pub.locator(".cv-head.cv-head-solo")).toHaveCount(1);
+    await expect(pub.locator(".cv-photo")).toHaveCount(0);
+    await expect(pub.locator(".cv-sheet img")).toHaveCount(0);
+    await pub.close();
+  } finally {
+    await badge.selectOption(badgeBefore); // leave the shared e2e data as seeded
+    await cvPhoto.selectOption(cvBefore);
+    await save();
+  }
+  const back = await page.context().newPage();
+  await back.goto(`${PUBLIC}/`);
+  await expect(back.locator(".badge-photo")).toHaveCount(1);
+  await back.goto(`${PUBLIC}/cv`);
+  await expect(back.locator(".cv-photo img")).toHaveCount(1);
+});
+
 test("a changed select keeps its value after saving, and the next save does not revert it", async ({ page }) => {
   await page.goto("/admin/achievements");
   await page.locator(".adm-title").first().click();

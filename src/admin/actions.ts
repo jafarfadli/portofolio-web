@@ -6,7 +6,7 @@ import { assertAdminAction } from "@/auth/admin";
 import { getDb } from "@/db/client";
 import { echoValues, parseFields, toFormValues } from "./fields";
 import { getResource, PROFILE_FIELDS, type Flag, type Resource } from "./resources";
-import { deleteItem, moveItem, saveItem, saveProfile, setFlag } from "./store";
+import { checkMedia, deleteItem, moveItem, saveItem, saveProfile, setFlag } from "./store";
 
 export type FormState = {
   status: "idle" | "saved" | "error";
@@ -73,6 +73,10 @@ export async function saveProfileAction(_prev: FormState, form: FormData): Promi
   const parsed = parseFields(PROFILE_FIELDS, form);
   if (Object.keys(parsed.errors).length > 0) {
     return { status: "error", errors: parsed.errors, values: echoValues(PROFILE_FIELDS, form) };
+  }
+  const mediaErrors = checkMedia(getDb(), PROFILE_FIELDS, parsed.values);
+  if (Object.keys(mediaErrors).length > 0) {
+    return { status: "error", errors: mediaErrors, values: echoValues(PROFILE_FIELDS, form) };
   }
   saveProfile(getDb(), parsed.values);
   revalidatePath("/admin", "layout");

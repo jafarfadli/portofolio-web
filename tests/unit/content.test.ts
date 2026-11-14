@@ -56,6 +56,23 @@ describe("getCvContent", () => {
   it("returns null for an unknown profile slug", () => {
     expect(getCvContent(db, "nope")).toBeNull();
   });
+
+  it("drops a rank, role or institution that an older line repeats", () => {
+    const old = seededDb();
+    const ach = old.select().from(achievements).where(eq(achievements.title, "Nusantara Code Cup")).get()!;
+    old.update(achievements).set({ cvLine: "**Winner**, Nusantara Code Cup, software development" }).where(eq(achievements.id, ach.id)).run();
+    const act = old.select().from(activities).where(eq(activities.title, "JakWeb Meetup #42")).get()!;
+    old.update(activities).set({ cvLine: `${act.roleLabel}, JakWeb Meetup #42` }).where(eq(activities.id, act.id)).run();
+    const edu = old.select().from(education).all()[0];
+    old.update(education).set({ cvNote: `${edu.institution}, GPA 3.71 / 4.00` }).where(eq(education.id, edu.id)).run();
+
+    const cv = getCvContent(old)!;
+    expect(cv.achievements.find((a) => a.id === ach.id)!.cvLine).toBe("Nusantara Code Cup, software development");
+    expect(cv.activities.find((a) => a.id === act.id)!.cvLine).toBe("JakWeb Meetup #42");
+    expect(cv.education.find((e) => e.id === edu.id)!.cvNote).toBe("GPA 3.71 / 4.00");
+    // The home page keeps the stored line as it is.
+    expect(getHomeContent(old)!.achievements.some((a) => a.id === ach.id)).toBe(true);
+  });
 });
 
 describe("first run", () => {

@@ -2,7 +2,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createSession } from "@/auth/session";
 import { SESSION_COOKIE } from "@/auth/cookie";
 import type { Db } from "@/db/client";
-import { testDb } from "./helpers";
+import { eq } from "drizzle-orm";
+import { media, profile } from "@/db/schema";
+import { toFormValues } from "@/admin/fields";
+import { PROFILE_FIELDS } from "@/admin/resources";
+import { seededDb, testDb } from "./helpers";
 
 const state = vi.hoisted(() => ({
   headers: {} as Record<string, string>,
@@ -27,9 +31,11 @@ vi.mock("next/navigation", () => ({
     throw new Error("NOT_FOUND");
   },
 }));
+vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 vi.mock("@/db/client", async (importOriginal) => ({ ...(await importOriginal<typeof import("@/db/client")>()), getDb: () => state.db }));
 
 const { assertAdminAction } = await import("@/auth/admin");
+const { saveProfileAction } = await import("@/admin/actions");
 
 const DAY = 86_400_000;
 const OWNER = "owner@example.com";
@@ -111,5 +117,42 @@ describe("assertAdminAction", () => {
     expect(value).toBe(token);
     expect(options).toMatchObject({ httpOnly: true, secure: true, sameSite: "strict", path: "/" });
     expect(options.expires.getTime()).toBeGreaterThan(before + 13 * DAY);
+  });
+});
+
+describe("saveProfileAction", () => {
+  function profileForm(over: Record<string, string>): FormData {
+    const row = state.db.select().from(profile).get()!;
+    const values = { ...toFormValues(PROFILE_FIELDS, row as Record<string, unknown>), ...over };
+    const form = new FormData();
+    for (const [k, v] of Object.entries(values)) form.set(k, v);
+    return form;
+  }
+  const mediaId = (kind: "photo" | "screenshot") => state.db.select().from(media).where(eq(media.kind, kind)).get()!.id;
+  const prev = { status: "idle" as const, errors: {} };
+
+  beforeEach(() => {
+    state.db = seededDb();
+    state.cookies[SESSION_COOKIE] = createSession(state.db, "test", new Date()).token;
+  });
+
+  it("returns a field error, and saves nothing, for a deleted or wrong-kind image", async () => {
+    const before = state.db.select().from(profile).get()!;
+    const msg = "Pick a photo from the media library.";
+    const gone = await saveProfileAction(prev, profileForm({ photoId: "99999", firstName: "Changed" }));
+    expect(gone).toMatchObject({ status: "error", errors: { photoId: msg } });
+    expect(gone.values?.firstName).toBe("Changed");
+    const wrong = await saveProfileAction(prev, profileForm({ cvPhotoId: String(mediaId("screenshot")) }));
+    expect(wrong).toMatchObject({ status: "error", errors: { cvPhotoId: msg } });
+    expect(state.db.select().from(profile).get()).toEqual(before);
+  });
+
+  it("saves empty pickers and right-kind images", async () => {
+    const save = saveProfileAction;
+    expect((await save(prev, profileForm({ photoId: "", cvPhotoId: "" }))).status).toBe("saved");
+    expect(state.db.select().from(profile).get()).toMatchObject({ photoId: null, cvPhotoId: null });
+    const photo = mediaId("photo");
+    expect((await save(prev, profileForm({ photoId: String(photo), cvPhotoId: String(photo) }))).status).toBe("saved");
+    expect(state.db.select().from(profile).get()).toMatchObject({ photoId: photo, cvPhotoId: photo });
   });
 });

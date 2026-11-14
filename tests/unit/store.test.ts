@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { and, eq, getTableColumns } from "drizzle-orm";
 import { getResource, LIST_KEYS, PROFILE_FIELDS, RESOURCES } from "@/admin/resources";
-import { deleteItem, getItem, listItems, moveItem, saveItem, saveProfile, setFlag } from "@/admin/store";
+import { checkMedia, deleteItem, getItem, listItems, moveItem, saveItem, saveProfile, setFlag } from "@/admin/store";
 import { achievements, cvProfileItems, media, profile, projects } from "@/db/schema";
 import { minimalProject, seededDb, testDb } from "./helpers";
 
@@ -81,6 +81,17 @@ describe("store", () => {
     expect(saveItem(db, "projects", ledgerly.id, { screenshotId: photo.id })).toEqual(pickError);
     expect(saveItem(db, "projects", ledgerly.id, { screenshotId: 99_999 })).toEqual(pickError);
     expect(saveItem(db, "projects", ledgerly.id, { screenshotId: shot.id }).ok).toBe(true);
+  });
+
+  it("checks the profile's picked images the same way", () => {
+    const db = seededDb();
+    const photo = db.select().from(media).where(eq(media.kind, "photo")).get()!;
+    const shot = db.select().from(media).where(eq(media.kind, "screenshot")).get()!;
+    const msg = "Pick a photo from the media library.";
+    expect(checkMedia(db, PROFILE_FIELDS, { photoId: 99_999 })).toEqual({ photoId: msg });
+    expect(checkMedia(db, PROFILE_FIELDS, { photoId: shot.id, cvPhotoId: shot.id })).toEqual({ photoId: msg, cvPhotoId: msg });
+    expect(checkMedia(db, PROFILE_FIELDS, { photoId: null, cvPhotoId: null })).toEqual({});
+    expect(checkMedia(db, PROFILE_FIELDS, { photoId: photo.id, cvPhotoId: photo.id })).toEqual({});
   });
 
   it("moves rows up and down and stops at the ends", () => {

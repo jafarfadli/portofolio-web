@@ -1,6 +1,7 @@
 import { and, asc, count, eq, ne, sql } from "drizzle-orm";
 import type { Db } from "@/db/client";
 import { cvProfileItems, media, profile, projects } from "@/db/schema";
+import type { Field } from "./fields";
 import { RESOURCES, type Flag, type ListKey, type Resource } from "./resources";
 
 export const MAX_FEATURED = 4;
@@ -90,13 +91,19 @@ function featuredOthers(db: Db, id: number | null): number {
   return db.select({ n: count() }).from(projects).where(where).get()?.n ?? 0;
 }
 
-function checkRules(db: Db, res: Resource, id: number | null, values: Record<string, unknown>): Record<string, string> {
+/** A picked image must still exist and be the kind the field asks for. Shared by every list and the profile. */
+export function checkMedia(db: Db, fields: readonly Field[], values: Record<string, unknown>): Record<string, string> {
   const errors: Record<string, string> = {};
-  for (const f of res.fields) {
+  for (const f of fields) {
     if (f.kind !== "media" || !(f.name in values) || values[f.name] === null) continue;
     const picked = db.select({ kind: media.kind }).from(media).where(eq(media.id, values[f.name] as number)).get();
     if (!picked || picked.kind !== f.mediaKind) errors[f.name] = `Pick a ${f.mediaKind} from the media library.`;
   }
+  return errors;
+}
+
+function checkRules(db: Db, res: Resource, id: number | null, values: Record<string, unknown>): Record<string, string> {
+  const errors = checkMedia(db, res.fields, values);
   if (res.key === "projects") {
     if (typeof values.slug === "string") {
       const sameSlug = eq(projects.slug, values.slug);
