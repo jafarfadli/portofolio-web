@@ -119,6 +119,15 @@
         ],
         "createdAt": "2026-11-14T13:26:53.858Z",
         "reason": "Owner asked (2026-11-14) for the achievements to auto-scroll like danielsun.space; reel has a visible pause button, pauses on hover, focus and off screen, and stands still under reduced motion"
+      },
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "mockup/project.html"
+        ],
+        "createdAt": "2026-11-14T13:29:24.899Z",
+        "reason": "False positive: project.html loads the shared styles.css, whose .reel-track rule belongs to the home achievements reel; project.html has no reel element"
       }
     ]
   }
