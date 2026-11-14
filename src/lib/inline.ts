@@ -3,7 +3,7 @@ export type InlineSegment = { text: string; strong?: true; em?: true };
 /** Tiny inline markup for owner-written copy: **strong** and _em_. Nothing else is interpreted. */
 export function parseInline(src: string): InlineSegment[] {
   const out: InlineSegment[] = [];
-  const re = /\*\*(.+?)\*\*|_(.+?)_/g;
+  const re = /\*\*(.+?)\*\*|(?<!\w)_(?!\s)(.+?)(?<!\s)_(?!\w)/g;
   let last = 0;
   let m: RegExpExecArray | null;
   while ((m = re.exec(src)) !== null) {

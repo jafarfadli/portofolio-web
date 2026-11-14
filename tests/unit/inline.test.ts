@@ -27,6 +27,15 @@ describe("parseInline", () => {
   it("leaves unclosed markers literal", () => {
     expect(parseInline("**half open")).toEqual([{ text: "**half open" }]);
   });
+
+  it("does not treat underscores inside identifiers as em markers", () => {
+    expect(parseInline("built with snake_case_names")).toEqual([{ text: "built with snake_case_names" }]);
+    expect(parseInline("my_var and other_var")).toEqual([{ text: "my_var and other_var" }]);
+  });
+
+  it("still applies em at word boundaries", () => {
+    expect(parseInline("_start_ of line")).toEqual([{ text: "start", em: true }, { text: " of line" }]);
+  });
 });
 
 describe("displayUrl", () => {
