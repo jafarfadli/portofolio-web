@@ -27,3 +27,10 @@ next-env.d.ts
 *.tsbuildinfo
 /out/
 /coverage/
+
+# owner's raw reference photos stay local; only processed crops ship
+/references/*.png
+/references/*.jpg
+/references/*.jpeg
+/references/*.heic
+/.impeccable/mocks/revision/

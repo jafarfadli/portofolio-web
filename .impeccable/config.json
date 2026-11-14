@@ -29,6 +29,87 @@
         ],
         "createdAt": "2026-11-14T09:46:01.833Z",
         "reason": "Agent: false positive, .cs-page padding is clamp(28px, 3.2vw, 52px); measured 46px at 1440"
+      },
+      {
+        "rule": "tiny-text",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/revision/compare.html"
+        ],
+        "createdAt": "2026-11-14T11:49:02.173Z",
+        "reason": "Agent: decision page with scaled-down page miniatures; exploration artifact, never shipped"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "mockup/index.html"
+        ],
+        "createdAt": "2026-11-14T12:03:03.597Z",
+        "reason": "Agent: false positive, padding is clamp(20px, 2vw, 28px); measured text inset 28px on .badge-head and .avail at 1440"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/revision/compare.html"
+        ],
+        "createdAt": "2026-11-14T12:03:03.621Z",
+        "reason": "Agent: decision page with scaled-down page miniatures; exploration artifact, never shipped"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/revision/compare.html"
+        ],
+        "createdAt": "2026-11-14T12:03:03.644Z",
+        "reason": "Agent: decision page with scaled-down page miniatures; exploration artifact, never shipped"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/revision/compare.html"
+        ],
+        "createdAt": "2026-11-14T12:03:03.669Z",
+        "reason": "Agent: decision page with scaled-down page miniatures; exploration artifact, never shipped"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/revision/compare.html"
+        ],
+        "createdAt": "2026-11-14T12:03:03.692Z",
+        "reason": "Agent: decision page with scaled-down page miniatures; exploration artifact, never shipped"
+      },
+      {
+        "rule": "nested-cards",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/revision/compare.html"
+        ],
+        "createdAt": "2026-11-14T12:03:03.716Z",
+        "reason": "Agent: decision page with scaled-down page miniatures; exploration artifact, never shipped"
+      },
+      {
+        "rule": "tight-leading",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/revision/compare.html"
+        ],
+        "createdAt": "2026-11-14T12:03:03.740Z",
+        "reason": "Agent: decision page with scaled-down page miniatures; exploration artifact, never shipped"
+      },
+      {
+        "rule": "undersized-ui-text",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/revision/compare.html"
+        ],
+        "createdAt": "2026-11-14T12:03:03.764Z",
+        "reason": "Agent: decision page with scaled-down page miniatures; exploration artifact, never shipped"
       }
     ]
   }

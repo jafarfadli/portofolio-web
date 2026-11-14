@@ -1,16 +1,30 @@
 /* Lanyard & Badge - portfolio mockup
-   World: woven ultramarine lanyard ground, PVC badge stock, near-black ink, clip metal.
+   World: two woven lanyard colourways sewn together (navy and concrete), PVC badge stock, near-black ink, clip metal.
    One family: Archivo (variable wdth 62–125, wght 100–900). */
 
 :root {
-  --ground: #2132d6;
-  --ground-deep: #1a27ad;
+  /* two webbing colourways; every section is sewn from one of them */
+  --navy: #1d2640;
+  --navy-deep: #151c31;
+  --concrete: #e5e4df;
+  --concrete-deep: #d6d5cf;
   --stock: #f2f2ee;
   --ink: #111216;
   --ink-2: #45474d;
   --metal: #c9ccd6;
+  --metal-light: #dfe1e7;
+  --metal-mid: #a7abb7;
+  --metal-dark: #7f8391;
+
+  /* theme roles, remapped by .theme-dark / .theme-light */
+  --ground: var(--navy);
+  --ground-deep: var(--navy-deep);
   --on-ground: #f2f2ee;
-  --on-ground-2: #c8cef6;
+  --on-ground-2: #b4bcd3;
+  --line: rgba(242, 242, 238, 0.22);
+  --line-strong: rgba(242, 242, 238, 0.85);
+  --stitch: rgba(242, 242, 238, 0.26);
+  --twill-tint: transparent;
 
   --r-card: 18px;
   --r-sticker: 16px;
@@ -34,7 +48,7 @@
 *::before,
 *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; scrollbar-color: var(--metal) var(--ground-deep); scrollbar-width: thin; }
+html { -webkit-text-size-adjust: 100%; scrollbar-color: var(--metal) var(--navy-deep); scrollbar-width: thin; }
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 
@@ -53,8 +67,8 @@ body {
 
 ::selection { background: var(--stock); color: var(--ground); }
 ::-webkit-scrollbar { width: 10px; }
-::-webkit-scrollbar-track { background: var(--ground-deep); }
-::-webkit-scrollbar-thumb { background: var(--metal); border-radius: 10px; border: 2px solid var(--ground-deep); }
+::-webkit-scrollbar-track { background: var(--navy-deep); }
+::-webkit-scrollbar-thumb { background: var(--metal); border-radius: 10px; border: 2px solid var(--navy-deep); }
 
 img { display: block; max-width: 100%; }
 a { color: inherit; text-underline-offset: 0.22em; text-decoration-thickness: 2px; }
@@ -62,7 +76,7 @@ h1, h2, h3, p, ul, ol, figure { margin: 0; }
 ul, ol { padding: 0; list-style: none; }
 button { font: inherit; color: inherit; }
 
-:focus-visible { outline: 3px solid var(--stock); outline-offset: 3px; border-radius: 6px; }
+:focus-visible { outline: 3px solid var(--on-ground); outline-offset: 3px; border-radius: 6px; }
 .on-stock :focus-visible, .on-stock:focus-visible { outline-color: var(--ink); }
 
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
@@ -71,16 +85,36 @@ button { font: inherit; color: inherit; }
 
 .icon { width: 1.1em; height: 1.1em; flex: none; fill: currentColor; }
 
-/* ---------- Woven lanyard ground (fixed, never on a scrolling layer) ---------- */
-.weave {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background-image: url("assets/textures/twill.png"); background-size: 24px 24px; /* raster 2/2 twill tile, see assets-src/make_textures.py */
+/* ---------- Two woven colourways, sewn panel to panel ---------- */
+.weave { display: none; } /* the page ground now lives on each section panel */
+.theme-dark {
+  --ground: var(--navy); --ground-deep: var(--navy-deep);
+  --on-ground: #f2f2ee; --on-ground-2: #b4bcd3;
+  --line: rgba(242, 242, 238, 0.22); --line-strong: rgba(242, 242, 238, 0.85); --stitch: rgba(242, 242, 238, 0.26);
+  --twill-tint: transparent;
+}
+.theme-light {
+  --ground: var(--concrete); --ground-deep: var(--concrete-deep);
+  --on-ground: var(--ink); --on-ground-2: var(--ink-2);
+  --line: rgba(17, 18, 22, 0.16); --line-strong: rgba(17, 18, 22, 0.8); --stitch: rgba(17, 18, 22, 0.22);
+  --twill-tint: rgba(229, 228, 223, 0.55); /* the same twill reads finer on the light webbing */
+}
+.theme-dark, .theme-light {
+  color: var(--on-ground); caret-color: var(--on-ground);
+  background-color: var(--ground);
+  /* raster 2/2 twill tile (assets-src/make_textures.py); the first layer is a flat tint, not a gradient */
+  background-image: linear-gradient(var(--twill-tint), var(--twill-tint)), url("assets/textures/twill.png");
+  background-size: auto, 24px 24px;
+}
+/* the seam: each panel is sewn onto the one above it */
+.theme-dark + .theme-light::before, .theme-light + .theme-dark::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 12px; height: 0; border-top: 2px dashed var(--stitch); pointer-events: none;
 }
 
 /* ---------- The cord: one vertical line that rules the page ---------- */
 .cord { position: fixed; z-index: 2; left: var(--cord-x); top: 0; bottom: 0; width: 6px; pointer-events: none; opacity: 0; transition: opacity 400ms var(--ease-out); }
 .cord.is-on { opacity: 1; }
-.cord::before { content: ""; position: absolute; inset: 0; background: rgba(242, 242, 238, 0.14); border-radius: 3px; }
+.cord::before { content: ""; position: absolute; inset: 0; background: rgba(127, 131, 145, 0.24); border-radius: 3px; }
 .cord-fill { position: absolute; inset: 0; background: var(--ink); border-radius: 3px; transform-origin: top; transform: scaleY(0);
   background-image: url("assets/textures/webbing.png"); background-size: 16px 16px; }
 
@@ -96,8 +130,8 @@ button { font: inherit; color: inherit; }
 .btn:active { transform: translateY(1px) scale(0.98); }
 .btn-stock { background: var(--stock); color: var(--ink); box-shadow: 0 6px 16px -8px rgba(10, 11, 18, 0.7); }
 .btn-stock:hover { background: #ffffff; box-shadow: 0 10px 22px -8px rgba(10, 11, 18, 0.75); }
-.btn-line { border-color: rgba(242, 242, 238, 0.75); color: var(--on-ground); }
-.btn-line:hover { border-color: var(--stock); background: rgba(242, 242, 238, 0.08); }
+.btn-line { border-color: var(--line-strong); color: var(--on-ground); }
+.btn-line:hover { border-color: var(--on-ground); background: var(--line); }
 .btn-ink { background: var(--ink); color: var(--stock); }
 .btn-ink:hover { background: #24262e; }
 .btn-ink-line { border-color: var(--ink); color: var(--ink); }
@@ -110,18 +144,18 @@ button { font: inherit; color: inherit; }
   padding: 0 var(--gutter-r) 0 var(--gutter);
   transition: transform 380ms var(--ease-out), background-color 300ms var(--ease-out);
 }
-.nav.is-solid { background: rgba(26, 39, 173, 0.92); backdrop-filter: saturate(140%) blur(10px); -webkit-backdrop-filter: saturate(140%) blur(10px); }
+.nav.is-solid { background: rgba(21, 28, 49, 0.94); backdrop-filter: saturate(140%) blur(10px); -webkit-backdrop-filter: saturate(140%) blur(10px); }
 .nav.is-hidden { transform: translateY(-100%); }
 .brand { font-weight: 800; font-variation-settings: "wdth" 118; font-size: 17px; text-decoration: none; letter-spacing: 0.01em; }
 .nav-links { display: flex; gap: clamp(16px, 2.4vw, 36px); }
-.nav-links a { text-decoration: none; font-weight: 600; font-size: 15px; color: var(--on-ground); padding: 8px 0; position: relative; }
+.nav-links a { text-decoration: none; font-weight: 600; font-size: 15px; color: #f2f2ee; padding: 8px 0; position: relative; }
 .nav-links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 2px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform 260ms var(--ease-out); }
 .nav-links a:hover::after, .nav-links a[aria-current="true"]::after { transform: scaleX(1); }
 .nav .btn { min-height: 42px; font-size: 15px; }
 
 /* ---------- Layout ---------- */
 main { position: relative; z-index: 1; }
-.section { position: relative; padding: clamp(96px, 12vw, 176px) var(--gutter-r) 0 var(--gutter); }
+.section { position: relative; padding: clamp(88px, 10vw, 150px) var(--gutter-r) clamp(88px, 10vw, 150px) var(--gutter); } /* each panel is its own piece of webbing */
 .section-head { position: relative; margin-bottom: clamp(36px, 5vw, 64px); }
 .section-head h2 {
   font-size: clamp(44px, 6.6vw, 96px); line-height: 0.95; font-weight: 850;
@@ -136,33 +170,38 @@ main { position: relative; z-index: 1; }
 }
 
 /* ---------- Hero ---------- */
-.hero { position: relative; height: 100vh; height: 100dvh; min-height: 720px; max-height: 1000px; overflow: clip; }
+.hero { position: relative; z-index: 2; height: 100vh; height: 100dvh; min-height: 720px; max-height: 1000px; overflow-x: clip; } /* y stays visible: the badge's shadow falls across the seam */
 
 .pendulum {
-  position: absolute; z-index: 3; left: 26%; top: -40px; width: 0; height: 0;
+  position: absolute; z-index: 3; left: 77%; top: -40px; width: 0; height: 0;
+  --strap-l: clamp(210px, 27vh, 270px);
   transform-origin: 0 0; will-change: transform;
 }
+/* The strap is a loop: two lengths of printed webbing come down from the neck, are sewn into one end,
+   and that end folds round a metal ring. The ring's top bar sits inside the fold, so only its lower half shows. */
 .strap {
-  position: absolute; left: -23px; top: 0; width: 46px; height: clamp(250px, 34vh, 330px);
-  background: var(--ink);
+  position: absolute; top: -60px; width: 30px; height: calc(var(--strap-l) + 60px);
+  background-color: var(--concrete);
   background-image: url("assets/textures/webbing.png"); background-size: 16px 16px;
-  border-radius: 0 0 4px 4px; overflow: hidden;
-  box-shadow: inset 3px 0 0 rgba(255, 255, 255, 0.05), inset -3px 0 0 rgba(0, 0, 0, 0.35);
+  border-radius: 0 0 3px 3px; overflow: hidden; transform-origin: 50% 100%;
+  box-shadow: inset 2px 0 0 rgba(255, 255, 255, 0.35), inset -3px 0 0 rgba(17, 18, 22, 0.2);
 }
+.strap.l { left: -28px; transform: rotate(-8deg); }
+.strap.r { left: -2px; transform: rotate(8deg); }
 .strap span {
   position: absolute; left: 50%; top: 0; transform: translateX(-50%); writing-mode: vertical-rl;
-  white-space: nowrap; color: var(--stock); opacity: 0.62; font-size: 12px; font-weight: 800;
-  font-variation-settings: "wdth" 125; letter-spacing: 0.32em; padding-top: 60px;
+  white-space: nowrap; color: var(--navy); font-size: 11px; font-weight: 800;
+  font-variation-settings: "wdth" 125; letter-spacing: 0.3em; padding-top: 70px;
 }
-.clasp {
-  position: absolute; left: -20px; top: calc(clamp(250px, 34vh, 330px) - 6px); width: 40px; height: 46px;
-  border: 6px solid var(--metal); border-radius: 12px 12px 18px 18px; border-top-width: 10px;
-  background: linear-gradient(180deg, transparent 55%, rgba(17, 18, 22, 0.15));
-  box-shadow: 0 4px 8px rgba(10, 11, 18, 0.45);
-}
+.strap.r span { padding-top: 150px; }
+.strap-fold { position: absolute; z-index: 1; left: -31px; top: calc(var(--strap-l) - 22px); width: 62px; height: 54px; overflow: visible; }
+/* ring (behind the fold), then swivel and lobster clasp in front: flat metal facets, no sheen */
+.hw { position: absolute; left: -32px; width: 64px; pointer-events: none; filter: drop-shadow(0 3px 3px rgba(10, 11, 18, 0.45)); }
+.hw-back { z-index: 0; top: calc(var(--strap-l) + 10px); height: 40px; }
+.hw-front { z-index: 2; top: calc(var(--strap-l) + 36px); height: 66px; }
 .badge {
-  position: absolute; left: calc(var(--badge-w) / -2); top: calc(clamp(250px, 34vh, 330px) + 26px);
-  --badge-w: clamp(280px, 25vw, 360px);
+  position: absolute; z-index: 1; left: calc(var(--badge-w) / -2); top: calc(var(--strap-l) + 86px);
+  --badge-w: clamp(280px, 23vw, 340px);
   width: var(--badge-w); aspect-ratio: 360 / 510;
   perspective: 1400px; touch-action: none; cursor: grab;
 }
@@ -176,13 +215,27 @@ main { position: relative; z-index: 1; }
   display: flex; flex-direction: column; padding: 0 clamp(20px, 2vw, 28px);
 }
 .back { transform: rotateY(180deg); }
+/* the clasp hooks through the badge slot: its curve shows through the hole */
+.badge .slot { position: relative; margin-top: 10px; }
+.badge .slot::after {
+  content: ""; position: absolute; left: 50%; top: 0; width: 12px; height: 8px; margin-left: -6px;
+  border: 3px solid var(--metal-mid); border-top: 0; border-radius: 0 0 6px 6px;
+}
 .slot { flex: none; width: 74px; height: 13px; border-radius: 8px; background: var(--ground-deep); margin: 18px auto 18px; box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.35); }
 .badge-rule { height: 0; border-bottom: 2px solid var(--ink); margin-top: 6px; }
-.badge-name { margin-top: clamp(18px, 2.4vw, 30px); line-height: 0.86; }
-.badge-name .first { display: block; font-size: calc(var(--badge-w) * 0.22); font-weight: 900; font-variation-settings: "wdth" 125; letter-spacing: -0.035em; }
-.badge-name .last { display: block; margin-top: 8px; font-size: clamp(26px, 2.4vw, 36px); font-weight: 500; font-variation-settings: "wdth" 100; letter-spacing: -0.01em; }
-.badge-role { margin-top: clamp(16px, 2vw, 26px); font-size: clamp(18px, 1.5vw, 22px); font-weight: 750; line-height: 1.2; }
-.badge-stack { margin-top: 6px; font-size: 15px; color: var(--ink-2); line-height: 1.35; }
+/* printed header band, like the event strip on a conference pass */
+.badge-head {
+  margin: 0 calc(-1 * clamp(20px, 2vw, 28px)); padding: 9px clamp(20px, 2vw, 28px); background: var(--navy); color: #f2f2ee;
+  display: flex; justify-content: space-between; gap: 12px;
+  font-size: 11.5px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; font-variation-settings: "wdth" 85;
+}
+.badge-id { display: grid; grid-template-columns: 40% minmax(0, 1fr); gap: 14px; align-items: end; margin-top: 16px; }
+.badge-photo { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(17, 18, 22, 0.12); }
+.badge-name { margin-top: 14px; line-height: 0.86; }
+.badge-name .first { display: block; font-size: calc(var(--badge-w) * 0.2); font-weight: 900; font-variation-settings: "wdth" 125; letter-spacing: -0.035em; }
+.badge-name .last { display: block; margin-top: 6px; font-size: calc(var(--badge-w) * 0.082); font-weight: 500; font-variation-settings: "wdth" 100; letter-spacing: -0.01em; }
+.badge-role { font-size: clamp(16px, 1.3vw, 19px); font-weight: 750; line-height: 1.15; }
+.badge-stack { margin-top: 6px; font-size: 13.5px; color: var(--ink-2); line-height: 1.35; }
 .badge-foot { margin-top: auto; margin-left: calc(-1 * clamp(20px, 2vw, 28px)); margin-right: calc(-1 * clamp(20px, 2vw, 28px)); }
 .flip-row { display: flex; justify-content: space-between; align-items: center; padding: 0 clamp(20px, 2vw, 28px) 12px; font-size: 13px; font-weight: 650; color: var(--ink-2); }
 .flip-btn {
@@ -193,7 +246,7 @@ main { position: relative; z-index: 1; }
 .flip-btn:hover { background: var(--ink); color: var(--stock); }
 .flip-btn .icon { transition: transform 500ms var(--ease-out); }
 .flip-btn:hover .icon { transform: rotate(180deg); }
-.avail { display: flex; justify-content: space-between; gap: 12px; background: var(--ink); color: var(--stock); padding: 15px clamp(20px, 2vw, 28px); font-size: 14.5px; font-weight: 700; }
+.avail { display: flex; justify-content: space-between; gap: 12px; background: var(--ink); color: var(--stock); padding: 14px clamp(20px, 2vw, 28px); font-size: 14px; font-weight: 700; white-space: nowrap; }
 .avail .live { display: inline-flex; align-items: center; gap: 8px; }
 .avail .live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #5ee08c; }
 
@@ -231,12 +284,13 @@ main { position: relative; z-index: 1; }
 @media (hover: none) and (min-width: 861px) {
   .sticker .sticker-cap { opacity: 1; transform: translate(-50%, 0); font-size: 12.5px; padding: 7px 11px; }
 }
-.s-ledgerly { left: 4%; top: 15%; width: clamp(240px, 22vw, 330px); aspect-ratio: 1.6; --rot: -7deg; }
-.s-rute { left: 41%; top: 12%; width: clamp(118px, 10.4vw, 150px); aspect-ratio: 0.47; --rot: 6deg; }
-.s-kanbo { right: 5%; top: 14%; width: clamp(230px, 21vw, 310px); aspect-ratio: 1.6; --rot: 4deg; }
-.s-pantau { left: 1.5%; top: 66%; width: clamp(170px, 14vw, 210px); aspect-ratio: 1.6; --rot: 5deg; }
+/* every sticker lives on the left, under the statement; the lanyard hangs alone on the right */
+.s-ledgerly { left: 7%; top: 50%; width: clamp(220px, 19vw, 280px); aspect-ratio: 1.6; --rot: -4deg; }
+.s-rute { left: 27%; top: 46%; width: clamp(88px, 7vw, 104px); aspect-ratio: 0.47; --rot: 7deg; }
+.s-kanbo { left: 34%; top: 62%; width: clamp(200px, 17vw, 250px); aspect-ratio: 1.6; --rot: -3deg; }
+.s-pantau { left: 12%; top: 75%; width: clamp(160px, 13vw, 200px); aspect-ratio: 1.6; --rot: 3deg; }
 .s-pantau img { object-position: center 18%; }
-.s-award { left: 41.5%; top: 68%; width: clamp(118px, 10vw, 140px); aspect-ratio: 1; --rot: -10deg; }
+.s-award { left: 44%; top: 47%; width: clamp(100px, 8vw, 120px); aspect-ratio: 1; --rot: -8deg; }
 .s-award .sticker { padding: 6px; border-radius: 50%; }
 .s-award .seal {
   width: 100%; height: 100%; border-radius: 50%; display: grid; place-items: center; text-align: center; color: var(--ink);
@@ -246,8 +300,8 @@ main { position: relative; z-index: 1; }
 .s-award .seal b { display: block; font-size: 30px; font-weight: 900; font-variation-settings: "wdth" 125; }
 .s-award .seal small { display: block; font-size: 11px; font-weight: 750; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; font-variation-settings: "wdth" 80; }
 
-.statement { position: absolute; z-index: 2; left: 58%; right: var(--gutter-r); top: 53%; }
-.lede { font-size: clamp(30px, 2.9vw, 44px); line-height: 1.08; font-weight: 700; font-variation-settings: "wdth" 96; letter-spacing: -0.02em; text-wrap: balance; max-width: 15em; }
+.statement { position: absolute; z-index: 2; left: var(--gutter); width: min(52vw, 740px); top: 18%; }
+.lede { font-size: clamp(38px, 3.9vw, 58px); line-height: 1.02; font-weight: 800; font-variation-settings: "wdth" 90; letter-spacing: -0.025em; text-wrap: balance; }
 .lede .line { display: block; overflow: hidden; padding-bottom: 0.06em; }
 .lede .line > span { display: block; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
@@ -346,15 +400,15 @@ main { position: relative; z-index: 1; }
 .ribbon.is-finalist .band { width: 88%; }
 .ribbon.is-award .band { width: 76%; padding: 7px 8px; }
 .fan.is-fanned + .fan-controls { align-items: center; gap: 16px; margin-top: clamp(24px, 3vw, 40px); }
-.round-btn { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; border: 2px solid rgba(242, 242, 238, 0.7); background: none; cursor: pointer; transition: background-color 180ms var(--ease-out), color 180ms var(--ease-out); }
-.round-btn:hover { background: var(--stock); color: var(--ink); }
+.round-btn { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; border: 2px solid var(--line-strong); background: none; cursor: pointer; transition: background-color 180ms var(--ease-out), color 180ms var(--ease-out); }
+.round-btn:hover { background: var(--on-ground); color: var(--ground); }
 .round-btn:disabled { opacity: 0.35; cursor: default; background: none; color: var(--on-ground); }
 .fan-caption { font-size: 17px; color: var(--on-ground-2); min-height: 1.6em; }
 .fan-caption b { color: var(--on-ground); }
 
 /* ---------- Activities: the agenda ---------- */
-.agenda { border-top: 2px solid rgba(242, 242, 238, 0.85); }
-.agenda li { border-bottom: 2px solid rgba(242, 242, 238, 0.22); }
+.agenda { border-top: 2px solid var(--line-strong); }
+.agenda li { border-bottom: 2px solid var(--line); }
 .agenda a {
   display: grid; grid-template-columns: clamp(64px, 7vw, 110px) minmax(0, 1fr) auto; align-items: center; gap: 20px;
   padding: clamp(14px, 1.6vw, 22px) 0; text-decoration: none; color: var(--on-ground);
@@ -371,7 +425,7 @@ main { position: relative; z-index: 1; }
 .role[data-role="speaker"] { clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 50%, 100% 100%, 0 100%); padding-right: 22px; }
 .role[data-role="organizer"] { border-radius: var(--r-pill); }
 .role[data-role="mentor"] { border-radius: 3px 3px 14px 14px; }
-.role[data-role="volunteer"] { background: transparent; color: var(--on-ground); box-shadow: inset 0 0 0 2px var(--stock); }
+.role[data-role="volunteer"] { background: transparent; color: var(--on-ground); box-shadow: inset 0 0 0 2px var(--on-ground); }
 .agenda.is-hovering a:not(.is-active) { opacity: 0.4; }
 .agenda a.is-active .title, .agenda a:focus-visible .title { transform: translateX(clamp(12px, 2vw, 32px)); }
 .agenda .thumb { display: none; }
@@ -402,30 +456,28 @@ main { position: relative; z-index: 1; }
 .socials { display: flex; flex-wrap: wrap; gap: 8px 28px; margin-top: 40px; }
 .socials a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 650; text-decoration: none; }
 .socials a:hover span { text-decoration: underline; }
-.footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: clamp(64px, 8vw, 120px); padding-top: 22px; border-top: 2px solid rgba(242, 242, 238, 0.25); font-size: 14px; color: var(--on-ground-2); }
+.footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: clamp(64px, 8vw, 120px); padding-top: 22px; border-top: 2px solid var(--line); font-size: 14px; color: var(--on-ground-2); }
 
 .mock-note { position: fixed; z-index: 60; right: 16px; bottom: 16px; background: var(--ink); color: var(--stock); font-size: 12.5px; font-weight: 650; padding: 8px 12px; border-radius: var(--r-pill); box-shadow: var(--shadow-sticker); }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1100px) {
-  .statement { left: 52%; }
-  .s-rute { left: 44%; }
+  .statement { width: 56vw; }
+  .s-rute { left: 28%; }
 }
 @media (max-width: 860px) {
   .nav-links { display: none; }
   .hero { height: auto; max-height: none; min-height: 0; padding: 96px var(--gutter-r) 64px; display: flex; flex-direction: column; }
   .hero-stage { position: relative; height: 640px; margin: 0 calc(-1 * var(--gutter-r)); }
-  .pendulum { left: 50%; top: -20px; }
-  .strap, .clasp { --s: 170px; }
-  .strap { height: 170px; }
-  .clasp { top: 164px; }
-  .badge { top: 196px; --badge-w: 290px; }
-  .s-ledgerly { left: -18px; top: 10px; width: 200px; }
+  .pendulum { left: 50%; top: -20px; --strap-l: 150px; }
+  .strap { top: -16px; height: calc(var(--strap-l) + 20px); } /* starts under the nav so the brand stays readable */
+  .badge { --badge-w: 290px; }
+  .s-ledgerly { left: -18px; right: auto; top: 10px; width: 200px; }
   .s-kanbo { display: none; }
   .s-rute { left: auto; right: -6px; top: 18px; width: 104px; }
   .s-pantau { display: none; }
   .s-award { left: auto; right: 4px; top: 420px; width: 104px; }
-  .statement { position: relative; left: auto; right: auto; top: auto; margin-top: 8px; }
+  .statement { position: relative; left: auto; right: auto; top: auto; width: auto; margin-top: 8px; }
   .project.is-half { grid-column: span 12; }
   .project-body { grid-template-columns: 1fr; }
   .project-field { aspect-ratio: 4 / 3.2; }
