@@ -1,4 +1,5 @@
 import { Icon } from "@/components/Icon";
+import { IconSticker } from "@/components/IconSticker";
 import type { Profile } from "@/content/home";
 import { fullName } from "@/lib/name";
 import { SectionHead } from "./SectionHead";
@@ -6,7 +7,7 @@ import { SectionHead } from "./SectionHead";
 export function Closing({ profile: p }: { profile: Profile }) {
   return (
     <section className="section closing theme-dark" id="contact" aria-labelledby="contact-h">
-      <SectionHead id="contact-h" title="Let's talk." style={{ marginBottom: 0 }} />
+      <SectionHead id="contact-h" title="Let's talk." after={<IconSticker name="wave" rot={-8} className="is-wave" />} style={{ marginBottom: 0 }} />
       <p className="sub">{p.closingLine}</p>
       <div className="hero-actions">
         <a className="btn btn-stock" href={`mailto:${p.email}`}>Email me <Icon name="mail" /></a>

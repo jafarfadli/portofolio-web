@@ -1,5 +1,7 @@
 import { Icon } from "@/components/Icon";
+import { Inline } from "@/components/Inline";
 import type { HomeContent } from "@/content/home";
+import { statementLines } from "@/lib/statement";
 import { displayUrl } from "@/lib/url";
 
 const SLOTS = ["s-a", "s-b", "s-c", "s-d"] as const;
@@ -140,8 +142,9 @@ export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: 
 
       <div className="statement">
         <p className="lede" data-lede>
-          <span className="line"><span>{p.statementLine1}</span></span>
-          <span className="line"><span>{p.statementLine2}</span></span>
+          {statementLines(p.statementLine1, p.statementLine2).map((line, i) => (
+            <span key={i} className="line"><span><Inline text={line} icons /></span></span>
+          ))}
         </p>
         <div className="hero-actions">
           <a className="btn btn-stock" href="#work">See the work <Icon name="arrow-ur" /></a>

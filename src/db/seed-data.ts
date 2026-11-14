@@ -44,10 +44,10 @@ export const seedProfile = {
   siteUrl: "https://jafarfadli.example",
   githubUrl: "https://github.com/jafarfadli",
   linkedinUrl: "https://linkedin.example/in/jafarfadli",
-  statementLine1: "Web products, end to end.",
-  statementLine2: "From schema to pixel.",
+  statementLine1: "Web products :browsers:, / end to end.",
+  statementLine2: "From schema :database: / to pixel :cursor:.",
   aboutText:
-    "Full-stack engineer in Jakarta. I like owning a feature from the first migration to the last loading state, _and I do my best work on small teams that ship every week._",
+    "Full-stack engineer in Jakarta :pin:. I like owning a feature from the first migration to the last loading state :loading:, _and I do my best work on small teams :team: that ship every week :rocket:._",
   closingLine: "Open to full-time full-stack roles from January 2027, in Jakarta or remote.",
   cvSummary:
     "Full-stack engineer who owns features from database migration to interface. Ships TypeScript and Go products used by small businesses and commuters; strongest in Next.js, PostgreSQL, and API performance work.",

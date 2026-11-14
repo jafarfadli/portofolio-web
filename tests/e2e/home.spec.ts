@@ -26,6 +26,23 @@ test("home renders every section from the database", async ({ page }) => {
   expect(ld).toMatchObject({ "@type": "Person", name: "Muhammad Jafar Fadli", jobTitle: "Full-stack Engineer" });
 });
 
+test("owner copy renders icon stickers, statement lines and the closing wave", async ({ page }) => {
+  await page.goto("/");
+  const lede = page.locator("[data-lede]");
+  await expect(lede.locator(".line")).toHaveCount(4);
+  await expect(lede.locator(".line > span")).toHaveCount(4);
+  await expect(lede.locator(".ico-stk")).toHaveCount(3);
+  const lines = (await lede.locator(".line").allInnerTexts()).map((t) => t.replace(/\u00a0/g, " ").trim());
+  // the no-break space before an icon stays in the text, so each icon reads as a gap before its punctuation
+  expect(lines).toEqual(["Web products ,", "end to end.", "From schema", "to pixel ."]);
+  for (const svg of await page.locator(".ico-stk svg").all()) {
+    await expect(svg).toHaveAttribute("aria-hidden", "true");
+  }
+  await expect(page.locator(".about-text .ico-stk")).toHaveCount(4);
+  await expect(page.locator("#contact-h .ico-stk.is-wave")).toHaveCount(1);
+  await expect(page.getByRole("heading", { name: "Let's talk.", exact: true })).toHaveCount(1);
+});
+
 test("copy has no em or en dashes", async ({ page }) => {
   await page.goto("/");
   const text = await page.locator("body").innerText();

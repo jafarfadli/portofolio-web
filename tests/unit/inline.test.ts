@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseInline } from "@/lib/inline";
+import { ICON_STICKERS, parseInline, toPlain } from "@/lib/inline";
 import { displayUrl } from "@/lib/url";
 
 describe("parseInline", () => {
@@ -35,6 +35,50 @@ describe("parseInline", () => {
 
   it("still applies em at word boundaries", () => {
     expect(parseInline("_start_ of line")).toEqual([{ text: "start", em: true }, { text: " of line" }]);
+  });
+});
+
+describe("parseInline icons", () => {
+  it("splits known :name: tokens into icon segments when icons is on", () => {
+    expect(parseInline("Web products :browsers:, end", { icons: true })).toEqual([
+      { text: "Web products\u00a0" },
+      { icon: "browsers" },
+      { text: ", end" },
+    ]);
+  });
+
+  it("keeps tokens as plain text without the icons option", () => {
+    expect(parseInline("Web products :browsers:, end")).toEqual([{ text: "Web products :browsers:, end" }]);
+  });
+
+  it("leaves unknown tokens as plain text", () => {
+    expect(parseInline("hello :nope: there", { icons: true })).toEqual([{ text: "hello :nope: there" }]);
+  });
+
+  it("splits icons out of em text", () => {
+    expect(parseInline("_small teams :team: that_", { icons: true })).toEqual([
+      { text: "small teams\u00a0", em: true },
+      { icon: "team" },
+      { text: " that", em: true },
+    ]);
+  });
+
+  it("knows all eight stickers", () => {
+    expect(ICON_STICKERS).toHaveLength(8);
+  });
+});
+
+describe("toPlain", () => {
+  it("drops icon tokens and line-break slashes", () => {
+    expect(toPlain("Web products :browsers:, / end to end.")).toBe("Web products, end to end.");
+  });
+
+  it("drops strong and em markers", () => {
+    expect(toPlain("**Winner**, _soft_ text")).toBe("Winner, soft text");
+  });
+
+  it("keeps unknown tokens and slashes inside words", () => {
+    expect(toPlain("A/B :nope: test")).toBe("A/B :nope: test");
   });
 });
 
