@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import { describe, expect, it } from "vitest";
 import { lockedUntil } from "@/auth/lockout";
 import { attemptLogin, hasAdmin, setupAdmin } from "@/auth/login";
@@ -96,3 +97,32 @@ describe("setup and login", () => {
     expect(await attemptLogin(db, "a long test password", "UA", at(22))).toMatchObject({ ok: true });
   });
 });
+
+describe("concurrency", () => {
+  it("counts parallel wrong passwords against the lockout", async () => {
+    const db = testDb();
+    await setupAdmin(db, "a long test password", "a long test password", "UA", t0);
+    const results = await Promise.all(
+      Array.from({ length: 8 }, () => attemptLogin(db, "wrong password", "UA", at(1))),
+    );
+    const errors = results.map((r) => (r.ok ? "" : r.error));
+    expect(errors.filter((e) => e === "That password is not right.")).toHaveLength(5);
+    expect(errors.filter((e) => e.startsWith("Too many wrong passwords."))).toHaveLength(3);
+  });
+  it("lets exactly one of two parallel first-run setups win", async () => {
+    const db = testDb();
+    const results = await Promise.all([
+      setupAdmin(db, "a long test password", "a long test password", "UA", t0),
+      setupAdmin(db, "another long password", "another long password", "UA", t0),
+    ]);
+    expect(results.filter((r) => r.ok)).toHaveLength(1);
+    expect(results.filter((r) => !r.ok && r.error === "A password is already set. Sign in instead.")).toHaveLength(1);
+  });
+  it("rethrows setup errors that are not a primary-key clash", async () => {
+    const db = testDb();
+    db.run(sql`CREATE TRIGGER block_admin BEFORE INSERT ON admin_user BEGIN SELECT RAISE(ABORT, 'blocked'); END`);
+    await expect(setupAdmin(db, "a long test password", "a long test password", "UA", t0)).rejects.toThrow();
+    expect(hasAdmin(db)).toBe(false);
+  });
+});
+
