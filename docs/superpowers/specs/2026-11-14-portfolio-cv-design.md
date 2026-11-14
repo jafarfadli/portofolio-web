@@ -99,7 +99,7 @@ Rules:
 - **`/projects/[slug]`**: the case study page.
   - Not mocked yet. It will be designed in the same world before implementation (section 13).
   - Content: hero print, the impact headline, role/year/stack, metric tags, case study markdown, links, and next project.
-- **`/cv`**: HTML CV preview using the mockup's `cv.html` rules (single column, one A4 page, ultramarine only on the header rule and section labels).
+- **`/cv`**: HTML CV preview using the mockup's `cv.html` rules (single column, one A4 page, ATS-readable text). Revised 2026-11-14: navy strap bands, section tabs, the owner's cut-out portrait and tagged ranks; see DESIGN.md.
   - Always renders the default profile. It takes no profile parameter, so non-default profiles are never public.
 - **`/cv.pdf`**: serves the pre-generated PDF of the default profile from `DATA_DIR/cv/`. The public process never launches Chromium.
 - **`/media/*`**: serves upload variants with long cache headers. Filenames are content-hashed.

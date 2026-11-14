@@ -1,9 +1,11 @@
 ---
 name: Lanyard & Badge
-description: A portfolio read the way recruiters read candidates at a fair, by the badge. Woven ultramarine ground, PVC badge stock, near-black ink, clip metal.
+description: A portfolio read the way recruiters read candidates at a fair, by the badge. Two woven webbing colourways (navy and concrete) sewn panel to panel, PVC badge stock, near-black ink, flat clip metal.
 colors:
-  lanyard-ultramarine: "#2132d6"
-  lanyard-deep: "#1a27ad"
+  webbing-navy: "#1d2640"
+  webbing-navy-deep: "#151c31"
+  webbing-concrete: "#e5e4df"
+  webbing-concrete-deep: "#d6d5cf"
   badge-stock: "#f2f2ee"
   kiss-cut-white: "#ffffff"
   print-ink: "#111216"
@@ -11,12 +13,16 @@ colors:
   ink-raised: "#24262e"
   ribbon-tail: "#26282f"
   clip-metal: "#c9ccd6"
-  on-ground: "#f2f2ee"
-  on-ground-soft: "#c8cef6"
+  metal-light: "#dfe1e7"
+  metal-mid: "#a7abb7"
+  metal-dark: "#7f8391"
+  on-navy: "#f2f2ee"
+  on-navy-soft: "#b4bcd3"
+  availability-live: "#5ee08c"
 typography:
   badge-name:
     fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "calc(var(--badge-w) * 0.22)"
+    fontSize: "calc(var(--badge-w) * 0.2)"
     fontWeight: 900
     lineHeight: 0.86
     letterSpacing: "-0.035em"
@@ -84,11 +90,11 @@ typography:
     fontVariation: "'wdth' 85"
   lede:
     fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(30px, 2.9vw, 44px)"
-    fontWeight: 700
-    lineHeight: 1.08
-    letterSpacing: "-0.02em"
-    fontVariation: "'wdth' 96"
+    fontSize: "clamp(38px, 3.9vw, 58px)"
+    fontWeight: 800
+    lineHeight: 1.02
+    letterSpacing: "-0.025em"
+    fontVariation: "'wdth' 90"
   statement-large:
     fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(28px, 3.3vw, 48px)"
@@ -147,9 +153,9 @@ typography:
     fontVariation: "'wdth' 104"
   badge-role:
     fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(18px, 1.5vw, 22px)"
+    fontSize: "clamp(16px, 1.3vw, 19px)"
     fontWeight: 750
-    lineHeight: 1.2
+    lineHeight: 1.15
     fontVariation: "'wdth' 100"
   booth-name:
     fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
@@ -210,30 +216,54 @@ typography:
     fontWeight: 800
     letterSpacing: "0.14em"
     fontVariation: "'wdth' 85"
+  badge-band:
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "11.5px"
+    fontWeight: 800
+    letterSpacing: "0.16em"
+    fontVariation: "'wdth' 85"
   strap-print:
     fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "12px"
+    fontSize: "11px"
     fontWeight: 800
-    letterSpacing: "0.32em"
+    letterSpacing: "0.3em"
     fontVariation: "'wdth' 125"
   cv-name:
     fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "27pt"
+    fontSize: "28pt"
     fontWeight: 900
-    lineHeight: 1
-    letterSpacing: "-0.02em"
-    fontVariation: "'wdth' 120"
+    lineHeight: 0.9
+    letterSpacing: "-0.03em"
+    fontVariation: "'wdth' 125"
+  cv-role:
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "12.5pt"
+    fontWeight: 750
+    fontVariation: "'wdth' 100"
   cv-section-label:
     fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "9pt"
+    fontSize: "8.4pt"
     fontWeight: 800
-    letterSpacing: "0.14em"
+    letterSpacing: "0.16em"
+    fontVariation: "'wdth' 85"
+  cv-date:
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "7.8pt"
+    fontWeight: 700
+    letterSpacing: "0.08em"
+    fontFeature: "'tnum' 1"
+    fontVariation: "'wdth' 85"
+  cv-tag:
+    fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "6.8pt"
+    fontWeight: 800
+    letterSpacing: "0.12em"
     fontVariation: "'wdth' 85"
   cv-body:
     fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "9.4pt"
+    fontSize: "9.2pt"
     fontWeight: 400
-    lineHeight: 1.33
+    lineHeight: 1.32
     fontVariation: "'wdth' 100"
 rounded:
   label-cut: "3px"
@@ -247,7 +277,9 @@ spacing:
   cord-x: "clamp(20px, 2.6vw, 40px)"
   gutter-left: "clamp(56px, 7vw, 112px)"
   gutter-right: "clamp(20px, 4vw, 64px)"
-  section-top: "clamp(96px, 12vw, 176px)"
+  section-pad: "clamp(88px, 10vw, 150px)"
+  seam-inset: "12px"
+  strap-length: "clamp(210px, 27vh, 270px)"
   section-head-gap: "clamp(36px, 5vw, 64px)"
   grid-gap: "clamp(18px, 2vw, 28px)"
   card-pad: "clamp(22px, 2.4vw, 34px)"
@@ -272,11 +304,14 @@ components:
     textColor: "{colors.print-ink}"
   button-line:
     backgroundColor: "transparent"
-    textColor: "{colors.on-ground}"
+    textColor: "{colors.on-navy}"
     typography: "{typography.button}"
     rounded: "{rounded.pill}"
     padding: "0 1.25em"
     height: "48px"
+  button-line-concrete:
+    backgroundColor: "transparent"
+    textColor: "{colors.print-ink}"
   button-ink:
     backgroundColor: "{colors.print-ink}"
     textColor: "{colors.badge-stock}"
@@ -305,7 +340,7 @@ components:
     height: "40px"
   round-button:
     backgroundColor: "transparent"
-    textColor: "{colors.on-ground}"
+    textColor: "{colors.on-navy}"
     rounded: "{rounded.pill}"
     size: "52px"
   round-button-hover:
@@ -313,11 +348,11 @@ components:
     textColor: "{colors.print-ink}"
   nav:
     backgroundColor: "transparent"
-    textColor: "{colors.on-ground}"
+    textColor: "{colors.on-navy}"
     typography: "{typography.nav-link}"
     height: "72px"
   nav-solid:
-    backgroundColor: "rgba(26, 39, 173, 0.92)"
+    backgroundColor: "rgba(21, 28, 49, 0.94)"
   stack-chip:
     backgroundColor: "{colors.badge-stock}"
     textColor: "{colors.print-ink}"
@@ -339,17 +374,30 @@ components:
     height: "34px"
   role-tag-volunteer:
     backgroundColor: "transparent"
-    textColor: "{colors.on-ground}"
+    textColor: "{colors.on-navy}"
+  strap:
+    backgroundColor: "{colors.webbing-concrete}"
+    textColor: "{colors.webbing-navy}"
+    typography: "{typography.strap-print}"
+    width: "30px"
   badge-face:
     backgroundColor: "{colors.badge-stock}"
     textColor: "{colors.print-ink}"
     rounded: "{rounded.card}"
     padding: "0 clamp(20px, 2vw, 28px)"
-    width: "clamp(280px, 25vw, 360px)"
+    width: "clamp(280px, 23vw, 340px)"
+  badge-header-band:
+    backgroundColor: "{colors.webbing-navy}"
+    textColor: "{colors.badge-stock}"
+    typography: "{typography.badge-band}"
+    padding: "9px clamp(20px, 2vw, 28px)"
+  badge-photo:
+    rounded: "{rounded.pin}"
+    width: "40%"
   badge-availability-band:
     backgroundColor: "{colors.print-ink}"
     textColor: "{colors.badge-stock}"
-    padding: "15px clamp(20px, 2vw, 28px)"
+    padding: "14px clamp(20px, 2vw, 28px)"
   sticker:
     backgroundColor: "{colors.kiss-cut-white}"
     rounded: "{rounded.sticker}"
@@ -394,21 +442,53 @@ components:
     backgroundColor: "{colors.kiss-cut-white}"
     textColor: "{colors.print-ink}"
     typography: "{typography.cv-body}"
-    padding: "12mm 15mm 11mm"
+    padding: "0 15mm 6.5mm"
     width: "210mm"
+  cv-strap-band:
+    backgroundColor: "{colors.webbing-navy}"
+    height: "6mm"
+  cv-strap-foot:
+    backgroundColor: "{colors.webbing-navy}"
+    height: "3mm"
+  cv-photo:
+    height: "34mm"
+  cv-section-tab:
+    backgroundColor: "{colors.webbing-navy}"
+    textColor: "{colors.badge-stock}"
+    typography: "{typography.cv-section-label}"
+    rounded: "0.8mm"
+    padding: "0.9mm 2.6mm 0.8mm"
+  cv-chip:
+    backgroundColor: "transparent"
+    textColor: "{colors.print-ink-soft}"
+    rounded: "{rounded.pill}"
+    padding: "0.2mm 1.8mm"
+  cv-tag-cut:
+    backgroundColor: "{colors.print-ink}"
+    textColor: "{colors.badge-stock}"
+    typography: "{typography.cv-tag}"
+    rounded: "0.5mm"
+    padding: "0.5mm 2mm 0.4mm"
+    width: "21mm"
+  cv-tag-cut-outline:
+    backgroundColor: "transparent"
+    textColor: "{colors.print-ink}"
+  cv-tag-cut-stock:
+    backgroundColor: "{colors.badge-stock}"
+    textColor: "{colors.print-ink}"
   case-tag:
     backgroundColor: "transparent"
-    textColor: "{colors.on-ground}"
+    textColor: "{colors.on-navy}"
     rounded: "{rounded.pill}"
     padding: "0 12px"
     height: "30px"
   case-index-row:
     backgroundColor: "transparent"
-    textColor: "{colors.on-ground-soft}"
+    textColor: "{colors.on-navy-soft}"
     typography: "{typography.index-row}"
     padding: "12px 0"
   case-index-row-active:
-    textColor: "{colors.on-ground}"
+    textColor: "{colors.on-navy}"
   reading-tag:
     backgroundColor: "{colors.badge-stock}"
     textColor: "{colors.print-ink}"
@@ -417,7 +497,7 @@ components:
     padding: "5px 10px"
   case-index-pill:
     backgroundColor: "transparent"
-    textColor: "{colors.on-ground}"
+    textColor: "{colors.on-navy}"
     typography: "{typography.index-pill}"
     rounded: "{rounded.pill}"
     padding: "0 14px"
@@ -431,7 +511,7 @@ components:
     rounded: "{rounded.card}"
     padding: "clamp(28px, 3.2vw, 52px)"
   arch-field:
-    backgroundColor: "{colors.lanyard-deep}"
+    backgroundColor: "{colors.webbing-navy-deep}"
     rounded: "{rounded.sticker}"
     padding: "clamp(20px, 2.4vw, 32px)"
   arch-booth:
@@ -447,7 +527,7 @@ components:
     padding: "12px 16px"
   arch-booth-external:
     backgroundColor: "transparent"
-    textColor: "{colors.on-ground}"
+    textColor: "{colors.on-navy}"
     rounded: "{rounded.sticker}"
     padding: "0 14px 14px"
   hang-tag:
@@ -486,57 +566,85 @@ components:
 
 **Creative North Star: "The Badge at the Fair"**
 
-Recruiters meet this engineer the way they meet candidates at a career fair: by reading the badge. The whole page is a woven ultramarine lanyard; everything readable is printed on off-white PVC badge stock in near-black ink, hung from silver clip metal. Project screenshots are die-cut stickers with white kiss-cut borders slapped onto the ground; metrics hang off them on die-cut tags tied with leader lines; achievements are a fanned collection of event badges whose satin ribbons carry rank by cut and length; activities are the event agenda; experience is the itinerary. One vertical cord runs down the left of the page and every section clips onto it.
+Recruiters meet this engineer the way they meet candidates at a career fair: by reading the badge. The page is sewn from two woven lanyard colourways, navy and concrete, panel to panel, with a stitched seam at every join; everything readable is printed on off-white PVC badge stock in near-black ink, hung from silver clip metal. Project screenshots are die-cut stickers with white kiss-cut borders slapped onto the webbing; metrics hang off them on die-cut tags tied with leader lines; achievements are a fanned collection of event badges whose satin ribbons carry rank by cut and length; activities are the event agenda; experience is the itinerary. One vertical cord runs down the left of the page and every section clips onto it.
 
-The system is physical, not digital. Depth comes from objects lying on fabric (neutral dark drop shadows under hung or stuck things), never from glow, gloss, or gradient. State is told by form (a ribbon's tails, a tag's cut, a sticker lifting) and printed words, never by hue alone. There is one accent world, ultramarine, and it is the ground itself; content never gets its own accent colour. One type family, Archivo variable, does everything by moving along its width axis: expanded black for names and display, normal width for reading, condensed caps for printed labels.
+The system is physical, not digital. Depth comes from objects lying on fabric (neutral dark drop shadows under hung or stuck things), never from glow, gloss, or gradient. State is told by form (a ribbon's tails, a tag's cut, a sticker lifting) and printed words, never by hue alone. The only saturated surfaces are the two webbings themselves; content never gets its own accent colour. One type family, Archivo variable, does everything by moving along its width axis: expanded black for names and display, normal width for reading, condensed caps for printed labels.
 
-This file is derived from the shipped mockup (`mockup/index.html`, `mockup/styles.css`, `mockup/main.js`, `mockup/cv.html`). It is the spec for the production build (Next.js + SQLite, public `/`, `/projects/[slug]`, `/cv`, plus `/admin`). Every name, metric, photo, screenshot, and achievement in the mockup is synthetic and must be replaced (see Content rules in Do's and Don'ts).
+This file is derived from the shipped mockup (`mockup/index.html`, `mockup/styles.css`, `mockup/main.js`, `mockup/cv.html`). It is the spec for the production build (Next.js + SQLite, public `/`, `/projects/[slug]`, `/cv`, plus `/admin`). The owner's name, portrait, and GitHub account are real; every other name, metric, screenshot, and achievement in the mockup is synthetic and must be replaced (see the content checklist in Do's and Don'ts).
 
-The case study page (`mockup/project.html`, `mockup/project.css`, `mockup/project.js`, on top of the shared `mockup/styles.css`; production `/projects/[slug]`) extends the world without changing it. It reads as an event program held on the lanyard: the header sits on the ground, a sticky program index on the left tells you where you are, each part of the story is printed on its own stock page, the architecture is a set of booths on a strip of deep twill wired together with stock cords, and the results hang as ink tags from a webbing rail. Its rules are recorded in each section below next to the home page's.
+The two-colourway world replaced the original single ultramarine ground on 2026-11-14 at the owner's request (the ultramarine read as too loud). The home page and the CV carry the revision. The case study page has not been migrated yet (see below).
+
+The case study page (`mockup/project.html`, `mockup/project.css`, `mockup/project.js`, on top of the shared `mockup/styles.css`; production `/projects/[slug]`) extends the world without changing it. It reads as an event program held on the lanyard: the header sits on the ground, a sticky program index on the left tells you where you are, each part of the story is printed on its own stock page, the architecture is a set of booths on a strip of deep twill wired together with stock cords, and the results hang as ink tags from a webbing rail. Its rules are recorded in each section below next to the home page's. **Pending migration:** `mockup/project.html` and `mockup/project.css` were built for the single ultramarine ground and have not been moved to the two-colourway world. Today the page inherits the navy defaults from the shared stylesheet as one flat panel without the twill (the page-wide weave layer is gone), and its compact index bar still uses the ultramarine-era `rgba(26, 39, 173, 0.94)`. Its rules below describe its structure; where they name a ground colour, read it as navy until the page is migrated and given its own panel sequence.
 
 **Key Characteristics:**
-- Full-bleed woven ultramarine ground, raster twill tile, fixed behind every scroll.
+- Two woven webbing colourways, navy and concrete, alternating section by section with the raster twill on every panel and a stitched seam at every join.
 - Content on off-white badge stock in near-black ink; 18px card corners, 16px sticker corners, full pills for buttons.
 - One family, Archivo variable (wdth 62 to 125, wght 100 to 900), roles separated by width as much as weight.
-- Physical motion: a damped pendulum badge, stickers that slap down, leader lines that draw to the result.
+- Physical motion: a damped pendulum badge on a concrete strap with a metal ring and lobster clasp, stickers that slap down, leader lines that draw to the result.
 - State by form and printed word, never by colour alone.
 - Every creative moment has a plain readable path; reduced motion renders every section in its final state.
 - Case studies read as an event program: a sticky index with a printed "Reading" tag, one stock page per section, the cord as reading progress.
 
 ## Colors
 
-One saturated hue (the lanyard) and a press palette of stock, ink, and metal; nothing else.
+Two webbing colourways (navy and concrete) and a press palette of stock, ink, and flat metal; one live green dot; nothing else.
 
-### Primary
-- **Lanyard Ultramarine** (`lanyard-ultramarine`): the page ground, always full-bleed, overlaid with the twill tile. Also the CV's header rule and section labels, and the text-selection colour on the CV. It is the only accent in the system and it is a surface, not a highlight.
-- **Lanyard Deep** (`lanyard-deep`): the shadowed weave. Used for the punched slot hole on badges (the ground showing through), the default project field behind screenshots, the solid nav at 0.92 alpha (`rgba(26, 39, 173, 0.92)`), the scrollbar track, and the CV toolbar.
+### Primary: the two webbings
+- **Webbing Navy** (`webbing-navy`): the dark colourway. The ground of the hero, work, activities, and closing panels; the badge's header band; the CV's strap band, foot, cord, section tabs, header rule, and metric figures; the print on the concrete strap. On the CV it is also the text-selection colour.
+- **Webbing Navy Deep** (`webbing-navy-deep`): the shadowed navy weave. Punched slots on the navy panels (the ground showing through), the solid nav at 0.94 alpha (`rgba(21, 28, 49, 0.94)`, also the CV toolbar), the scrollbar track, and the CV slot.
+- **Webbing Concrete** (`webbing-concrete`): the light colourway. The ground of the about, achievements, and experience panels; the hero strap, its folded end, and the cord fill (each with the webbing tile). On the concrete panels the twill is printed finer: a flat 55% concrete layer (`rgba(229, 228, 223, 0.55)`) sits over the tile.
+- **Webbing Concrete Deep** (`webbing-concrete-deep`): the shadowed concrete weave, seen only through punched slots on the concrete panels.
+
+### Theme roles
+Each section panel takes `.theme-dark` (navy) or `.theme-light` (concrete), which remap one set of roles. Everything printed straight on the webbing uses these roles, never a fixed colour:
+
+| Role | Navy panel | Concrete panel |
+|---|---|---|
+| ground / ground-deep | `webbing-navy` / `webbing-navy-deep` | `webbing-concrete` / `webbing-concrete-deep` |
+| on-ground (text, icons, line buttons, outline tags) | `on-navy` | `print-ink` |
+| on-ground soft (intros, years, captions, footer) | `on-navy-soft` | `print-ink-soft` |
+| line (row rules, footer rule, line-button hover wash) | stock at 22% | ink at 16% |
+| line strong (agenda top rule, line-button and round-button borders) | stock at 85% | ink at 80% |
+| stitch (the seam) | stock at 26% | ink at 22% |
+| twill tint | none | concrete at 55% |
+
+Stock surfaces (badge, cards, itinerary, pins, chips) do not change between panels.
 
 ### Neutral
-- **Badge Stock** (`badge-stock`): PVC badge face, project cards, itinerary, pins, chips, stock buttons, focus ring on the ground. Identical value to `on-ground` (text printed directly on the lanyard).
+- **Badge Stock** (`badge-stock`): PVC badge face, project cards, itinerary, pins, chips, stock buttons, the text on the badge's navy header band, and the focus ring on navy panels.
 - **Kiss-cut White** (`kiss-cut-white`): pure white is reserved for die-cut material: sticker borders, screenshot prints, the agenda photo preview frame, the 5px chip outline, the stock-button hover, and the CV paper.
-- **Print Ink** (`print-ink`): all text on stock; the strap and cord webbing base; ink buttons; caption pills; ribbon bands; the availability band; flat one-ink seals.
-- **Print Ink Soft** (`print-ink-soft`): secondary text on stock (stack line, meta, dates, pin explanations).
+- **Print Ink** (`print-ink`): all text on stock and on concrete panels; the fan stubs' webbing base; ink buttons; caption pills; ribbon bands; the availability band; flat one-ink seals; the 1.5px edge of the cord.
+- **Print Ink Soft** (`print-ink-soft`): secondary text on stock and on concrete panels (stack line, meta, dates, pin explanations).
 - **Ink Raised** (`ink-raised`): hover state of ink buttons only.
 - **Ribbon Tail** (`ribbon-tail`): the hanging tails of achievement ribbons, one step off the band so the fold reads.
-- **Clip Metal** (`clip-metal`): clasp ring, clip marks on the cord, scrollbar thumb, the secondary line inside ink pins. Flat; never given a gradient sheen.
-- **On-ground Soft** (`on-ground-soft`): secondary text printed on the ultramarine ground (section intros, years, fan caption, the de-emphasised half of the about statement, footer).
+- **On-navy Soft** (`on-navy-soft`): secondary text printed on navy panels.
+
+### Metal
+Clip hardware is four flat facets of one grey, never a gradient or sheen.
+- **Clip Metal** (`clip-metal`): the ring, the swivel barrel, the clasp body, clip marks on navy panels, the scrollbar thumb, the secondary line inside ink pins.
+- **Metal Light** (`metal-light`): the lit edge on the lower curve of the ring.
+- **Metal Mid** (`metal-mid`): the swivel eye and neck band, the clasp's shaded side and gate, the clasp curve seen through the badge slot, CV clip marks and bullet markers.
+- **Metal Dark** (`metal-dark`): the swivel neck, the clasp's spring line, and the clip marks on concrete panels (where clip metal would vanish).
+
+### The one live hue
+- **Availability Live** (`availability-live`): the 8px dot before "Open to full-time roles" on the badge's availability band. It is the only non-palette hue in the system; it marks a live status, always beside the printed word, and appears nowhere else.
 
 ### Per-project field colour
-Each project card's screenshot field takes a `--field` colour from that project's own product palette (mockup: `#0E2A22`, `#FF6A2B`, `#E9E2D6`, `#16161D`), falling back to `lanyard-deep`. This is record data stored with the project in SQLite, not a system token, and it never leaks outside the field (no tinted card, no tinted shadow, no tinted text). The pin eyelet hole shows the field colour through it.
+Each project card's screenshot field takes a `--field` colour from that project's own product palette (mockup: `#0E2A22`, `#FF6A2B`, `#E9E2D6`, `#16161D`), falling back to the panel's deep ground. This is record data stored with the project in SQLite, not a system token, and it never leaks outside the field (no tinted card, no tinted shadow, no tinted text). The pin eyelet hole shows the field colour through it.
 
-### Case study uses
-- `lanyard-deep` under the twill tile is the architecture field; at 0.94 alpha (`rgba(26, 39, 173, 0.94)`) it is the compact program index bar.
+### Case study uses (pending migration)
+- The deep ground under the twill tile is the architecture field (today `webbing-navy-deep`); the compact program index bar still carries the ultramarine-era `rgba(26, 39, 173, 0.94)` and moves to the nav's `rgba(21, 28, 49, 0.94)` when the page is migrated.
 - `print-ink` is the results rail and the hang tags; `clip-metal` prints the tag's before line and label on that ink.
-- `on-ground-soft` sets the fact terms in the header and the program index rows that are not being read.
+- The soft on-ground role sets the fact terms in the header and the program index rows that are not being read.
 - Inline code on a page sits on a 7% ink wash (`rgba(17, 18, 22, 0.07)`): the only tint on stock, and it is a thin print of ink, not a new colour.
 - The next-project card's field takes the next project's own `--field` colour (mockup: Rute, `#FF6A2B`), with the same containment as on project cards: it stays inside the field.
 
 ### Named Rules
-**The One Ground Rule.** Ultramarine is the ground, not a highlight. Never put ultramarine text, borders, or fills on the web page's stock surfaces; on the CV it appears only as the header rule and section labels.
+**The Two Colourway Rule.** The page is sewn from two webbings and nothing else: navy and concrete alternate panel by panel in story order (hero navy, about concrete, work navy, achievements concrete, activities navy, experience concrete, closing navy), every join carries the stitched seam, and a panel never changes colourway partway through. Webbing colours are grounds, straps, and printed bands; they never become a text highlight on stock. On stock and paper navy appears only as print: the badge's header band, the CV's strap, cord, tabs, rule, and metric figures.
 
 **The State By Form Rule.** Rank, role, and status are told by cut, length, and the printed word. Two items that differ only by hue are a defect.
 
-**The Press Palette Rule.** Stock, white, ink, metal. A new colour needs a physical reason (it is a material on a badge or lanyard), or it does not ship.
+**The Press Palette Rule.** Two webbings, stock, white, ink, flat metal. A new colour needs a physical reason (it is a material on a badge or lanyard), or it does not ship. The live green dot is the one standing exception.
 
 ## Typography
 
@@ -547,30 +655,31 @@ Each project card's screenshot field takes a `--field` colour from that project'
 **Character:** One grotesque stretched across its width axis like one press with three type cases: expanded black for names, normal width for reading, condensed caps for printed labels. Pairing a second family breaks the world.
 
 ### Hierarchy
-- **Badge name** (900, wdth 125, `calc(var(--badge-w) * 0.22)`, lh 0.86, -0.035em): first name on the badge front, sized as a fraction of badge width. The last name sits below at 500, wdth 100, `clamp(26px, 2.4vw, 36px)`.
+- **Badge name** (900, wdth 125, `calc(var(--badge-w) * 0.2)`, lh 0.86, -0.035em): first name on the badge front, sized as a fraction of badge width. The last name sits 6px below at 500, wdth 100, `calc(var(--badge-w) * 0.082)`.
 - **Closing display** (900, wdth 125, `clamp(64px, 12.4vw, 200px)`, lh 0.86, -0.04em): the closing "Let's talk." only.
 - **Section headline** (850, wdth 122, `clamp(44px, 6.6vw, 96px)`, lh 0.95, -0.025em, `text-wrap: balance`): one per section. Under 860px: `clamp(32px, 9.6vw, 48px)` at wdth 108.
 - **Agenda title** (820, wdth 72, `clamp(32px, 5.2vw, 80px)`, lh 0.98, uppercase): the condensed poster line of each activity; its sub-line is 16px/1.3, 550, wdth 100, sentence case.
-- **Lede** (700, wdth 96, `clamp(30px, 2.9vw, 44px)`, lh 1.08, max 15em, at most 2 lines): hero statement.
-- **Statement large** (650, wdth 96, `clamp(28px, 3.3vw, 48px)`, lh 1.12, max 26em, `text-wrap: pretty`): about paragraph; second clause in `on-ground-soft`, upright (no italic).
+- **Lede** (800, wdth 90, `clamp(38px, 3.9vw, 58px)`, lh 1.02, -0.025em, `text-wrap: balance`, two lines): hero statement, in a block `min(52vw, 740px)` wide.
+- **Statement large** (650, wdth 96, `clamp(28px, 3.3vw, 48px)`, lh 1.12, max 26em, `text-wrap: pretty`): about paragraph; second clause in the soft on-ground role, upright (no italic).
 - **Metric** (850, wdth 112, `clamp(26px, 2.6vw, 38px)`, tabular figures; big pins `clamp(34px, 3.6vw, 52px)`): the number on a pin, `white-space: nowrap`. Explanation below at 13.5px/600.
 - **Event year** (900, wdth 125, 54px, tnum; 44px under 860px): bottom of each achievement badge.
 - **Event title** (850, wdth 115, 25px, lh 1.02); **Stop title** (800, wdth 104, `clamp(20px, 1.7vw, 25px)`), org line 16px/550 wdth 100.
 - **Project title** (450, `clamp(25px, 2.4vw, 36px)`, lh 1.12, max 30ch): a full outcome sentence whose leading product name is set 850 wdth 108.
-- **Badge role** (750, `clamp(18px, 1.5vw, 22px)`); badge stack 15px in `print-ink-soft`.
+- **Badge role** (750, `clamp(16px, 1.3vw, 19px)`, lh 1.15); badge stack 13.5px in `print-ink-soft`, beside the portrait.
+- **Badge band** (800, wdth 85, 11.5px, +0.16em, uppercase): the domain and "Portfolio" printed in stock on the badge's navy header band.
 - **Body** (400, 18px, lh 1.55, wdth 100); in cards 16.5px/1.5, max 60ch; section intros 19px, max 46ch.
 - **Meta** (600, 14.5px): project year/role line; tags 13px/650.
 - **Button** (700, 16px, +0.005em; 15px in nav and project links).
 - **Brand** (800, wdth 118, 17px, nowrap); **Nav link** (600, 15px).
-- **Printed label** (800, wdth 85, 12.5 to 13px, +0.14 to 0.16em, uppercase): role tags, ribbon bands. Itinerary list labels use 15px, wdth 80. Seal small print 11px/750, wdth 80, +0.1em.
-- **Strap print** (800, wdth 125, 12px, +0.32em, vertical-rl, 62% opacity stock on webbing): the owner's name repeated on the strap.
+- **Printed label** (800, wdth 85, 12.5 to 13px, +0.14 to 0.16em, uppercase): role tags, ribbon bands. Itinerary list labels use 15px, wdth 80. Seal small print 10px/750, lh 1.15, wdth 80, +0.08em, on two lines.
+- **Strap print** (800, wdth 125, 11px, +0.3em, vertical-rl, full navy on the concrete webbing): the owner's name repeated on each strap length, the two lengths offset (70px and 150px from the top) so the names never line up.
 
 Case study tiers (`/projects/[slug]`):
 - **Case title** (900, wdth 125, `clamp(64px, 8.4vw, 140px)`, lh 0.86, -0.04em, `overflow-wrap: anywhere`): the project name in the header, one step below closing display. Under 860px: `clamp(48px, 15vw, 72px)`.
 - **Case outcome**: the statement large tier at max 22em with `text-wrap: balance`, directly under the case title.
 - **Page headline** (850, wdth 112, `clamp(30px, 3vw, 44px)`, lh 1, -0.02em, `text-wrap: balance`): the heading of each stock page, sized for a sheet rather than a section of the ground.
 - **Index row** (820, wdth 72, 22px, lh 1, uppercase): program index rows, the agenda title's condensed voice at list scale. Under 860px the rows become pills at 15px, wdth 85.
-- **Facts**: term 14px/600 in `on-ground-soft`; value 18px/750 with tabular figures.
+- **Facts**: term 14px/600 in the soft on-ground role; value 18px/750 with tabular figures.
 - **Decision title**: the stop title tier; the decision body is 16.5px/1.5 and the trade-off line 15px/600 in `print-ink-soft`.
 - **Page body** (400, 18px, lh 1.6, max 64ch); list rows 18px/1.5; the architecture flows list 15.5px/1.45, max 72ch; figure captions 15px/1.45 in `print-ink-soft`.
 - **Booth name** (800, wdth 104, 16px, lh 1.2; people at wdth 88) over a 13px/600 role line in `print-ink-soft`. Under 860px: 14.5px and 12px.
@@ -578,35 +687,50 @@ Case study tiers (`/projects/[slug]`):
 - **Header small parts**: back link 15px/650; stack tags on the ground 13.5px/650; demo label 17px/750, `nowrap`.
 - **Inline code**: the same Archivo at 700, wdth 85, 0.95em.
 
+CV tiers (`/cv`, set in pt and mm for print):
+- **CV name** (900, wdth 125, 28pt, lh 0.9, -0.03em, `white-space: nowrap`): the full name on one line.
+- **CV role** (750, 12.5pt); contact list 8.8pt in `print-ink-soft`.
+- **CV section label** (800, wdth 85, 8.4pt, +0.16em, uppercase): stock print on a navy tab.
+- **CV body** (400, 9.2pt, lh 1.32); summary 9.6pt; entry titles 800 at wdth 106, organisations 500 in `print-ink-soft`.
+- **CV date** (700, wdth 85, 7.8pt, +0.08em, uppercase, tabular, `print-ink-soft`): right-aligned on each entry's baseline.
+- **CV tag** (800, wdth 85, 6.8pt, +0.12em, uppercase): rank and role cut tags. Chips are 7.4pt/650 in `print-ink-soft`.
+- **CV metric** (800, navy, tabular): key figures inside bullet points.
+
 ### Named Rules
 **The Width Axis Rule.** Hierarchy moves on `wdth` as much as on weight: names and display at 118 to 125, reading at 96 to 100, printed labels at 72 to 85. Never fake width with `transform: scaleX` or letter-spacing.
 
 **The Tabular Numbers Rule.** Any figure the eye compares (metrics, years, dates, GPA, latency) sets `font-feature-settings: "tnum" 1`.
 
-**The Printed Label Rule.** Uppercase tracked condensed caps exist only as print on a physical object (ribbon band, role tag, itinerary list label, strap, seal). They never float above a heading as a section label.
+**The Printed Label Rule.** Uppercase tracked condensed caps exist only as print on a physical object (ribbon band, role tag, itinerary list label, strap, seal, the badge's header band, and on the CV the section tabs, cut tags, and dates). They never float above a heading as a section label.
 
 **The Code Is Data Rule.** Identifiers in prose (`SKIP LOCKED`) stay in Archivo at 700, wdth 85, on a 7% ink wash with `label-cut` corners. Monospace never appears, not even for code.
 
 ## Layout
 
-**The cord and gutters.** A fixed 6px cord sits at `cord-x` from the left edge for the whole page. Sections are left-padded by `gutter-left` (clearing the cord) and right-padded by `gutter-right`; section top padding is `section-top`, heads sit `section-head-gap` above content. The layout is asymmetric and left-hung; nothing is centred in a max-width column except the CV sheet.
+**The cord and gutters.** A fixed 6px cord sits at `cord-x` from the left edge for the whole page, crossing every panel. Sections are left-padded by `gutter-left` (clearing the cord) and right-padded by `gutter-right`; each panel is its own piece of webbing, padded `section-pad` at both top and bottom, and heads sit `section-head-gap` above content.
+
+**Panels and seams.** Every section is a full-bleed panel carrying its colourway (see The Two Colourway Rule) with the twill tile on the panel itself, so the weave scrolls with its panel. Where two colourways meet, the lower panel carries the seam: a 2px dashed line in the stitch role, `seam-inset` below its top edge, full width, never interactive. The layout is asymmetric and left-hung; nothing is centred in a max-width column except the CV sheet.
 
 **Section order** (the story): hero badge, about + stack, Selected work, Achievements, Activities, Experience and education, closing. Anchors: `#work`, `#achievements`, `#activities`, `#experience`, `#contact`; skip link targets `#work`.
 
-**Hero.** `100dvh`, min 720px, max 1000px, `overflow: clip`. The pendulum pivots at `left: 26%; top: -40px`. Strap height `clamp(250px, 34vh, 330px)`, clasp under it, badge 26px below the strap end, width `clamp(280px, 25vw, 360px)`, aspect 360/510. Five stickers sit absolutely at authored positions and angles (-10deg to +7deg, via `--rot`): two landscape screenshots at aspect 1.6, one phone screenshot at aspect 0.47, one small landscape, one circular seal. The statement block sits at `left: 58%; top: 53%` (52% under 1100px). Only the five slots exist; more projects do not add stickers.
+**Hero.** A navy panel, `100dvh`, min 720px, max 1000px, clipped on the x axis only (`overflow-x: clip`) and lifted to z-index 2 so the badge's shadow falls across the seam into the about panel. The hero splits in two:
+- **Left, text and stickers.** The statement block sits at `left: gutter-left; top: 18%`, `min(52vw, 740px)` wide: the two-line lede, then the See the work and Download CV pills. Below it the five stickers lie in a loose collage at authored positions and angles (-8deg to +7deg via `--rot`): the lead landscape at `left 7%, top 50%` (`clamp(220px, 19vw, 280px)`), the phone at `27%, 46%` (`clamp(88px, 7vw, 104px)`, aspect 0.47), the second landscape at `34%, 62%` (`clamp(200px, 17vw, 250px)`), the small landscape at `12%, 75%` (`clamp(160px, 13vw, 200px)`), and the seal at `44%, 47%` (`clamp(100px, 8vw, 120px)`). Landscapes are aspect 1.6. Only the five slots exist; more projects do not add stickers.
+- **Right, the lanyard alone.** The pendulum pivots at `left: 77%; top: -40px`. Strap length is `strap-length`; the badge hangs 86px below the strap's end, width `clamp(280px, 23vw, 340px)`, aspect 360/510. Nothing else shares the right half.
 
 **Work grid.** 12 columns, gap `grid-gap`. Cards alternate full (span 12, field aspect 16/7.2) and half (span 6, field aspect 4/3.1). Card body is a two-column grid (text, links) aligned to the bottom; half cards stack it.
 
 **Breakpoints.**
-- `max-width: 1100px`: statement moves to `left: 52%`, phone sticker to `left: 44%`.
+- `max-width: 1100px`: the statement widens to 56vw and the phone sticker moves to `left: 28%`.
 - `max-width: 860px` (JS mirrors this as `min-width: 861px` for "wide"): see responsive rules below.
-- `(hover: none) and (min-width: 861px)`: sticker captions are always visible, smaller (12.5px, 7px 11px).
+- `(hover: none) and (min-width: 861px)`: sticker captions are always visible, smaller (12.5px, 7px 11px), since there is no hover to reveal them.
+- `max-width: 420px`: the strap shortens to 110px, the badge to 260px, and the stage to 560px, so the statement reaches the first screen.
 
 **Responsive rules under 860px.**
 - Nav keeps only the brand and the Download CV pill; section links are hidden.
-- Hero becomes a column: padding `96px gutter-right 64px gutter-left`, a 640px-tall stage, then the statement flows below in normal order.
-- Pendulum centres (`left: 50%; top: -20px`); strap 170px, clasp at 164px, badge `--badge-w: 290px` at top 196px.
-- Only two stickers stay (the lead landscape at top-left, the phone at top-right, 104px). The other landscape, the small landscape, and the seal are hidden. All sticker captions are hidden; stickers stay plain links to their project cards.
+- Hero becomes a column: padding `96px gutter-right 64px gutter-left`, a 640px-tall stage holding only the lanyard, then the statement flows below in normal order.
+- Pendulum centres (`left: 50%; top: -20px`); strap length 150px, its top starting 16px above the pivot so it emerges under the nav and the brand stays readable; badge `--badge-w: 290px`.
+- The hero stickers are dropped entirely; every project is one scroll away as a full card.
+- The cord is hidden (on phones it only crossed the hero).
 - Half project cards go full width; card body stacks; field aspect 4/3.2.
 - Leader lines and their dots are hidden; pins re-anchor inside the field at `right: 12px; bottom: 12px`, max-width 66%, always pointing left, metric 26px, explanation 12.5px.
 - The achievement fan does not fan: it stays a native horizontal `scroll-snap` row (gap 28px, bottom padding 110px for ribbons), scrolled on load to centre the active badge (index 2, the top rank). Prev/next controls are hidden.
@@ -624,20 +748,20 @@ Case study tiers (`/projects/[slug]`):
 - `read-offset-compact` replaces `read-offset` for scroll padding and page scroll margins (the nav plus the index bar).
 - Header goes to one column, top padding 96px; the case title takes its compact tier; the hero print follows the actions 36px down at -1deg. Facts go to two columns.
 - Body goes to one column, gap 24px, top padding 64px.
-- The program index becomes a full-bleed bar sticky at `top: 72px` under the nav: negative margins out to both gutters, 10px vertical padding, `lanyard-deep` at 0.94 with the nav's `saturate(140%) blur(10px)`, holding one horizontal row of pills with the scrollbar hidden.
+- The program index becomes a full-bleed bar sticky at `top: 72px` under the nav: negative margins out to both gutters, 10px vertical padding, the ultramarine-era `rgba(26, 39, 173, 0.94)` (pending migration to the nav's navy) with the nav's `saturate(140%) blur(10px)`, holding one horizontal row of pills with the scrollbar hidden.
 - Approach decisions go to one column.
 - Architecture booths re-hang in two columns in flow order (see Components); field gap 34px 14px, padding 18px 14px.
 - Result tags hang in one horizontal scroll-snap row under the one rail.
 - Gallery goes to one column; the phone print is at most 62% wide.
 - The next-project card stacks; its field is at least 240px tall.
 
-**Z-index layers.** weave 0; main 1; cord 2; hero stickers 2 (a peeled or focused sticker 5, so it can lift over the badge, which requires the sticker list to create no stacking context); pendulum 3; project field: punch slot 2, leader 3, pin and dot 4; fan items `10 - distance`; agenda preview 40; nav 50; sample-content note 60; skip link 100.
+**Z-index layers.** main 1; cord 2; hero panel 2 (above the panels after it, so the badge shadow crosses the seam); hero stickers 2 (a peeled or focused sticker 5, which requires the sticker list to create no stacking context); pendulum 3, and inside it the ring 0, the folded strap end 1, the badge 1, the swivel and clasp 2; project field: punch slot 2, leader 3, pin and dot 4; fan items `10 - distance`; agenda preview 40; nav 50; sample-content note 60; skip link 100. There is no page-wide weave layer any more.
 
 On the case study: the compact index bar 20; inside the architecture field, wires 0 and booths 1.
 
 ## Elevation & Depth
 
-Depth is physical: objects hang over or lie on woven fabric and cast neutral, near-black shadows (`rgba(10, 11, 18, a)`). Shadows are always offset downward with a negative spread so they read as a thing a few centimetres off the cloth. There is no glow, no coloured or tinted halo, no inner gloss, no gradient sheen.
+Depth is physical: objects hang over or lie on woven fabric and cast neutral, near-black shadows (`rgba(10, 11, 18, a)`). Shadows are always offset downward with a negative spread so they read as a thing a few centimetres off the cloth. The same shadow is used on both colourways; on concrete it reads lighter, and that is correct. There is no glow, no coloured or tinted halo, no inner gloss, no gradient sheen. The hanging badge is the one object allowed to cast across a seam.
 
 ### Shadow Vocabulary
 - **Hang** (`0 28px 60px -18px rgba(10,11,18,.62), 0 6px 14px -6px rgba(10,11,18,.4)`): anything hanging or lying flat as a card: badge faces, project cards, event badges, itinerary.
@@ -645,8 +769,9 @@ Depth is physical: objects hang over or lie on woven fabric and cast neutral, ne
 - **Lift** (`0 30px 50px -16px rgba(10,11,18,.7), 0 6px 12px -4px rgba(10,11,18,.35)`): a peeled sticker and the agenda photo preview.
 - **Print** (`0 26px 50px -18px rgba(0,0,0,.55)`): screenshot prints inside a project field.
 - **Button stock** (`0 6px 16px -8px rgba(10,11,18,.7)`, hover `0 10px 22px -8px rgba(10,11,18,.75)`).
-- **Small parts**: clip mark `0 3px 6px rgba(10,11,18,.4)`; clasp `0 4px 8px rgba(10,11,18,.45)`; ribbon band `0 6px 10px -4px rgba(0,0,0,.4)`; CV sheet on screen `0 30px 70px -20px rgba(10,11,18,.6)`.
-- **Insets** (punched holes and webbing edges only): slot `inset 0 2px 3px rgba(0,0,0,.35)`; strap edges `inset 3px 0 0 rgba(255,255,255,.05), inset -3px 0 0 rgba(0,0,0,.35)`; seal ring `inset 0 0 0 5px ink, inset 0 0 0 7px stock`.
+- **Small parts**: clip mark `0 3px 6px rgba(10,11,18,.4)`; strap hardware (ring, swivel, clasp) `filter: drop-shadow(0 3px 3px rgba(10,11,18,.45))`, since the parts are SVG silhouettes; ribbon band `0 6px 10px -4px rgba(0,0,0,.4)`; CV sheet on screen `0 30px 70px -20px rgba(10,11,18,.6)`.
+- **Insets** (punched holes and webbing edges only): slot `inset 0 2px 3px rgba(0,0,0,.35)`; strap edges `inset 2px 0 0 rgba(255,255,255,.35), inset -3px 0 0 rgba(17,18,22,.2)` (the woven selvedge of the concrete webbing); cord edge `inset 0 0 0 1.5px rgba(17,18,22,.7)`, so the concrete cord reads on concrete panels; portrait edge `inset 0 0 0 1px rgba(17,18,22,.12)`; seal ring `inset 0 0 0 5px ink, inset 0 0 0 7px stock`.
+- **Fold**: the folded strap end is shaded by flat paths, not shadows: its lower lip at 13% ink and its right edge a 3px stroke at 20% ink.
 
 ### Case study depth
 - **Stock pages** and the **next-project card** take the hang shadow; the card lifts on hover to the lift shadow and `translateY(-4px)` (420ms `ease-out`).
@@ -664,13 +789,16 @@ Depth is physical: objects hang over or lie on woven fabric and cast neutral, ne
 ## Shapes
 
 - **Cards** (badge faces, project cards, event badges, itinerary): `card` radius. **Stickers and screenshot prints**: `sticker` radius, the image inside at radius minus 6px, so the white kiss-cut border reads as an even die-cut margin (7px on hero stickers, 8px on prints). **Buttons, chips, tags, caption pills**: full `pill`.
-- **Punched slot**: every badge-like object carries a pill slot near its top edge, the ground showing through: 74x13px (badge), 52x11px (event badge), 64x12px at 28% black (project field). A 2px ink rule sits under the slot on badges and event badges.
+- **Punched slot**: every badge-like object carries a pill slot near its top edge, the deep ground of its panel showing through: 74x13px (badge, 10px from the top), 52x11px (event badge), 64x12px at 28% black (project field), 17x3mm on the CV. A 2px ink rule sits under the slot on event badges; on the hero badge the navy header band takes its place, and the clasp's curve shows through the slot as a 12x8px U in a 3px `metal-mid` stroke.
 - **Die-cut pins**: a rectangle with a 16px arrow point toward the thing it explains (`clip-path: polygon(16px 0, 100% 0, 100% 100%, 16px 100%, 0 50%)`, mirrored for right-pointing), `pin` radius on the square end, a 10px eyelet 13px in from the point.
 - **Role tag cuts** (`label-cut` base): speaker = swallowtail notch on the right; organizer (and host) = full pill; mentor = square top, 14px rounded bottom; volunteer = outline only (2px inset stock ring, transparent fill).
 - **Ribbons**: a band that overhangs the event badge by 12px each side and drops 18px below it; tails are 34px wide with a V-notch (`polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%)`).
 - **Seals**: circles, flat ink with a 2px stock ring inset 5px; rotated off-axis (-12deg on the event badge).
-- **Clip mark**: 20x34px rounded rectangle (`clip` radius), 4px metal border, ground fill.
-- **Clasp**: 40x46px ring, 6px metal border with a 10px top edge, radius `12px 12px 18px 18px`.
+- **Clip mark**: 20x34px rounded rectangle (`clip` radius), 4px border in `clip-metal` on navy panels and `metal-dark` on concrete panels, ground fill.
+- **Seam**: a straight 2px dashed line across the full panel width; never curved, never doubled.
+- **Strap**: two 30px concrete lengths in a V (rotated -8deg and +8deg from their bottom ends, 26px apart at the pivot), radius `0 0 3px 3px`, running from 60px above the pivot down to `strap-length`.
+- **Folded end** (SVG, 62x54 viewBox): one piece as wide as both lengths at the top, tapering to a rounded end; a box stitch (36x13 rectangle, radius 2, 1.5px dashed `3 2.5` at 55% navy) sews the two ends together. It sits over the ring's top bar, so only the ring's lower half shows.
+- **Ring and clasp** (SVG): a 12-radius ring in a 5px `clip-metal` stroke with a `metal-light` arc on its lower left; a swivel (eye, barrel, neck band, neck) hooked on it; a lobster clasp with a long body, an open throat, and a spring gate on its left, its tip going on through the badge slot. Every part is a flat facet from the four metal tokens.
 
 - **Hang tag** (results): ink, die-cut with a peaked top (`clip-path: polygon(50% 0, 100% 18px, 100% 100%, 0 100%, 0 18px)`), bottom corners at `pin`, a 10px stock eyelet 13px below the peak. Each hangs by a 2px ink string, 40px long, from the rail.
 - **Rail**: a 14px strip of webbing over ink, `label-cut` radius, overhanging the page content by 8px each side.
@@ -678,19 +806,21 @@ Depth is physical: objects hang over or lie on woven fabric and cast neutral, ne
 - **Architecture field**: a `sticker`-radius rectangle of deep twill laid on the page.
 - **Decision item**: a 2px ink rule on top, 16px above the title.
 - **Inline code**: `label-cut` corners.
+- **Badge portrait**: aspect 4/5, `pin` radius, 40% of the badge's inner width.
+- **CV cut tags**: 21mm wide, 0.5mm corners as the base; winner and speaker take a swallowtail notch (1.6mm) on the right; finalist and volunteer are outline only (0.8pt ink ring); organizer and host are full pills; mentor has a square top and 2mm rounded bottom; other awards (certified, honourable mention, dean's list) are a plain stock fill. **CV section tabs**: 0.8mm corners. **CV clip marks**: 2.8x4.4mm, 1mm corners, 1.1pt `metal-mid` border. **CV knots**: 2.1mm circles, paper fill, 1.2pt navy ring.
 
 ## Components
 
 ### Buttons
 Pills pressed from stock or ink; confident, never glossy.
 - **Shape:** full pill, min-height 48px (42px in nav, 44px in project links), padding 0 1.25em, 2px border slot always reserved (transparent when unused), icon gap 0.5em, icon 1.1em trailing.
-- **Stock** (on the ground): stock fill, ink text, button-stock shadow; hover goes to white with a deeper shadow. Primary action on the ground ("See the work", "Email me", nav "Download CV").
-- **Line** (on the ground): 2px stock border at 75% alpha, stock text; hover full stock border and an 8% stock wash. Secondary action beside a stock button.
+- **Stock** (on either colourway): stock fill, ink text, button-stock shadow; hover goes to white with a deeper shadow. Primary action on the ground ("See the work", "Email me", nav "Download CV").
+- **Line** (on either colourway): 2px border in the line-strong role, on-ground text; hover takes the full on-ground border and the line-role wash. Stock on navy, ink on concrete. Secondary action beside a stock button.
 - **Ink** (on stock): ink fill, stock text; hover `ink-raised`. Primary action on a card ("Case study", badge-back "Download CV").
 - **Ink line** (on stock): 2px ink border; hover fills ink.
 - **Active:** `translateY(1px) scale(0.98)`, 160ms. Transitions 200ms `ease-out`.
 - **Plain link** (on stock): 700/15px, underline at 30% ink, full ink on hover, 44px min target ("Live site", "Code").
-- **Round** (fan controls): 52px circle, 2px stock border at 70%; hover fills stock with ink icon; disabled at 35% opacity.
+- **Round** (fan controls): 52px circle, 2px border in the line-strong role; hover fills with the on-ground colour and turns the icon to the ground colour; disabled at 35% opacity.
 - **Icons:** Phosphor Regular paths inlined as SVG symbols (`assets/icons/`), `fill: currentColor`. No glyph or emoji icons.
 
 ### Chips (stack stickers)
@@ -702,26 +832,26 @@ Pills pressed from stock or ink; confident, never glossy.
 - **Itinerary** (experience + education): one stock card, padding `itinerary-pad`. Each list opens with a printed label (15px, wdth 80, uppercase, +0.14em) over a 2px ink rule. Each **stop** is a 3-column grid (`clamp(130px,14vw,200px)` date, 1.1fr role/org, 1.4fr description), 20px vertical padding, 1px rule at 14% ink; key figures in the description are `<strong>` 750 with tnum.
 
 ### Navigation
-- 72px fixed bar, transparent over the hero; brand left (wordmark is the owner's name), section links centre-right, stock "Download CV" pill right.
-- Links 600/15px stock; a 2px underline scales in from the left on hover and for `aria-current="true"` (260ms). The current link is set by ScrollTrigger when the section crosses 45% of the viewport.
+- 72px fixed bar, transparent over the hero; brand left (wordmark is the owner's name, "Jafar Fadli"), section links centre-right, stock "Download CV" pill right.
+- Links 600/15px, always stock (`#f2f2ee`) whatever panel is underneath, because the bar is navy once solid; a 2px underline scales in from the left on hover and for `aria-current="true"` (260ms). The current link is set by ScrollTrigger when the section crosses 45% of the viewport.
 - After 40px of scroll it turns solid (`nav-solid`, `backdrop-filter: saturate(140%) blur(10px)`); scrolling down past 80% of the viewport height hides it (`translateY(-100%)`, 380ms); scrolling up shows it.
 - Anchor clicks scroll with Lenis (`offset: -24`, `duration: 1.1`) and move focus to the target (`tabindex="-1"`).
 - Under 860px: brand and CV pill only.
 
 ### Badge (signature)
-The hero object. A pendulum (`strap` + `clasp` + `badge`) hung from above the viewport.
-- **Strap:** 46px ink webbing (webbing tile at 16px), radius `0 0 4px 4px`, the owner's name printed vertically in strap print.
-- **Front** (fixed sweep of truths, top to bottom): punched slot, 2px ink rule, first name (badge-name role) and last name, role line, stack line, then a foot row: "CV and contact on the back" with a **Flip** pill (40px, 2px ink border, flip icon that turns 180deg on hover over 500ms; hover fills ink), and the full-bleed ink **availability band** (14.5px/700: availability left, location right).
+The hero object, hung alone on the right half of the navy hero. A pendulum (strap, folded end, ring, swivel and clasp, badge) dropped from above the viewport.
+- **Strap:** two lengths of concrete webbing (webbing tile at 16px) in a V, the owner's name ("JAFAR FADLI") printed down each in navy strap print. They are sewn into one folded end that wraps a metal ring; a swivel and lobster clasp hang from the ring and the clasp tip goes through the badge slot (see Shapes). The strap is the same concrete on both colourways and is never tinted by its panel.
+- **Front** (an ID pass, a fixed sweep of truths, top to bottom): punched slot with the clasp curve; a full-bleed navy **header band** (badge band tier: the domain left, "Portfolio" right); an ID row 16px below (a two-column grid, 40% and the rest, gap 14px, bottom-aligned): the owner's **duotone portrait** (navy `#1D2640` to `#EEEDE8`, so it prints like the rest of the pass) beside the role line and stack line; the first name huge (badge-name tier) 14px below and the last name under it; then a foot row: "CV and contact on the back" (wraps, balanced) with a **Flip** pill (40px, 2px ink border, flip icon that turns 180deg on hover over 500ms; hover fills ink), and the full-bleed ink **availability band** (14px/700, `nowrap`: the live dot and availability left, location right).
 - **Back** (lead retrieval): slot, rule, "Scan to take my CV with you" (800, wdth 112, 22px), a QR code (`min(64%, 196px)`, 10px padding, 2px ink border, 12px radius, `image-rendering: pixelated`) linking to `/cv`, an ink "Download CV" pill, contact links with icons, and a "Front" flip pill.
 - **Flip:** `rotateY(180deg)` on the inner card, 760ms `ease-out`, `perspective: 1400px`, both faces `backface-visibility: hidden`. The hidden face is `inert`. After flipping, focus moves to the other face's flip button (after 380ms; immediately under reduced motion). The flip kicks the pendulum (+34 deg/s to the back, -34 back to the front).
 - **Interaction:** drag swings (cursor grab/grabbing); a press with under 6px travel and under 350ms flips; Enter/Space on the flip buttons flips. On coarse pointers `touch-action: pan-y` so the page still scrolls.
-- **Name fitting:** the first name is sized at 22% of badge width, which only fits short names. Production must measure the rendered first name and step the size down (or move to the next lower `wdth`) until it fits the badge's inner width; never let it clip or wrap mid-word.
+- **Name fitting:** the first name is sized at 20% of badge width, which only fits short names. Production must measure the rendered first name and step the size down (or move to the next lower `wdth`) until it fits the badge's inner width; never let it clip or wrap mid-word.
 
 ### Stickers (hero)
 - White kiss-cut border (7px), sticker radius, sticker shadow, each at its `--rot`. Each is a link to its project card (`#p-slug`) or to `#achievements` (the seal).
 - **Peek:** on pointer enter or focus, the sticker peels (`rotate(rot * 0.3) translateY(-8px) scale(1.04)`, lift shadow, 420ms) and the others step back (opacity 0.38, `saturate(0.6)`). Leaving restores all.
-- **Caption pill:** ink pill below (or above, for the top sticker) the sticker: "Name: one-line outcome" plus an arrow-up-right icon, 14px/650; fades and slides 6px in (220ms opacity, 320ms transform). One sticker is marked **resting** (the lead project) and shows its caption by default; it hides while another sticker is being peeked. On touch-only wide screens all captions are visible. Under 860px all captions are hidden.
-- **Seal sticker:** circular, 6px white border, flat ink disc with stock ring: rank ("1st", 900, wdth 125, 30px) over the event short name (11px condensed caps).
+- **Caption pill:** ink pill below the sticker: "Name: one-line outcome" plus an arrow-up-right icon, 14px/650; fades and slides 6px in (220ms opacity, 320ms transform). No caption shows at rest: captions appear only on hover (peel) or keyboard focus. On touch-only wide screens all captions are visible, since there is no hover. Under 860px the stickers themselves are gone.
+- **Seal sticker:** circular, 6px white border, flat ink disc with stock ring: rank ("1st", 900, wdth 125, 30px) over the event short name and year on two lines (10px condensed caps).
 
 ### Metric pins + leader lines
 - One pin per project, carrying one real metric (metric role) and a one-line explanation. Stock pin by default; **ink pin** on light fields (its leader stroke switches to ink and the explanation to metal). **Big** pins for full-width cards.
@@ -739,26 +869,32 @@ The hero object. A pendulum (`strap` + `clasp` + `badge`) hung from above the vi
 - **Under 860px:** native scroll-snap row centred on the active badge (see Layout).
 
 ### Agenda (activities)
-- Top rule 2px stock at 85%, row rules 2px at 22%. Each row is a link: year (16px/700 tnum, `on-ground-soft`), condensed uppercase title with a sentence-case sub-line, and a role tag at the right.
-- **Role tags** are stock printed labels told apart by cut (see Shapes): Speaker notch, Organizer/Host pill, Mentor rounded bottom, Volunteer outline. Never by colour.
+- Top rule 2px in the line-strong role, row rules 2px in the line role. Each row is a link: year (16px/700 tnum, soft on-ground role), condensed uppercase title with a sentence-case sub-line, and a role tag at the right.
+- **Role tags** are stock printed labels told apart by cut (see Shapes): Speaker notch, Organizer/Host pill, Mentor rounded bottom, Volunteer outline (a 2px inset ring in the on-ground colour). Never by colour.
 - **Hover/focus:** other rows drop to 40% opacity; the active title slides right `clamp(12px, 2vw, 32px)` (520ms). A photo preview (white 8px frame, radius 10px, lift shadow, `clamp(260px, 22vw, 340px)`, 4/3) fades in (0.4s `expo.out`, random tilt -4 to 4deg) and trails the cursor with `gsap.quickTo` on x/y (0.55s `power3`), offset 28px right and vertically centred. On keyboard focus it parks beside the row. Hide: 0.25s `power2.in` to scale 0.85. While scrolling under a still cursor, the hovered row is re-checked.
 - Photos are real activity photos; under 860px they show inline (see Layout).
 
 ### Cord + clip marks
-- Fixed 6px cord at `cord-x`: an empty track at 14% stock, and an ink webbing fill that scales from the top with scroll progress (scrub 0.4) from the about section entering to the contact section's end. Fades in (400ms) once that range starts.
-- Each section head (except about) carries a clip mark aligned to the cord at the headline's first line. Hidden under 860px.
+- Fixed 6px cord at `cord-x`: an empty track at 24% `metal-dark` (`rgba(127, 131, 145, 0.24)`), and a fill of concrete webbing (the strap's material, tile at 16px) with a 1.5px ink edge, so the one cord reads on both colourways. The fill scales from the top with scroll progress (scrub 0.4) from the about section entering to the contact section's end, and fades in (400ms) once that range starts.
+- Each section head (except about) carries a clip mark aligned to the cord at the headline's first line, its border `metal-dark` on concrete panels. Cord and clip marks are hidden under 860px.
 - On the case study the cord is reading progress for the whole page (see Section pages); there are no clip marks.
 
 ### Closing
-- Closing display headline, a 34ch sub-line (550, `clamp(20px, 1.8vw, 26px)`), stock "Email me" + line "Download CV" pills, icon links (GitHub, LinkedIn, email, 44px targets), then a footer over a 2px rule at 25% stock (14px, `on-ground-soft`).
+- A navy panel: closing display headline, a 34ch sub-line (550, `clamp(20px, 1.8vw, 26px)`), stock "Email me" + line "Download CV" pills, icon links (GitHub, LinkedIn, email, 44px targets), then a footer over a 2px rule in the line role (14px, soft on-ground).
 
 ### CV (`/cv`, print surface)
-- Screen: sticky toolbar on `lanyard-deep` at 0.94 ("Back to the site", a note, stock "Download CV" pill that prints); the A4 sheet (210mm x 297mm min, white, padding 12mm 15mm 11mm) centred on the ground with the CV sheet shadow.
-- Print: `@page { size: A4; margin: 0 }`; toolbar hidden, white body, no shadow; links not underlined; sections and entries `break-inside: avoid`. **Must fit one A4 page.**
-- Single column, real selectable DOM text, no images of text, no icons in the sheet, no columns or tables for layout, no progress bars or skill meters.
-- Order: header (name in cv-name, role 12pt/700, contact line 9.2pt soft ink), Summary, Experience, Selected projects, Achievements, Activities, Education, Skills.
-- Entries: a row with bold title + soft-ink org on the left and the date (9pt, tnum, soft ink) right-aligned on the baseline; bullet points 14px indent, soft-ink markers. Achievements and activities are one-line rows with right-aligned years.
-- Ultramarine appears only as the 2.5pt header rule and the section labels (cv-section-label, uppercase). Everything else is ink on white.
+The badge's paper twin: the same pass, printed on A4.
+- **Screen:** sticky toolbar on `webbing-navy-deep` at 0.94 ("Back to the site", a note, stock "Download CV" pill that prints), over a navy twill ground; the A4 sheet (210mm x 297mm min, white, padding `0 15mm 6.5mm`) centred with the CV sheet shadow. Under 860px the sheet keeps its A4 width and scrolls sideways.
+- **Strap:** a 6mm band of navy twill across the top of the sheet (full bleed) and a 3mm band at the foot, the two ends of the strap. A 17x3mm punched slot in `webbing-navy-deep` sits under the top band, 3mm down.
+- **Header:** a two-column grid (the text, then a 24mm portrait column, gap 8mm, bottom-aligned) over a 2.5pt navy rule. Left: the full name in CV name on one line; the role (CV role); a wrapping contact list (location, email, domain, GitHub, LinkedIn), each item led by a 3.3mm Phosphor icon in navy. Right: the owner's **cut-out portrait**, 34mm tall, background removed, in the same navy duotone as the badge, standing on the header rule and rising into the space under the strap band.
+- **Cord:** a 1.6pt navy cord runs down the left margin of the body (7mm gutter). Every section label carries a `metal-mid` clip mark on the cord; every experience and education entry is a knot on the cord (see Shapes).
+- **Section labels:** a navy tab printed with the label in stock (CV section label tier), followed by a 0.6pt hairline (`#d9d9d4`) to the right margin.
+- **Entries:** a row with the bold title and soft-ink organisation on the left and the date (CV date tier) right-aligned on the baseline; bullet points 14px indent with `metal-mid` markers. Key figures are CV metrics: bold navy tabular figures, so the numbers read first.
+- **Chips:** project stacks (inline after the project name) and skills (after a 24mm bold group name) are outlined pills: 0.7pt border (`#b9bcc6`), transparent fill, CV chip type.
+- **Cut tags:** each achievement rank and activity role leads its one-line row as a cut tag, told by shape as on the site: winner and speaker swallowtail, finalist and volunteer outline, organizer and host pill, mentor rounded bottom, other awards stock fill. Every tag still prints its word.
+- **Text extraction:** it stays single-column real selectable text. Tags and chips are inline elements separated by literal spaces in the markup, so copying or parsing the PDF keeps the words apart; never build a row of tags with flex gaps alone.
+- **Print:** `@page { size: A4; margin: 0 }`; toolbar hidden, white body, no shadow, colours forced with `print-color-adjust: exact`; links not underlined; sections and entries `break-inside: avoid`; the sheet's print min-height is 296.4mm, a hair under A4, so rounding never spills a blank second page. **Must fit one A4 page.**
+- **Order:** header, Summary, Experience, Selected projects, Achievements, Activities, Education, Skills.
 - The CV is generated from the same SQLite records as the site; the owner selects which items appear per application.
 
 ### Case study header
@@ -772,10 +908,10 @@ The recruiter's whole answer in one viewport, printed straight on the ground.
 
 ### Program index
 The event schedule you hold while reading; it tells you where you are.
-- **Rows:** a numbered list of links in the index row tier, `on-ground-soft`, 12px vertical padding, 2px rules at 22% stock above each row and under the last. Hover and the current row go to `on-ground` (200ms `ease-out`).
+- **Rows:** a numbered list of links in the index row tier, soft on-ground role, 12px vertical padding, 2px rules at 22% stock above each row and under the last. Hover and the current row go to the on-ground role (200ms `ease-out`).
 - **Reading tag:** the current row (`aria-current="true"`) carries a printed stock pill reading "Reading" at its right end, in the printed label voice (12.5px, 800, wdth 85, +0.14em, uppercase from the row). It is a label printed on the row, never a heading label, and appears nowhere else.
 - **Scroll-spy:** the current section is the last page whose top has passed 35% of the viewport height; before the first page passes, the first is current. It is computed on `scroll` and `resize`, throttled to one `requestAnimationFrame`, never with IntersectionObserver, so a jump between two spots where no page crosses a threshold still updates.
-- **Under 860px:** the sticky bar of pills (see Layout). Pills are 40px tall, 0 14px padding, index pill tier, `on-ground` text with a 1.5px inset ring at 45% stock. The current pill fills stock with ink text and drops the ring; it does not carry the Reading tag. When the current pill changes, the script scrolls the row (never the page) to centre it, smoothly, or instantly under reduced motion.
+- **Under 860px:** the sticky bar of pills (see Layout). Pills are 40px tall, 0 14px padding, index pill tier, on-ground text with a 1.5px inset ring at 45% stock. The current pill fills stock with ink text and drops the ring; it does not carry the Reading tag. When the current pill changes, the script scrolls the row (never the page) to centre it, smoothly, or instantly under reduced motion.
 
 ### Section pages
 - One stock page per section: `card` radius, hang shadow, padding `page-pad`, `scroll-margin-top: read-offset` (compact under 860px). Page headline, then page body paragraphs, with key figures in `<strong>` at 750 and tabular figures.
@@ -787,7 +923,7 @@ The event schedule you hold while reading; it tells you where you are.
 
 ### Architecture booths and cords
 The system drawn as an exhibition floor: booths on a strip of lanyard, wired with stock cords. All text is DOM text; only the cords are SVG.
-- **Field:** `lanyard-deep` with the twill tile at 24px, `sticker` radius, padding `clamp(20px, 2.4vw, 32px)`; a 5-column, 3-row grid, gap 30px 22px. This twill scrolls with the page because it is a piece of material laid on the sheet, not the page ground.
+- **Field:** the deep ground (today `webbing-navy-deep`) with the twill tile at 24px, `sticker` radius, padding `clamp(20px, 2.4vw, 32px)`; a 5-column, 3-row grid, gap 30px 22px. It is a piece of material laid on the sheet, so it scrolls with the page like the panels.
 - **Booths:** placed by data. Each booth carries `--c` and `--r` (its desktop column and row in the 5x3 grid) and `--mc` and `--mr` (its column and row in the 2-column compact grid, in flow order: people, front doors, the API across both columns, data and payments, worker and messages). The booth that spans both compact columns is centred at `min(100%, 210px)`. Booth kind by form, never by colour (see Shapes); people booths centre vertically in their cell.
 - **Cords:** one SVG path per flow, drawn from the measured booth boxes and redrawn on resize: 2.5px stock stroke, round caps, no fill, with a 4.5px-radius stock end dot ringed 2px ink at both ends. Desktop routing: booths in the same column hang a straight vertical line from edge to edge; any other pair is a horizontal cubic from the facing side edges with both control points at half the horizontal distance. Compact routing: booths in different rows join with a vertical cubic from the bottom edge to the top edge (control points at half the vertical distance); booths in the same row join with the horizontal cubic.
 - **Draw-in:** once, when 35% of the field is visible, each cord draws via `stroke-dashoffset` from its full length to 0 over 700ms `cubic-bezier(0.65, 0, 0.35, 1)`, staggered 90ms per cord in flow order. Under reduced motion every cord is already drawn, with no transition.
@@ -811,19 +947,20 @@ Before and after, hung like price tags from a strap.
 - No screenshot appears twice on one page: the hero print, the demo poster, every gallery print, and the next-project card each show a different screen.
 
 ### Next project card
-- A section headline "Next project" on the ground, then one card linking to the next case study: stock, `card` radius, hang shadow, a 1fr / 1.4fr grid (stacked under 860px). Left: a field in the next project's own `--field` colour (fallback `lanyard-deep`), at least 300px tall (240px compact), holding a 46% wide print at -3deg (7px white border, empty alt since the title names it). Right: the project title sentence (max 26ch) and an ink "Read the case study" pill with a trailing right arrow. Hover lifts the whole card (see Elevation & Depth).
+- A section headline "Next project" on the ground, then one card linking to the next case study: stock, `card` radius, hang shadow, a 1fr / 1.4fr grid (stacked under 860px). Left: a field in the next project's own `--field` colour (fallback: the deep ground), at least 300px tall (240px compact), holding a 46% wide print at -3deg (7px white border, empty alt since the title names it). Right: the project title sentence (max 26ch) and an ink "Read the case study" pill with a trailing right arrow. Hover lifts the whole card (see Elevation & Depth).
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** keep the woven ground fixed and full-bleed: `lanyard-ultramarine` plus `assets/textures/twill.png` at 24px on a `position: fixed` layer behind everything (never on a scrolling layer).
-- **Do** produce woven materials as raster tiles from `mockup/assets-src/make_textures.py`: a 48px 2/2 twill (white thread highlight and deep `rgb(4,6,30)` shade as alpha over the ground, displayed at 24px) and a 32px ribbed webbing (displayed at 16px over ink for the strap, cord fill, and fan stubs). Regenerate rather than hand-draw or approximate with CSS gradients.
+- **Do** put the weave on each section panel: the panel's ground colour plus `assets/textures/twill.png` at 24px, and on concrete panels a flat 55% concrete layer over the tile (written as a single-colour `linear-gradient`, which is a flat tint, not a gradient). Alternate navy and concrete in story order and sew every join with the seam.
+- **Do** produce woven materials as raster tiles from `mockup/assets-src/make_textures.py`: a 48px 2/2 twill (white thread highlight and deep `rgb(4,6,30)` shade as alpha over the ground, displayed at 24px) and a 32px ribbed webbing (displayed at 16px over concrete for the strap, its folded end, and the cord fill, and over ink for the fan stubs). Regenerate rather than hand-draw or approximate with CSS gradients.
+- **Do** draw the strap hardware as flat SVG facets from the four metal tokens, with the ring's top bar hidden inside the folded strap end and the clasp tip shown through the badge slot.
 - **Do** make seals, foils, and medals as flat one-ink discs with a stock ring; the "foil" on the winner badge is ink, not metallic.
 - **Do** tell state by form: ribbon tails and band width for rank, tag cut for role, sticker lift for focus, printed word always present.
 - **Do** use real raster screenshots of the actual product for stickers and prints (PNG, at least 1440x900 for desktop, 780x1688 for phone), cropped from the top-left, with honest alt text describing what the screen shows.
 - **Do** give every project one real metric on its pin, with what it measures in plain words.
 - **Do** set every comparable figure with tabular numbers.
-- **Do** keep every interaction keyboard reachable with a visible 3px focus ring (stock on the ground, ink on stock surfaces, offset 3px, radius 6px).
+- **Do** keep every interaction keyboard reachable with a visible 3px focus ring (offset 3px, radius 6px) in the on-ground colour of its panel (stock on navy, ink on concrete), and ink on stock surfaces. Stock cards (project cards, the itinerary, event badges) keep an ink ring on either colourway.
 - **Do** use these motion constants: Lenis `lerp: 0.11, wheelMultiplier: 0.95`; pendulum `K = 36, C = 2.4` integrated per GSAP tick (dt capped at 40ms, sleeps when `|a| < 0.02` and `|v| < 0.05`), drag clamped to +/-38deg with velocity smoothed 0.6/0.4 and capped at 260deg/s on release, scroll velocity tugging the strap (`velocity * 0.9`, clamped +/-6) only while the hero is visible.
 - **Do** run the one authored entrance exactly once, defaults `expo.out`, after 0.12s: nav fades in (0.6s, at 0); the pendulum drops from -95vh (0.78s `power3.in`, at 0.05s) then kicks the spring by 58deg/s; stickers slap down from `scale 1.22, rotation 9, opacity 0` (0.5s `back.out(1.5)`, stagger 0.075s, at 0.62s); lede lines rise from `yPercent 108` (0.9s, stagger 0.09s, at 0.78s); hero buttons rise 14px (0.6s, stagger 0.07s, at 1.0s).
 - **Do** slap the stack chips on once at 82% viewport (from `scale 1.3, rotation +=10, opacity 0`, 0.45s `back.out(1.6)`, stagger 0.045s).
@@ -831,7 +968,9 @@ Before and after, hung like price tags from a strap.
 - **Do** honour `prefers-reduced-motion: reduce` with the final state: no Lenis, no pendulum ticker, no entrance, no chip slap, leader lines and pins already drawn, cord fully drawn, fan laid out with zero duration, preview following with zero duration, CSS transitions at 1ms, and the badge flip replaced by a 180ms opacity cross-fade between faces with no 3D rotation.
 - **Do** keep the page fully readable with scripts off: GSAP absent means the badge, stickers, cards, fan row, and agenda all render static.
 - **Do** measure and fit the first name to the badge width in production (Next.js), stepping size or `wdth` down until it fits.
-- **Do** replace all synthetic content before launch: the owner name "Dimas Arkana", role, stack, location, availability, email `hello@dimasarkana.example` and social URLs; the four projects (Ledgerly, Rute, Kanbo, Pantau) with their copy, metrics, tags, and per-project field colours; `mockup/assets/screens/*.png` (generated mock screens); `mockup/assets/photos/act-*.jpg` (Unsplash stand-ins listed in `SOURCES.txt`); `mockup/assets/qr-cv.svg` (must encode the real `/cv` URL, stock background); the five achievements, six activities, three experience stops, education, GPA, and the CV text; remove the "Mockup with sample content" note and every "(sample)" marker.
+- **Do** keep the owner's real details as they are: the name (Muhammad Jafar Fadli; the badge prints "Jafar" over "Fadli", the nav brand and strap read "Jafar Fadli"), the portrait (`mockup/assets/photos/owner-badge.jpg` and `owner-cutout.png`, provenance in `SOURCES.txt`), and the GitHub account `github.com/jafarfadli`.
+- **Do** replace the deliberate placeholders before launch: the email `hello@jafarfadli.example`, the domain `jafarfadli.example` (badge header band, CV contact list), and the LinkedIn URL `linkedin.example/in/jafarfadli` and its empty `#` link in the closing.
+- **Do** replace all remaining synthetic content before launch: the role, stack, location, and availability lines (confirm them with the owner); the four projects (Ledgerly, Rute, Kanbo, Pantau) with their copy, metrics, tags, and per-project field colours; `mockup/assets/screens/*.png` (generated mock screens); `mockup/assets/photos/act-*.jpg` (Unsplash stand-ins listed in `SOURCES.txt`); `mockup/assets/qr-cv.svg` (must encode the real `/cv` URL, stock background); the five achievements, six activities, three experience stops, education, GPA, and the CV text; remove the "Mockup with sample content" note and every "(sample)" marker.
 - **Do** keep provenance for every shipping raster (source or generator next to the asset).
 - **Do** print a result's before value as a legible line ("from 13.1 days") above the value, in `clip-metal` on the ink tag.
 - **Do** describe every architecture cord in the flows list under the diagram, in drawing order, and draw the cords from that list and the booth placements; never hand-draw connector paths.
@@ -846,18 +985,20 @@ Before and after, hung like price tags from a strap.
 - **Don't** put eyebrow or kicker labels (small uppercase tracked text) above section headings or titles; printed labels live only on physical objects (ribbons, role tags, strap, seals, itinerary list labels).
 - **Don't** use gradient text, gradient fills, conic or holographic gradients, or a fake metallic or foil sheen on any surface, seal, ribbon, or clip.
 - **Don't** use glow, tinted halos, or coloured shadows; shadows are neutral near-black and offset down.
-- **Don't** introduce a second accent colour or give sections, roles, or ranks their own hue; differentiate by cut, length, and the printed word.
+- **Don't** introduce an accent colour or give roles or ranks their own hue; sections differ only by the two webbing colourways in fixed alternation, and everything else by cut, length, and the printed word.
 - **Don't** fake screenshots with styled divs or CSS mock UIs; use real raster screenshots.
 - **Don't** use monospace type as costume (no terminal prompts, no code-styled labels); there is no monospace in the system.
 - **Don't** add a marquee or ticker; at most one marquee may ever exist and none is used.
 - **Don't** use em dashes in copy; use commas, colons, or full stops.
 - **Don't** present synthetic or estimated metrics as real; a metric without a source does not ship.
 - **Don't** add a second type family or swap Archivo for a system display face.
-- **Don't** add a dark-mode inversion of the ground; the ultramarine lanyard is the one theme.
+- **Don't** add a third colourway, a theme toggle, a dark-mode inversion, or a gradient between panels; navy and concrete are the whole set, and a join is always a stitched seam.
+- **Don't** give the strap, cord, or hardware their own per-panel colour; they are one material that crosses both colourways.
 - **Don't** render any copy in canvas, WebGL, or images; all text is DOM text.
-- **Don't** add hero stickers beyond the five slots or let them cover the badge name at rest.
-- **Don't** reintroduce leader lines, sticker captions, the fanned layout, the cursor preview, or clip marks under 860px.
-- **Don't** use ultramarine on the CV beyond the header rule and section labels, add a second column, icons, photos, or skill bars, or let it run past one A4 page.
+- **Don't** add hero stickers beyond the five slots or let them cross into the lanyard's half of the hero; the badge hangs alone on the right.
+- **Don't** show a sticker caption at rest; captions appear on hover or focus only (touch-only wide screens excepted).
+- **Don't** reintroduce leader lines, hero stickers, sticker captions, the fanned layout, the cursor preview, the cord, or clip marks under 860px.
+- **Don't** add a second column, a sidebar, skill bars or meters, or any colour beyond navy, ink, metal, and white to the CV, and never let it run past one A4 page. Icons on the CV are the small navy contact icons only.
 - **Don't** strike through before values or show change as struck-out text.
 - **Don't** repeat a screenshot within one page.
 - **Don't** title the last case study section "Next" or anything that reads as the next project; it is "What I'd do next".
@@ -871,3 +1012,9 @@ These trip automated design checks on purpose and are part of the system:
 - **Nested cards:** architecture booths are cards inside the architecture field inside a stock page. The field is a strip of fabric laid on the sheet and the booths are objects on that fabric, so the nesting is physical, not decorative.
 - **Display headings at line-height 1.0:** page headlines and program index rows set `line-height: 1` (and the larger display tiers go below 1). Tight leading on condensed or expanded display type is intended; running paragraphs never go under 1.45.
 - **Per-project field colour:** the next-project card's field carries another project's colour, a value outside the palette tokens. It is record data, contained to the field, as on project cards.
+
+### Open ideas (not rules)
+Raised by the finish review of the two-colourway revision as ways to raise the ceiling; none is built or required.
+- Achievement badges could hang from short stubs of the two webbing colourways with the hero's metal clip, instead of the ink webbing stubs.
+- The closing panel could show the strap's other end, closing the loop the hero opens.
+- Seams could gain a fold edge (a thin shaded lip on the upper panel) so the join reads as sewn fabric rather than a dashed line alone.
