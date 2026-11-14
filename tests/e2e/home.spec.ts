@@ -4,7 +4,7 @@ test.use({ reducedMotion: "reduce" });
 
 test("home renders every section from the database", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Dimas\s*Arkana/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Dimas\s+Arkana/);
   await expect(page.locator("[data-stickers] .slot-li")).toHaveCount(5);
   await expect(page.locator("article.project")).toHaveCount(4);
   await expect(page.locator("article.project").first()).toContainText("Ledgerly");

@@ -22,7 +22,7 @@ export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: 
                 <span className="slot" aria-hidden="true" />
                 <div className="badge-rule" aria-hidden="true" />
                 <h1 className="badge-name">
-                  <span className="first" data-fit>{p.firstName}</span>
+                  <span className="first" data-fit>{p.firstName}</span>{" "}
                   <span className="last">{p.lastName}</span>
                 </h1>
                 <p className="badge-role">{p.role}</p>
@@ -68,7 +68,7 @@ export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: 
             pr.screenshot ? (
               <li key={pr.id} className={`slot-li ${SLOTS[i]}`}>
                 <a className={`sticker${i === 0 ? " is-resting" : ""}`} href={`#p-${pr.slug}`}>
-                  <img src={pr.screenshot.url} alt={pr.screenshot.alt} width={pr.screenshot.width} height={pr.screenshot.height} />
+                  <img src={pr.screenshot.url} alt={pr.screenshot.alt} width={pr.screenshot.width} height={pr.screenshot.height} loading={i < 2 ? undefined : "lazy"} />
                   <span className={`sticker-cap${i === 0 ? " cap-top" : ""}`}>{pr.stickerCaption} <Icon name="arrow-ur" /></span>
                 </a>
               </li>

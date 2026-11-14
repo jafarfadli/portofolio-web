@@ -11,7 +11,7 @@ export function Experience({ experiences, education }: { experiences: Experience
         <ol>
           {experiences.map((e) => (
             <li key={e.id} className="stop">
-              <time>{e.period}</time>
+              <span className="when">{e.period}</span>
               <div className="who">{e.role}<span>{[e.org, e.location].filter(Boolean).join(", ")}</span></div>
               <p><Inline text={e.summary} /></p>
             </li>
@@ -21,7 +21,7 @@ export function Experience({ experiences, education }: { experiences: Experience
         <ol>
           {education.map((e) => (
             <li key={e.id} className="stop">
-              <time>{e.period}</time>
+              <span className="when">{e.period}</span>
               <div className="who">{e.degree}<span>{e.institution}</span></div>
               <p><Inline text={e.note} /></p>
             </li>
