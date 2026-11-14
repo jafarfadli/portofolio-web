@@ -1,14 +1,15 @@
 import { expect, test } from "@playwright/test";
 
-test("flip turns the badge to the CV side and back, moving focus", async ({ page }) => {
+test("a short press turns the badge over and back; there is no flip button", async ({ page }) => {
   await page.goto("/");
   const badge = page.locator("[data-badge]");
-  await page.getByRole("button", { name: "Flip badge to see CV and contact" }).click();
+  await expect(page.getByRole("button", { name: /flip/i })).toHaveCount(0);
+  const name = page.locator(".badge-name");
+  await name.click();
   await expect(badge).toHaveClass(/is-flipped/);
   await expect(page.locator('[data-face="back"]')).not.toHaveAttribute("inert");
   await expect(page.locator('[data-face="front"]')).toHaveAttribute("inert");
-  await expect(page.getByRole("button", { name: "Flip badge back to the front" })).toBeFocused();
-  await page.getByRole("button", { name: "Flip badge back to the front" }).click();
+  await page.locator('[data-face="back"] h2').click();
   await expect(badge).not.toHaveClass(/is-flipped/);
 });
 

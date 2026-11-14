@@ -36,7 +36,7 @@ export function initHomeMotion(doc: Document): () => void {
   };
 
   const body = () => {
-    /* ---------- Fit the first name to the badge width ---------- */
+    /* ---------- Fit the name to the badge width (both lines share one size) ---------- */
     const fit = () =>
       doc.querySelectorAll<HTMLElement>("[data-fit]").forEach((el) => {
         el.style.fontSize = "";
@@ -120,23 +120,14 @@ export function initHomeMotion(doc: Document): () => void {
       });
     }
     const kick = (dv: number) => { if (reduce) return; phys.v += dv; phys.awake = true; };
-    const flip = (): boolean => {
+    // No flip button: a short press on the badge turns it over (the back repeats links found elsewhere on the page).
+    const flip = () => {
       const toBack = !badge.classList.contains("is-flipped");
       badge.classList.toggle("is-flipped", toBack);
       front.inert = toBack;
       back.inert = !toBack;
       kick(toBack ? 34 : -34);
-      return toBack;
     };
-    badge.querySelectorAll<HTMLButtonElement>("[data-flip]").forEach((b) =>
-      on(b, "click", (e) => {
-        e.stopPropagation();
-        const toBack = flip();
-        const next = (toBack ? back : front).querySelector<HTMLButtonElement>("[data-flip]")!;
-        timeouts.push(win.setTimeout(() => next.focus({ preventScroll: true }), reduce ? 0 : 380));
-      }),
-    );
-
     if (!finePointer) badge.style.touchAction = "pan-y";
     type Drag = { x: number; y: number; t: number; p: { x: number; y: number }; a0: number; pa0: number; lastA: number; lastT: number; moved: number };
     let drag: Drag | null = null;

@@ -83,16 +83,7 @@
     faces.back.inert = !back;
     kick(back ? 34 : -34); // the flip nudges the strap
   };
-  badge.querySelectorAll("[data-flip]").forEach((b) =>
-    b.addEventListener("click", (e) => {
-      e.stopPropagation();
-      flip();
-      const next = (badge.classList.contains("is-flipped") ? faces.back : faces.front).querySelector("[data-flip]");
-      setTimeout(() => next.focus({ preventScroll: true }), reduce ? 0 : 380);
-    })
-  );
-
-  // drag to swing; a short press without travel flips
+  // drag to swing; a short press without travel turns the badge over (no button: the back is a small find)
   if (!finePointer) badge.style.touchAction = "pan-y";
   let start = null;
   const pivot = () => { const r = pendulum.getBoundingClientRect(); return { x: r.left, y: r.top }; };

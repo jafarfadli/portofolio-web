@@ -43,23 +43,32 @@ export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: 
             <rect x="45" y="0" width="3" height="41" fill="#111216" fillOpacity="0.2" />
             <g fill="none" stroke="#1d2640" strokeOpacity="0.55" strokeWidth="1.2" strokeDasharray="2.6 2"><rect x="20.5" y="6" width="23" height="21" rx="1" /><path d="M20.5 6L43.5 27M43.5 6L20.5 27" /></g>
           </svg>
-          {/* swivel: its eye hooks the ring's point (the ring wire shows through the eye); lobster clasp below, its hook dropping into the badge slot */}
+          {/* swivel: its eye hooks the ring's point. The lobster clasp is hooked THROUGH the badge slot: the strip of card above
+              the slot runs through the clasp's loop. The front strand comes down over the card into the hole, the wire crosses
+              inside the hole, and the back strand runs behind the card until it comes out above the card's top edge.
+              The shadow is drawn first and then clipped with the strand, so the back strand casts nothing on the card's face.
+              In this 64x80 frame the card's top edge is y=56 and the slot's top is y=74 (badge top = strap + 78px, slot 18px lower). */}
           <svg className="hw hw-clasp" viewBox="0 0 64 80" aria-hidden="true">
             <defs>
-              <clipPath id="clasp-above-slot"><rect width="64" height="79" /></clipPath>
-              <clipPath id="clasp-shape"><path d="M32 29C23.5 31 20.5 48 22.5 62C24 73.5 28.5 84 32 84C35.5 84 40 73.5 41.5 62C43.5 48 40.5 31 32 29Z" /></clipPath>
+              <filter id="hw-shadow" x="-40%" y="-20%" width="180%" height="150%"><feDropShadow dx="0" dy="3" stdDeviation="1.5" floodColor="#0a0b12" floodOpacity="0.45" /></filter>
+              <clipPath id="clasp-behind-card"><path d="M-20 -10H84V56H32V74H84V96H-20Z" /></clipPath>
+              <clipPath id="clasp-wire"><path clipRule="evenodd" d="M32 29C25.5 30.5 20 43 20 58C20 70 25 79 32 79C39 79 44 70 44 58C44 43 38.5 30.5 32 29ZM32 38C28 39.5 25.5 47 25.5 59C25.5 68.5 28.5 74.5 32 74.5C35.5 74.5 38.5 68.5 38.5 59C38.5 47 36 39.5 32 38Z" /></clipPath>
+              <linearGradient id="clasp-in-slot" x1="0" y1="74" x2="0" y2="79" gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#111216" stopOpacity="0.55" /><stop offset="1" stopColor="#111216" stopOpacity="0.15" /></linearGradient>
             </defs>
-            <rect x="29.4" y="1.6" width="5.2" height="14" rx="2.6" fill="none" stroke="#a7abb7" strokeWidth="2.2" />
-            <rect x="26" y="14" width="12" height="11" rx="3.2" fill="#c9ccd6" />
-            <rect x="26" y="19.4" width="12" height="2.2" fill="#a7abb7" />
-            <rect x="30" y="25" width="4" height="5" fill="#7f8391" />
-            <g clipPath="url(#clasp-above-slot)">
-              <rect x="21.5" y="48.5" width="3" height="5" fill="#a7abb7" />
-              <rect x="17.5" y="45" width="5.5" height="12" rx="2" fill="#a7abb7" />
-              <path fill="#c9ccd6" fillRule="evenodd" d="M32 29C23.5 31 20.5 48 22.5 62C24 73.5 28.5 84 32 84C35.5 84 40 73.5 41.5 62C43.5 48 40.5 31 32 29ZM32 38C28.4 40 27.6 51 28.8 60.5C29.6 67 31 71.5 32 71.5C33 71.5 34.4 67 35.2 60.5C36.4 51 35.6 40 32 38Z" />
-              <path fill="#a7abb7" d="M41.5 62C43.5 48 40.5 31 32 29C37.6 32.5 39.2 47 37 59.5C35.8 67 34.2 76 32 84C35.5 84 40 73.5 41.5 62Z" />
-              <path fill="none" stroke="#7f8391" strokeWidth="1.1" strokeLinecap="round" d="M36.6 44C37.9 50 37.9 56 36.4 62" />
-              <rect y="73" width="64" height="7" fill="#111216" fillOpacity="0.4" clipPath="url(#clasp-shape)" />
+            <g clipPath="url(#clasp-behind-card)">
+              <g filter="url(#hw-shadow)">
+                <rect x="29.4" y="1.6" width="5.2" height="14" rx="2.6" fill="none" stroke="#a7abb7" strokeWidth="2.2" />
+                <rect x="26" y="14" width="12" height="11" rx="3.2" fill="#c9ccd6" />
+                <rect x="26" y="19.4" width="12" height="2.2" fill="#a7abb7" />
+                <rect x="30" y="25" width="4" height="5" fill="#7f8391" />
+                <rect x="19" y="50.5" width="3" height="5" fill="#a7abb7" />
+                <rect x="15" y="47" width="5.5" height="12" rx="2" fill="#a7abb7" />
+                <path fill="#c9ccd6" fillRule="evenodd" d="M32 29C25.5 30.5 20 43 20 58C20 70 25 79 32 79C39 79 44 70 44 58C44 43 38.5 30.5 32 29ZM32 38C28 39.5 25.5 47 25.5 59C25.5 68.5 28.5 74.5 32 74.5C35.5 74.5 38.5 68.5 38.5 59C38.5 47 36 39.5 32 38Z" />
+                <path fill="#a7abb7" d="M44 58C44 43 38.5 30.5 32 29C36.5 32.5 40.2 44 40.2 58.5C40.2 69 36.8 78 32 79C39 79 44 70 44 58Z" />
+                <path fill="none" stroke="#eef0f4" strokeWidth="0.9" strokeLinecap="round" d="M21.6 49C21.2 54 21.3 61 22.2 66" />
+                <path fill="none" stroke="#7f8391" strokeWidth="1" strokeLinecap="round" d="M21.5 42.5H26.2" />
+                <rect y="74" width="64" height="6" fill="url(#clasp-in-slot)" clipPath="url(#clasp-wire)" />
+              </g>
             </g>
           </svg>
           <div className="badge" data-badge>
@@ -76,17 +85,11 @@ export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: 
                     <p className="badge-stack">{p.stackLine}</p>
                   </div>
                 </div>
-                <h1 className="badge-name">
-                  <span className="first" data-fit>{p.firstName}</span>{" "}
+                <h1 className="badge-name" data-fit>
+                  <span className="first">{p.firstName}</span>{" "}
                   <span className="last">{p.lastName}</span>
                 </h1>
                 <div className="badge-foot">
-                  <div className="flip-row">
-                    <span>CV and contact on the back</span>
-                    <button className="flip-btn" type="button" data-flip aria-label="Flip badge to see CV and contact">
-                      <Icon name="flip" />Flip
-                    </button>
-                  </div>
                   <p className="avail">
                     <span className={p.openToWork ? "live" : undefined}>{p.openToWorkLabel}</span>
                     <span>{p.availabilityNote}</span>
@@ -107,9 +110,6 @@ export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: 
                     <a href={`mailto:${p.email}`}><Icon name="mail" /><span>{p.email}</span></a>
                     <a href={p.githubUrl}><Icon name="github" /><span>{displayUrl(p.githubUrl)}</span></a>
                   </div>
-                  <button className="flip-btn" type="button" data-flip aria-label="Flip badge back to the front">
-                    <Icon name="flip" />Front
-                  </button>
                 </div>
               </div>
             </div>

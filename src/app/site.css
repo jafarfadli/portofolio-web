@@ -208,9 +208,9 @@ main { position: relative; z-index: 1; }
 .hw { position: absolute; left: -32px; width: 64px; overflow: visible; pointer-events: none; }
 .hw-ring { z-index: 0; top: calc(var(--strap-l) - 10px); height: 44px; filter: drop-shadow(0 2px 2px rgba(10, 11, 18, 0.4)); }
 .hw-tab { z-index: 1; top: calc(var(--strap-l) - 40px); height: 46px; filter: drop-shadow(0 1.5px 1.2px rgba(10, 11, 18, 0.45)); }
-.hw-clasp { z-index: 2; top: calc(var(--strap-l) + 22px); height: 80px; filter: drop-shadow(0 3px 3px rgba(10, 11, 18, 0.45)); }
+.hw-clasp { z-index: 2; top: calc(var(--strap-l) + 22px); height: 80px; } /* its shadow is an SVG filter, clipped with the strand that runs behind the card */
 .badge {
-  position: absolute; z-index: 1; left: calc(var(--badge-w) / -2); top: calc(var(--strap-l) + 86px);
+  position: absolute; z-index: 1; left: calc(var(--badge-w) / -2); top: calc(var(--strap-l) + 78px);
   --badge-w: clamp(280px, 23vw, 340px);
   width: var(--badge-w); aspect-ratio: 360 / 510;
   perspective: 1400px; touch-action: none; cursor: grab;
@@ -225,8 +225,8 @@ main { position: relative; z-index: 1; }
   display: flex; flex-direction: column; padding: 0 clamp(20px, 2vw, 28px);
 }
 .back { transform: rotateY(180deg); }
-/* the clasp's hook drops into this slot (its tip is clipped at the hole, see .hw-clasp) */
-.badge .slot { position: relative; margin-top: 10px; }
+/* the clasp is hooked through this slot: the card above it runs through the clasp's loop (see .hw-clasp) */
+.badge .slot { position: relative; margin-top: 18px; }
 .slot { flex: none; width: 74px; height: 13px; border-radius: 8px; background: var(--ground-deep); margin: 18px auto 18px; box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.35); }
 .badge-rule { height: 0; border-bottom: 2px solid var(--ink); margin-top: 6px; }
 /* printed header band, like the event strip on a conference pass */
@@ -238,23 +238,12 @@ main { position: relative; z-index: 1; }
 .badge-id { display: grid; grid-template-columns: 40% minmax(0, 1fr); gap: 14px; align-items: end; margin-top: 16px; }
 .badge-id.no-photo { grid-template-columns: 1fr; } /* the owner has not set a badge photo yet */
 .badge-photo { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(17, 18, 22, 0.12); }
-.badge-name { margin-top: 14px; line-height: 0.86; }
-.badge-name .first { display: block; font-size: calc(var(--badge-w) * 0.2); font-weight: 900; font-variation-settings: "wdth" 125; letter-spacing: -0.035em; }
-.badge-name .last { display: block; margin-top: 6px; font-size: calc(var(--badge-w) * 0.082); font-weight: 500; font-variation-settings: "wdth" 100; letter-spacing: -0.01em; }
+/* first and last name print at one size, stacked like the name on a conference pass */
+.badge-name { margin-top: 14px; line-height: 0.86; font-size: calc(var(--badge-w) * 0.2); font-weight: 900; font-variation-settings: "wdth" 125; letter-spacing: -0.035em; }
+.badge-name .first, .badge-name .last { display: block; }
 .badge-role { font-size: clamp(16px, 1.3vw, 19px); font-weight: 750; line-height: 1.15; }
 .badge-stack { margin-top: 6px; font-size: 13.5px; color: var(--ink-2); line-height: 1.35; }
 .badge-foot { margin-top: auto; margin-left: calc(-1 * clamp(20px, 2vw, 28px)); margin-right: calc(-1 * clamp(20px, 2vw, 28px)); }
-.flip-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 0 clamp(20px, 2vw, 28px) 12px; font-size: 13px; line-height: 1.25; font-weight: 650; color: var(--ink-2); }
-.flip-row > span { min-width: 0; text-wrap: balance; }
-.flip-row .flip-btn { flex: none; }
-.flip-btn {
-  display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px 0 12px; border-radius: var(--r-pill);
-  border: 2px solid var(--ink); background: transparent; color: var(--ink); font-weight: 700; font-size: 13.5px; cursor: pointer;
-  transition: background-color 180ms var(--ease-out), color 180ms var(--ease-out);
-}
-.flip-btn:hover { background: var(--ink); color: var(--stock); }
-.flip-btn .icon { transition: transform 500ms var(--ease-out); }
-.flip-btn:hover .icon { transform: rotate(180deg); }
 .avail { display: flex; justify-content: space-between; gap: 12px; background: var(--ink); color: var(--stock); padding: 14px clamp(20px, 2vw, 28px); font-size: 14px; font-weight: 700; white-space: nowrap; }
 .avail .live { display: inline-flex; align-items: center; gap: 8px; }
 .avail .live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #5ee08c; }
@@ -267,7 +256,6 @@ main { position: relative; z-index: 1; }
 .back-links { display: grid; gap: 4px; font-size: 15px; font-weight: 600; }
 .back-links a { display: flex; align-items: center; gap: 10px; text-decoration: none; padding: 6px 0; }
 .back-links a:hover span { text-decoration: underline; }
-.back .flip-btn { align-self: flex-start; margin-top: auto; }
 
 /* stickers */
 .stickers { position: absolute; inset: 0; } /* no stacking context: a peeled sticker may lift over the badge */
