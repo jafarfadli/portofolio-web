@@ -71,7 +71,7 @@ Every content table has `id`, `createdAt`, `updatedAt`, `sortOrder`, `showOnSite
 |---|---|
 | `profile` (single row) | firstName, lastName, role, stackLine, location, remoteOk, openToWork (bool), availabilityNote, email, websiteUrl, githubUrl, linkedinUrl, aboutText, statementLine1, statementLine2, cvSummary |
 | `projects` | slug, name, impactHeadline (with **bold** name part), year/yearRange, roleLine, tags (json), fieldColor, heroMediaId, stickerMediaId, metricValue, metricLabel, metricIsSample, pinAnchor {x,y} + pinSide, liveUrl, codeUrl, caseStudyMd, cvLine, featured (bool), layout (`wide`/`half`) |
-| `achievements` | title, rank (`winner`/`finalist`/`award`), rankLabel, category, description, year, mediaId, cvLine |
+| `achievements` | title, rank (`winner`/`finalist`/`award`), rankLabel, category, description, year, photoId plus optional photo2Id to photo4Id (up to four photos per achievement that take turns on its reel pass, owner's decision of 2026-11-14), cvLine |
 | `activities` | title, subtitle, role (`speaker`/`organizer`/`mentor`/`host`/`volunteer`), year, photoMediaId, url, cvLine |
 | `experiences` | role, org, location, startDate, endDate (nullable = present), summary (one line, `**metric**` allowed), cvBullets (json array) |
 | `education` | degree, institution, startYear, endYear, gpa, note |
@@ -166,7 +166,7 @@ Rules:
   - Motion code loads only on the client and only for the islands present.
 - Accessibility:
   - WCAG 2.2 AA.
-  - Keyboard covers the achievements reel pause button, the agenda rows on focus, and the sticker links. The badge flip is pointer-only by the owner's decision (a short press, no flip button); everything on its back (Download CV, email, GitHub) is repeated elsewhere on the page.
+  - Keyboard covers the agenda rows on focus and the sticker links. The achievements reel is itself a focusable region, and keyboard focus inside it stops it; there is no pause button (owner's decision, 2026-11-14). The reel never stops for hover, it slows to a quarter speed. It also stops when off screen, and under `prefers-reduced-motion` it does not move at all. The badge flip is pointer-only by the owner's decision (a short press, no flip button); everything on its back (Download CV, email, GitHub) is repeated elsewhere on the page.
   - `prefers-reduced-motion` renders final states, as the mockup does.
 - Content replaced at launch: every sample name, metric, screenshot, photo, and the QR target (the list is in DESIGN.md).
 
@@ -190,7 +190,7 @@ Rules:
 - **Integration**: role guard. Admin routes and actions return 404 or throw in `ROLE=public`. The revalidate endpoint rejects non-loopback requests and requests without the secret.
 - **E2E (Playwright)**:
   - Public home renders seeded content.
-  - The achievements reel pause button, the agenda rows, and the sticker links work by keyboard. The badge flip is pointer-only by the owner's decision, and everything on its back is repeated elsewhere on the page.
+  - The achievements reel takes keyboard focus and stops on it (no pause button, owner's decision of 2026-11-14), and the agenda rows and the sticker links work by keyboard. The badge flip is pointer-only by the owner's decision, and everything on its back is repeated elsewhere on the page.
   - `/cv.pdf` downloads and is one page.
   - Admin flow: login, edit a project, public page shows the change after revalidate, build a CV profile, export PDF.
 - **Visual**: desktop 1440, mobile 390, and the CV page compared against the mockup review captures, with reduced motion for full pages.

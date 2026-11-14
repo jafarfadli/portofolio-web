@@ -89,11 +89,11 @@ typography:
     fontVariation: "'wdth' 85"
   lede:
     fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(38px, 3.9vw, 58px)"
-    fontWeight: 800
-    lineHeight: 1.02
-    letterSpacing: "-0.025em"
-    fontVariation: "'wdth' 90"
+    fontSize: "clamp(48px, min(5.8vw, 9.4vh), 92px)"
+    fontWeight: 900
+    lineHeight: 0.92
+    letterSpacing: "-0.035em"
+    fontVariation: "'wdth' 112"
   statement-large:
     fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(28px, 3.3vw, 48px)"
@@ -328,14 +328,6 @@ components:
   button-ink-line-hover:
     backgroundColor: "{colors.print-ink}"
     textColor: "{colors.badge-stock}"
-  round-button:
-    backgroundColor: "transparent"
-    textColor: "{colors.on-navy}"
-    rounded: "{rounded.pill}"
-    size: "52px"
-  round-button-hover:
-    backgroundColor: "{colors.badge-stock}"
-    textColor: "{colors.print-ink}"
   nav:
     backgroundColor: "transparent"
     textColor: "{colors.on-navy}"
@@ -560,7 +552,7 @@ components:
 
 **Creative North Star: "The Badge at the Fair"**
 
-Recruiters meet this engineer the way they meet candidates at a career fair: by reading the badge. The page is sewn from two woven lanyard colourways, navy and concrete, panel to panel, with a stitched seam at every join; everything readable is printed on off-white PVC badge stock in near-black ink, hung from silver clip metal. Project screenshots are die-cut stickers with white kiss-cut borders slapped onto the webbing; metrics hang off them on die-cut tags tied with leader lines; achievements are photo passes hanging from a navy strap that rides slowly past, rank told by the cut of a tag; activities are the event agenda; experience is the itinerary. One vertical cord runs down the left of the page and every section clips onto it.
+Recruiters meet this engineer the way they meet candidates at a career fair: by reading the badge. The page is sewn from two woven lanyard colourways, navy and concrete, panel to panel, with a stitched seam at every join; everything readable is printed on off-white PVC badge stock in near-black ink, hung from silver clip metal. Project screenshots are die-cut stickers with white kiss-cut borders slapped onto the webbing; metrics hang off them on die-cut tags tied with leader lines; achievements are photo passes hanging from a navy strap that rides slowly past (slowing under the cursor), each pass turning through up to four photos, rank told by the cut of a tag; activities are the event agenda; experience is the itinerary. One vertical cord runs down the left of the page and every section clips onto it.
 
 The system is physical, not digital. Depth comes from objects lying on fabric (neutral dark drop shadows under hung or stuck things), never from glow, gloss, or a metallic sheen. State is told by form (a tag's cut, a sticker lifting) and printed words, never by hue alone. The only saturated surfaces are the two webbings themselves; content never gets its own accent colour. One type family, Archivo variable, does everything by moving along its width axis: expanded black for names and display, normal width for reading, condensed caps for printed labels.
 
@@ -574,7 +566,7 @@ The case study page (`mockup/project.html`, `mockup/project.css`, `mockup/projec
 - Two woven webbing colourways, navy and concrete, alternating section by section with the raster twill on every panel and a stitched seam at every join.
 - Content on off-white badge stock in near-black ink; 18px card corners, 16px sticker corners, full pills for buttons.
 - One family, Archivo variable (wdth 62 to 125, wght 100 to 900), roles separated by width as much as weight.
-- Physical motion: a damped pendulum badge on a concrete strap with a metal ring and lobster clasp, stickers that slap down, leader lines that draw to the result.
+- Physical motion: a damped pendulum badge on a concrete strap with a metal ring and lobster clasp, stickers that slap down and then drift and lean with the pointer over a field of punched dust, leader lines that draw to the result.
 - State by form and printed word, never by colour alone.
 - Every creative moment has a plain readable path; reduced motion renders every section in its final state.
 - Case studies read as an event program: a sticky index with a printed "Reading" tag, one stock page per section, the cord as reading progress.
@@ -598,7 +590,7 @@ Each section panel takes `.theme-dark` (navy) or `.theme-light` (concrete), whic
 | on-ground (text, icons, line buttons, outline tags) | `on-navy` | `print-ink` |
 | on-ground soft (intros, years, captions, footer) | `on-navy-soft` | `print-ink-soft` |
 | line (row rules, footer rule, line-button hover wash) | stock at 22% | ink at 16% |
-| line strong (agenda top rule, line-button and round-button borders) | stock at 85% | ink at 80% |
+| line strong (agenda top rule, line-button borders) | stock at 85% | ink at 80% |
 | stitch (the seam) | stock at 26% | ink at 22% |
 | twill tint | none | concrete at 55% |
 
@@ -652,7 +644,7 @@ Each project card's screenshot field takes a `--field` colour from that project'
 - **Closing display** (900, wdth 125, `clamp(64px, 12.4vw, 200px)`, lh 0.86, -0.04em): the closing "Let's talk." only.
 - **Section headline** (850, wdth 122, `clamp(44px, 6.6vw, 96px)`, lh 0.95, -0.025em, `text-wrap: balance`): one per section. Under 860px: `clamp(32px, 9.6vw, 48px)` at wdth 108.
 - **Agenda title** (820, wdth 72, `clamp(32px, 5.2vw, 80px)`, lh 0.98, uppercase): the condensed poster line of each activity; its sub-line is 16px/1.3, 550, wdth 100, sentence case.
-- **Lede** (800, wdth 90, `clamp(38px, 3.9vw, 58px)`, lh 1.02, -0.025em, `text-wrap: balance`, two lines): hero statement, in a block `min(52vw, 740px)` wide.
+- **Lede** (900, wdth 112, `font-size: var(--lede-fs)`, lh 0.92, -0.035em): the hero statement, the loudest type on the page after the badge name, in a block `min(62vw, 940px)` wide. `--lede-fs` is set on the hero as `clamp(48px, min(5.8vw, 9.4vh), 92px)`, so it follows the viewport height as well as the width and the stickers placed in its ems track it. Under 860px: `clamp(28px, calc((100vw - 80px) / 9.2), 64px)`, because the longest line is about 9em and each line must stay one line. The statement is four lines, set line by line (each line clips its own rise, padding `0.04em 0 0.08em`); the owner writes the breaks into the copy as ` / ` (a slash with a space each side) and `statementLines` splits on it. No `text-wrap` balancing: the owner's breaks are the breaks.
 - **Statement large** (650, wdth 96, `clamp(28px, 3.3vw, 48px)`, lh 1.12, max 26em, `text-wrap: pretty`): about paragraph; second clause in the soft on-ground role, upright (no italic).
 - **Metric** (850, wdth 112, `clamp(26px, 2.6vw, 38px)`, tabular figures; big pins `clamp(34px, 3.6vw, 52px)`): the number on a pin, `white-space: nowrap`. Explanation below at 13.5px/600.
 - **Pass year** (800, 15px, tnum, `print-ink-soft`): beside the rank tag on each achievement pass. **Pass title** (850, wdth 115, 24px, lh 1.05, -0.02em, balanced wrap): the pass's title; its story line below is 15px/1.4, weight 550.
@@ -707,26 +699,29 @@ CV tiers (`/cv`, set in pt and mm for print):
 **Section order** (the story): hero badge, about + stack, Selected work, Achievements, Activities, Experience and education, closing. Anchors: `#work`, `#achievements`, `#activities`, `#experience`, `#contact`; skip link targets `#work`.
 
 **Hero.** A navy panel, `100dvh`, min 720px, max 1000px, clipped on the x axis only (`overflow-x: clip`) and lifted to z-index 2 so the badge's shadow falls across the seam into the about panel. The hero splits in two:
-- **Left, text and stickers.** The statement block sits at `left: gutter-left; top: 18%`, `min(52vw, 740px)` wide: the two-line lede, then the See the work and Download CV pills. Below it the five stickers lie in a loose collage at authored positions and angles (-8deg to +7deg via `--rot`): the lead landscape at `left 7%, top 50%` (`clamp(220px, 19vw, 280px)`), the phone at `27%, 46%` (`clamp(88px, 7vw, 104px)`, aspect 0.47), the second landscape at `34%, 62%` (`clamp(200px, 17vw, 250px)`), the small landscape at `12%, 75%` (`clamp(160px, 13vw, 200px)`), and the seal at `44%, 47%` (`clamp(100px, 8vw, 120px)`). Landscapes are aspect 1.6. Only the five slots exist; more projects do not add stickers.
+- **Left, text and stickers.** The statement block sits at `left: gutter-left; top: 13%`, `min(62vw, 940px)` wide, z-index 2: the four-line lede (see Typography), then the See the work and Download CV pills 28px below. The hero canvas of dust (see Components) lies behind it at z-index 1. The stickers float in the room the statement leaves, in four project slots plus the seal; only these five slots exist and more featured projects do not add stickers (the first four featured projects with a screenshot fill the slots in order). Phone and seal are placed in lede ems, beside the short last line of the statement, so they track the type: phone `s-b` at `left: gutter-left + 6.3 lede-fs; top: 13% + 3.3 lede-fs` (`clamp(80px, 6.4vw, 96px)`, aspect 0.47, 7deg); seal at `left: gutter-left + 7.8 lede-fs; top: 13% + 3.6 lede-fs` (`clamp(96px, 7.4vw, 112px)`, -8deg). The three screens run in a loose row along the bottom edge: `s-a` at `left 7%, bottom 7%` (`clamp(200px, 17vw, 260px)`, aspect 1.6, -4deg), `s-c` at `27%, 3%` (`clamp(180px, 15vw, 230px)`, aspect 1.6, -3deg), `s-d` at `47%, 11%` (`clamp(150px, 12vw, 185px)`, aspect 1.6, 3deg, image cropped to `center 18%`). The authored angles run from -8deg to +7deg via `--rot`.
+- **Sticker slot and float layer.** Each sticker is a `li.slot-li` (position, size, z-index 3, above the statement whose wide box reaches over the phone and the seal) holding a `span.float` holding the sticker link. The three layers each own one kind of movement so none fights another: GSAP's entrance writes `transform` on the slot (and clears it); the mouse parallax writes `--px` and `--py`, which the slot applies through the individual `translate` property, never `transform`; the idle drift is the `float` keyframes on the inner span. The sticker's own `rotate(--rot)` and peel sit on the link inside.
+- **Float.** `@keyframes float` alternates infinitely, `ease-in-out`, from `translate3d(-x, -y, 0) rotate(-r)` to `translate3d(x, y, 0) rotate(r)`, with per-sticker `--float-t` (duration, default 7s), `--float-d` (a negative delay so they are out of step), `--float-y` (default 9px), `--float-r` (default 1.2deg) and `--float-x` (default 4px). Authored: `s-a` 7.4s / -1.2s / 9px / 1deg; `s-b` 6.2s / -3.4s / 11px / 1.6deg / x 3px; `s-c` 8.6s / -5.1s / 8px / 0.8deg / x 6px; `s-d` 6.9s / -2.3s / 10px / 1.3deg; seal 5.6s / -0.6s / 6px / 2.4deg / x 2px. The float pauses while its sticker is peeled or keyboard focused (`:has(.is-peeled)`, `:has(:focus-visible)`), so a sticker never slides from under the cursor.
+- **Pointer parallax.** Fine pointers only. Each slot has a depth (`s-a` 1.3, `s-b` 0.7, `s-c` 1, `s-d` 0.55, seal 1.6, by slot class, not by list position, because a project without a screenshot renders no sticker). The pointer position across the hero maps to -1..1 on each axis; the target offset is `16px * depth` on x and `11px * depth` on y, and each slot eases toward it by 0.08 per tick, so the deeper ones lean further. The ticker runs only while a slot is still travelling and removes itself at rest; leaving the hero eases every slot home.
 - **Right, the lanyard alone.** The pendulum pivots at `left: 77%; top: -40px`. Strap length is `strap-length`; the badge hangs 86px below the strap's end, width `clamp(280px, 23vw, 340px)`, aspect 360/510. Nothing else shares the right half.
 
 **Work grid.** 12 columns, gap `grid-gap`. Cards alternate full (span 12, field aspect 16/7.2) and half (span 6, field aspect 4/3.1). Card body is a two-column grid (text, links) aligned to the bottom; half cards stack it.
 
 **Breakpoints.**
-- `max-width: 1100px`: the statement widens to 56vw and the phone sticker moves to `left: 28%`.
+- `max-width: 1100px`: the statement block is `60vw` wide.
 - `max-width: 860px` (JS mirrors this as `min-width: 861px` for "wide"): see responsive rules below.
-- `(hover: none) and (min-width: 861px)`: sticker captions are always visible, smaller (12.5px, 7px 11px), since there is no hover to reveal them.
+- `(hover: none) and (min-width: 861px)`: sticker captions are always visible, smaller (12.5px, 7px 11px), since there is no hover to reveal them (the cap-top captions keep their place above their stickers).
 - `max-width: 420px`: the strap shortens to 110px, the badge to 260px, and the stage to 560px, so the statement reaches the first screen.
 
 **Responsive rules under 860px.**
 - Nav keeps only the brand and the Download CV pill; section links are hidden.
-- Hero becomes a column: padding `96px gutter-right 64px gutter-left`, a 640px-tall stage holding only the lanyard, then the statement flows below in normal order.
+- Hero becomes a column: padding `96px gutter-right 64px gutter-left`, a 640px-tall stage holding only the lanyard, then the statement flows below in normal order at the phone `--lede-fs`. The dust canvas still lies behind it (it covers the whole hero).
 - Pendulum centres (`left: 50%; top: -20px`); strap length 150px, its top starting 16px above the pivot so it emerges under the nav and the brand stays readable, and the strap tops fade out through a 44px mask instead of ending square; badge `--badge-w: 290px`.
 - The hero stickers are dropped entirely; every project is one scroll away as a full card.
 - The cord is hidden (on phones it only crossed the hero).
 - Half project cards go full width; card body stacks; field aspect 4/3.2.
 - Leader lines and their dots are hidden; pins re-anchor inside the field at `right: 12px; bottom: 12px`, max-width 66%, always pointing left, metric 26px, explanation 12.5px.
-- The achievements reel keeps moving (about 38px/s) but runs edge to edge: its left margin drops the cord offset, since the cord is hidden. The pause/play button stays. Under reduced motion it is a static snap row (see Components).
+- The achievements reel keeps moving (about 38px/s) but runs edge to edge: its left margin drops the cord offset, since the cord is hidden. There is no pause button; the reel is itself the focus stop (see Components). Under reduced motion it is a static snap row.
 - Agenda rows stack (year, title, role tag left-aligned) and show an inline 16/9 photo with a 6px white border, radius 8px. The cursor-trailing preview is removed.
 - Itinerary stops go to one column.
 - Clip marks on the cord are hidden.
@@ -748,7 +743,7 @@ CV tiers (`/cv`, set in pt and mm for print):
 - Gallery goes to one column; the phone print is at most 62% wide.
 - The next-project card stacks; its field is at least 240px tall.
 
-**Z-index layers.** main 1; cord 2; hero panel 2 (above the panels after it, so the badge shadow crosses the seam); hero stickers 2 (a peeled or focused sticker 5, which requires the sticker list to create no stacking context); pendulum 3, and inside it the ring 0, the sewn tab 1, the badge 1, the clasp 2 (the right strap length lies over the left); on the reel, each pass's short strap and card 1 over the rail; project field: punch slot 2, leader 3, pin and dot 4; agenda preview 40; nav 50; sample-content note 60; skip link 100. There is no page-wide weave layer any more.
+**Z-index layers.** main 1; cord 2; hero panel 2 (above the panels after it, so the badge shadow crosses the seam); hero dust canvas 1; hero statement 2; hero sticker slots 3, above the statement (a peeled or focused sticker 5, which requires the sticker list to create no stacking context); pendulum 3, and inside it the ring 0, the sewn tab 1, the badge 1, the clasp 2 (the right strap length lies over the left); on the reel, each pass's short strap and card 1 over the rail; project field: punch slot 2, leader 3, pin and dot 4; agenda preview 40; nav 50; sample-content note 60; skip link 100. There is no page-wide weave layer any more.
 
 On the case study: the compact index bar 20; inside the architecture field, wires 0 and booths 1.
 
@@ -813,8 +808,8 @@ Pills pressed from stock or ink; confident, never glossy.
 - **Ink line** (on stock): 2px ink border; hover fills ink.
 - **Active:** `translateY(1px) scale(0.98)`, 160ms. Transitions 200ms `ease-out`.
 - **Plain link** (on stock): 700/15px, underline at 30% ink, full ink on hover, 44px min target ("Live site", "Code").
-- **Round** (the reel's pause/play button, and the demo toggle): 52px circle, 2px border in the line-strong role; hover fills with the on-ground colour and turns the icon to the ground colour; disabled at 35% opacity.
-- **Icons:** Phosphor Regular paths inlined as SVG symbols (`assets/icons/`), `fill: currentColor`. No glyph or emoji icons.
+- **Icons:** Phosphor Regular paths inlined as SVG symbols (`assets/icons/`), `fill: currentColor`. No glyph or emoji icons. The one other icon family is the icon sticker below (Phosphor Bold, owner-copy only).
+- **Round** (the case study demo toggle only; see Demo video): the achievements reel's pause/play button and its round-button controls were removed on 2026-11-14 by owner decision and must not come back.
 
 ### Chips (stack stickers)
 - **Style:** stock pill, 46px, 0 18px padding, 700/16.5px ink text, a 5px white kiss-cut outline (`box-shadow: 0 0 0 5px #fff`) plus the sticker shadow, each set at its own small angle (-4deg to +4deg via `--rot`). Static, not interactive. Entrance: slapped down once (see Motion).
@@ -841,10 +836,26 @@ The hero object, hung alone on the right half of the navy hero. A pendulum (stra
 - **Name fitting:** the name is sized at 20% of badge width, which only fits short names. Production measures the whole name block and steps both lines down together until the longer one fits the badge's inner width, so the two lines always stay one size; never let it clip or wrap mid-word.
 
 ### Stickers (hero)
+See Layout for the slot, float layer, and pointer parallax.
 - White kiss-cut border (7px), sticker radius, sticker shadow, each at its `--rot`. Each is a link to its project card (`#p-slug`) or to `#achievements` (the seal).
 - **Peek:** on pointer enter or focus, the sticker peels (`rotate(rot * 0.3) translateY(-8px) scale(1.04)`, lift shadow, 420ms) and the others step back (opacity 0.38, `saturate(0.6)`). Leaving restores all.
-- **Caption pill:** ink pill below the sticker: "Name: one-line outcome" plus an arrow-up-right icon, 14px/650; fades and slides 6px in (220ms opacity, 320ms transform). No caption shows at rest: captions appear only on hover (peel) or keyboard focus. On touch-only wide screens all captions are visible, since there is no hover. Under 860px the stickers themselves are gone.
+- **Caption pill:** ink pill beside the sticker: "Name: one-line outcome" plus an arrow-up-right icon, 14px/650; fades and slides 6px in (220ms opacity, 320ms transform). It opens 14px below the sticker, except on the three screens along the bottom edge (`s-a`, `s-c`, `s-d`), which carry `cap-top`: the pill opens 14px above (`bottom: calc(100% + 14px)`) and slides down from 6px below, so it stays inside the hero. No caption shows at rest: captions appear only on hover (peel) or keyboard focus. On touch-only wide screens all captions are visible, since there is no hover. Under 860px the stickers themselves are gone.
 - **Seal sticker:** circular, 6px white border, flat ink disc with stock ring: rank ("1st", 900, wdth 125, 30px) over the event short name and year on two lines (11px condensed caps).
+
+### Hero dust (canvas)
+- A `canvas.hero-dust` fills the hero (`inset: 0`, z-index 1, `pointer-events: none`, `aria-hidden`), behind the statement, stickers, and lanyard. It is a decoration of the punched ground: the specks a hole punch leaves. It carries no copy.
+- **Specks:** dots in stock `242,242,238` (twice as likely), concrete `229,228,223`, and 12% slot-shaped chads (6.4x2px, radius 1, in `201,204,214`) that slowly spin. Count is the hero area plus the lean margin divided by 7200, capped at 300 (about one speck per 85px square); they are scattered 150px past the left and right edges and 90px past the top and bottom, so leaning never uncovers a bare strip. Each has a depth `z` of 0.15 to 1: radius `0.6 + 1.5 z` px, alpha `0.18 + 0.42 z`, and a slow wander of up to 3px/s on each axis, wrapping at the margins.
+- **Lean:** fine pointers only. The pointer position across the hero maps to -1..1 on each axis, the field eases toward it (rate `2.2 / s`, so it trails the cursor), and each speck shifts by `150px * z` on x and `90px * z` on y in the direction of the pointer: near specks travel further than far ones, which reads as depth. Leaving the hero eases the field home.
+- **Idle and cost:** it has its own frame loop (dt capped at 50ms), and schedules no frame at all while the hero is off screen (IntersectionObserver) or the tab is hidden; both start it again. Device pixel ratio is capped at 2. It reseeds only when the hero changes by more than 40px in either axis.
+- **Reduced motion:** drawn once, still, and redrawn only when the hero resizes; no loop, no lean.
+
+### Icon stickers (owner copy)
+- A small Phosphor Bold (MIT) icon printed on a scrap of badge stock and slapped into a line of text, tilted, never a bare glyph. The set is closed: `browsers`, `database`, `cursor`, `pin`, `loading`, `team`, `rocket`, `wave`. The owner opts in by writing `:name:` in copy; a space before the token becomes a no-break space, so an icon never starts a line. Only the statement, the About paragraph, and the closing headline render them; any other surface that prints owner copy as text strips the tokens (`toPlain`). The `icons` option is opt-in per render, and the CV never passes it, so the CV never shows an icon sticker.
+- **Hero size:** the scrap is `0.78em` square (radius `0.16em`, margin `0 0.02em 0 0.06em`, `vertical-align: 0.08em`), the glyph `0.54em`, in `webbing-navy` on `badge-stock`, with a `0 0.035em 0.08em` shadow at `rgba(10,11,18,.4)`. Everything is in ems, so it scales with whatever line it sits in.
+- **On concrete:** the scrap is white with the shadow `0 0.035em 0.08em rgba(17,18,22,.22)`.
+- **Tilt cycle:** each icon takes the next tilt in turn from -7, 5, -4, 6, -5, 7 degrees (the `rotate` property, set as `--r`); the statement counts across its lines, so the turn continues from one line to the next instead of restarting.
+- **About variant:** `0.9em` square, `vertical-align: -0.02em`; inside the softer emphasised half of the sentence the glyph stays full-strength `webbing-navy`.
+- **Closing wave:** the `wave` icon (tilt -8deg) follows "Let's talk." in the closing headline. When the closing panel is hovered it rocks once from its wrist (`transform-origin: 70% 90%`, 1.2s `ease-out`, keyframes 14deg, -8deg, 10deg, -3deg at 20/40/60/80%). It uses `transform`, so it does not disturb the tilt, which is on `rotate`.
 
 ### Metric pins + leader lines
 - One pin per project, carrying one real metric (metric role) and a one-line explanation. Stock pin by default; **ink pin** on light fields (its leader stroke switches to ink and the explanation to metal). **Big** pins for full-width cards.
@@ -857,13 +868,15 @@ The hero object, hung alone on the right half of the navy hero. A pendulum (stra
 - **Pass:** white card at `sticker` radius, 6px frame (padding 30px 6px 10px), width `clamp(260px, 24vw, 340px)`, gap `clamp(24px, 2.6vw, 40px)`, Sticker shadow. Each pass is rotated by its own `--rot` (about -2deg to +2.2deg) with the pivot at the rail (50% -43px), and on hover straightens to 30% of its tilt and lifts 6px. A 52x11px punched slot sits 11px from the top; a 22px-wide navy short strap wraps the rail, comes down and is threaded into the slot.
 - **Content, top to bottom:** 4:3 photo at radius minus 6px; a row with the rank tag left and the year right; the title (24px); the one-line story.
 - **Rank** is told by tag cut (see Shapes): winner notched, finalist outlined, award plain. Never by colour.
-- **Pauses:** on hover, on focus within, when the reel is off screen (IntersectionObserver), and with the round pause/play button (its label and icon swap between "Pause the achievements" and "Play the achievements").
+- **Photos take turns:** a pass holds up to four photos stacked in the one 4:3 frame (`.ach-photos`, overflow clipped). They cross-fade in turn: the shown photo is opacity 1 and scale 1, the others opacity 0 and scale 1.04, with a 900ms `ease-out` fade and a 1600ms `ease-out` settle. Each pass turns every 3600ms, started at `1200ms + 750ms * index` so neighbours are out of step; a pass and its clone turn together so the loop seam never shows two different photos. Nothing turns while the reel is off screen or the tab is hidden. A pass with one photo does not turn and has no dots. Alt text is on the first photo of each original pass only; later photos and the clone are empty-alt.
+- **Dots:** `aria-hidden` pill at the photo's bottom right (8px in), padding 5px 6px, `rgba(17,18,22,.55)`, holding one 6px dot per photo at `rgba(242,242,238,.5)`; the showing photo's dot widens to a 14px pill in stock (320ms `ease-out`).
+- **Speed and stops:** it does not stop on hover, it slows. On a fine pointer, hovering the reel eases the playback rate to a quarter (0.25) over 0.8s `power2.out`, and leaving eases back to 1. The reel itself is the focus stop: it is `tabindex=0`, `role=region`, labelled "Achievements, moving strip. Focus it to stop.", and focus within it pauses the strip (`:focus-within`), with a focus ring drawn 3px inside its edge because it runs to the screen edge. It also pauses when off screen (IntersectionObserver). There is no pause button and no round control; the owner removed them on 2026-11-14.
 - **Placement:** on desktop the reel starts at the page cord (left margin `cord-x + 3px - gutter`) and runs to the right viewport edge, so passes slip behind the cord; on phones it runs edge to edge.
-- **Reduced motion:** the animation stops, the clones and the button are hidden, and the reel is a native snap row (`scroll-snap-type: x mandatory`, passes snap to start) with `tabindex=0`, `role=region`, and the label "Achievements, scroll sideways", so it scrolls by keyboard. The first pass keeps the strap running from the cord.
+- **Reduced motion:** the animation stops, the clones and the photo dots are hidden, the photos do not turn (each pass shows its first), and the reel is a native snap row (`scroll-snap-type: x mandatory`, passes snap to start), still `tabindex=0` and `role=region`, now labelled "Achievements, scroll sideways", so it scrolls by keyboard. The first pass keeps the strap running from the cord.
 - The photos are temporary reuses of activity photos (see the content checklist).
 
 - **Role tags** are stock printed labels told apart by cut (see Shapes): Speaker notch, Organizer/Host pill, Mentor rounded bottom, Volunteer outline (a 2px inset ring in the on-ground colour). Never by colour.
-- **Hover/focus:** other rows drop to 40% opacity; the active title slides right `clamp(12px, 2vw, 32px)` (520ms). A photo preview (white 8px frame, radius 10px, lift shadow, `clamp(260px, 22vw, 340px)`, 4/3) fades in (0.4s `expo.out`, random tilt -4 to 4deg) and trails the cursor with `gsap.quickTo` on x/y (0.55s `power3`), offset 28px right and vertically centred. On keyboard focus it parks beside the row. Hide: 0.25s `power2.in` to scale 0.85. While scrolling under a still cursor, the hovered row is re-checked.
+- **Hover/focus:** other rows drop to 40% opacity; the active title slides right `clamp(12px, 2vw, 32px)` (520ms). A photo preview (white 8px frame, radius 10px, lift shadow, `clamp(260px, 22vw, 340px)`, 4/3) fades in (0.4s `expo.out`, random tilt -4 to 4deg) and trails the cursor with `gsap.quickTo` on x/y (0.55s `power3`), offset 28px right and vertically centred. On the first hover (whenever it is hidden) it opens at the cursor position instead of tweening in from wherever it last was: the page tracks the pointer, and a hidden preview is set to `x = pointer + 28, y = pointer - half its height` before it fades in. On keyboard focus it parks beside the row. Hide: 0.25s `power2.in` to scale 0.85. While scrolling under a still cursor, the hovered row is re-checked.
 - Photos are real activity photos; under 860px they show inline (see Layout).
 
 ### Cord + clip marks
@@ -955,10 +968,11 @@ Before and after, hung like price tags from a strap.
 - **Do** keep every interaction keyboard reachable with a visible 3px focus ring (offset 3px, radius 6px) in the on-ground colour of its panel (stock on navy, ink on concrete), and ink on stock surfaces. Stock cards (project cards, the itinerary) keep an ink ring on either colourway.
 - **Do** use these motion constants: Lenis `lerp: 0.11, wheelMultiplier: 0.95`; pendulum `K = 36, C = 2.4` integrated per GSAP tick (dt capped at 40ms, sleeps when `|a| < 0.02` and `|v| < 0.05`), drag clamped to +/-38deg with velocity smoothed 0.6/0.4 and capped at 260deg/s on release, scroll velocity tugging the strap (`velocity * 0.9`, clamped +/-6) only while the hero is visible.
 - **Do** run the one authored entrance exactly once, defaults `expo.out`, after 0.12s: nav fades in (0.6s, at 0); the pendulum drops from -95vh (0.78s `power3.in`, at 0.05s) then kicks the spring by 58deg/s; stickers slap down from `scale 1.22, rotation 9, opacity 0` (0.5s `back.out(1.5)`, stagger 0.075s, at 0.62s); lede lines rise from `yPercent 108` (0.9s, stagger 0.09s, at 0.78s); hero buttons rise 14px (0.6s, stagger 0.07s, at 1.0s).
+- **Do** keep the achievements photos turning in step and out of step: 3600ms per pass, first turn at 1200ms plus 750ms per pass, pass and clone together.
 - **Do** slap the stack chips on once at 82% viewport (from `scale 1.3, rotation +=10, opacity 0`, 0.45s `back.out(1.6)`, stagger 0.045s).
 - **Do** use the two CSS easings for state changes: `ease-out` `cubic-bezier(0.16, 1, 0.3, 1)` and `ease-in` `cubic-bezier(0.7, 0, 0.84, 0)`.
-- **Do** honour `prefers-reduced-motion: reduce` with the final state: no Lenis, no pendulum ticker, no entrance, no chip slap, leader lines and pins already drawn, cord fully drawn, the achievements reel standing still as a snap row, preview following with zero duration, CSS transitions at 1ms, and the badge flip replaced by a 180ms opacity cross-fade between faces with no 3D rotation.
-- **Do** keep the page fully readable with scripts off: GSAP absent means the badge, stickers, cards, the achievements reel (without its second copy), and agenda all render static.
+- **Do** honour `prefers-reduced-motion: reduce` with the final state: no Lenis, no pendulum ticker, no entrance, no chip slap, leader lines and pins already drawn, cord fully drawn, the dust drawn once and still, the stickers not floating or leaning, the achievements reel standing still as a snap row with its first photos, preview following with zero duration, CSS transitions at 1ms, and the badge flip replaced by a 180ms opacity cross-fade between faces with no 3D rotation.
+- **Do** keep the page fully readable with scripts off: GSAP absent means the badge, stickers, cards, the achievements reel (without its second copy), and agenda all render static, and the dust canvas stays empty.
 - **Do** measure and fit the first name to the badge width in production (Next.js), stepping size or `wdth` down until it fits.
 - **Do** keep the owner's real details as they are: the name (Muhammad Jafar Fadli; the badge prints "Jafar" over "Fadli", the nav brand and strap read "Jafar Fadli"), the portrait (`mockup/assets/photos/owner-badge.jpg` and `owner-cutout.png`, provenance in `SOURCES.txt`), and the GitHub account `github.com/jafarfadli`.
 - **Do** replace the deliberate placeholders before launch: the email `hello@jafarfadli.example`, the domain `jafarfadli.example` (badge header band, CV contact list), and the LinkedIn URL `linkedin.example/in/jafarfadli` and its empty `#` link in the closing.
@@ -980,7 +994,7 @@ Before and after, hung like price tags from a strap.
 - **Don't** introduce an accent colour or give roles or ranks their own hue; sections differ only by the two webbing colourways in fixed alternation, and everything else by cut, length, and the printed word.
 - **Don't** fake screenshots with styled divs or CSS mock UIs; use real raster screenshots.
 - **Don't** use monospace type as costume (no terminal prompts, no code-styled labels); there is no monospace in the system.
-- **Don't** add a marquee or ticker beyond the achievements reel. That reel is the one marquee, built because the owner asked for the motion (reference: danielsun.space); it must keep a visible pause button, pause on hover, focus and off screen, and stand still under reduced motion. A second moving strip is refused.
+- **Don't** add a marquee or ticker beyond the achievements reel. That reel is the one marquee, built because the owner asked for the motion (reference: danielsun.space); it slows to a quarter speed on hover, stops for keyboard focus on the strip itself and when off screen, and stands still under reduced motion. It has no pause button (owner decision 2026-11-14); do not add round controls to it. A second moving strip is refused.
 - **Don't** use em dashes in copy; use commas, colons, or full stops.
 - **Don't** present synthetic or estimated metrics as real; a metric without a source does not ship.
 - **Don't** add a second type family or swap Archivo for a system display face.
@@ -988,8 +1002,11 @@ Before and after, hung like price tags from a strap.
 - **Don't** give the strap, cord, or hardware their own per-panel colour; they are one material that crosses both colourways.
 - **Don't** render any copy in canvas, WebGL, or images; all text is DOM text.
 - **Don't** add hero stickers beyond the five slots or let them cross into the lanyard's half of the hero; the badge hangs alone on the right.
+- **Don't** let the dust, the floating stickers, or the icon stickers carry meaning or copy: dust is canvas decoration only, a sticker still reads and links without its drift, and an icon sticker sits beside words, never replacing them.
+- **Don't** drive sticker parallax or the float through `transform` on the slot; the slot's `transform` belongs to GSAP's entrance. Parallax goes through `translate` and the drift through the inner `float` span.
+- **Don't** add icon stickers outside the closed set of eight, or print them in the CV; they appear only where the owner writes a `:name:` token in the statement, About, or closing copy.
 - **Don't** show a sticker caption at rest; captions appear on hover or focus only (touch-only wide screens excepted).
-- **Don't** reintroduce leader lines, hero stickers, sticker captions, the cursor preview, the cord, or clip marks under 860px.
+- **Don't** reintroduce leader lines, hero stickers, sticker captions, the cursor preview, the cord, or clip marks under 860px. (The dust canvas and the icon stickers do stay on phones.)
 - **Don't** add a second column, a sidebar, skill bars or meters, or any colour beyond navy, ink, metal, and white to the CV, and never let it run past one A4 page. Icons on the CV are the small navy contact icons only.
 - **Don't** strike through before values or show change as struck-out text.
 - **Don't** repeat a screenshot within one page.

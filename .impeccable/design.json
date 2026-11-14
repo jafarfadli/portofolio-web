@@ -284,7 +284,7 @@
       },
       "lede": {
         "displayName": "Lede",
-        "purpose": "Hero statement, two lines, top left of the navy hero."
+        "purpose": "Hero statement, four lines broken by \" / \" in owner copy; --lede-fs clamp(48px, min(5.8vw, 9.4vh), 92px), 900, wdth 112, lh 0.92, -0.035em; under 860px clamp(28px, calc((100vw - 80px) / 9.2), 64px)."
       },
       "statement-large": {
         "displayName": "Statement Large",
@@ -541,12 +541,32 @@
       {
         "name": "sticker-peel",
         "value": "420ms ease-out; rotate(rot*0.3) translateY(-8px) scale(1.04); others opacity .38 saturate(.6) 300ms",
-        "purpose": "Hero sticker peek."
+        "purpose": "Hero sticker peek; its float is paused while peeled or focus-visible."
       },
       {
         "name": "sticker-caption",
-        "value": "opacity 220ms, transform 320ms ease-out, 6px slide",
+        "value": "opacity 220ms, transform 320ms ease-out, 6px slide; cap-top (s-a, s-c, s-d) opens above: bottom calc(100% + 14px), slides down from 6px",
         "purpose": "Caption pill in/out on hover or focus only; no caption shows at rest."
+      },
+      {
+        "name": "sticker-float",
+        "value": "@keyframes float alternate infinite ease-in-out on the inner span.float: translate3d(-x,-y,0) rotate(-r) to translate3d(x,y,0) rotate(r); vars --float-t (7s), --float-d (negative), --float-y (9px), --float-r (1.2deg), --float-x (4px); s-a 7.4s/-1.2s/9px/1deg, s-b 6.2s/-3.4s/11px/1.6deg/x3, s-c 8.6s/-5.1s/8px/0.8deg/x6, s-d 6.9s/-2.3s/10px/1.3deg, seal 5.6s/-0.6s/6px/2.4deg/x2; none under reduced motion",
+        "purpose": "Idle drift of each hero sticker, out of step."
+      },
+      {
+        "name": "sticker-parallax",
+        "value": "fine pointer only; hero pointer -1..1; target 16px*depth x, 11px*depth y; ease 0.08 per tick; depth s-a 1.3, s-b 0.7, s-c 1, s-d 0.55, seal 1.6; written as --px/--py and applied via the individual translate property on li.slot-li (never transform, which GSAP owns for the entrance); ticker removes itself at rest; hero pointerleave eases home",
+        "purpose": "Stickers lean toward the cursor by depth."
+      },
+      {
+        "name": "hero-dust",
+        "value": "canvas.hero-dust inset 0, z 1, aria-hidden; specks count min(300, (w+300)*(h+180)/7200); depth z 0.15..1, radius 0.6+1.5z, alpha 0.18+0.42z, wander up to 3px/s; 12% chads 6.4x2px r1 spinning; inks 242,242,238 (x2), 229,228,223, chad 201,204,214; lean 150px*z x and 90px*z y toward the pointer, eased 2.2/s; frame loop dt cap 50ms, no frames while hero off screen or tab hidden; dpr cap 2; reduced motion: one still draw, redrawn on resize",
+        "purpose": "Field of punched dust behind the hero type and stickers."
+      },
+      {
+        "name": "icon-sticker-wave",
+        "value": ".closing:hover .ico-stk.is-wave: 1.2s ease-out once, transform-origin 70% 90%, rotate 14deg/-8deg/10deg/-3deg at 20/40/60/80%",
+        "purpose": "Closing wave rocks from the wrist on panel hover."
       },
       {
         "name": "print-straighten",
@@ -590,13 +610,18 @@
       },
       {
         "name": "reel-drift",
-        "value": "track translateX 0 to -50% (two copies, second aria-hidden) linear infinite; duration = half track width / 38px per s; paused on hover, focus-within, off screen (IntersectionObserver), and by the round pause/play button; hover on a pass straightens it to 30% of its tilt and lifts 6px, 420ms expo.out",
-        "purpose": "Achievements reel."
+        "value": "track translateX 0 to -50% (two copies, second aria-hidden) linear infinite; duration = half track width / 38px per s; hover on a fine pointer eases playbackRate to 0.25 over 0.8s power2.out (back to 1 on leave); paused for :focus-within (the reel itself is tabindex 0, role region) and when off screen (IntersectionObserver); no pause button; hover on a pass straightens it to 30% of its tilt and lifts 6px, 420ms expo.out",
+        "purpose": "Achievements reel (slows on hover, stops on focus and off screen)."
+      },
+      {
+        "name": "ach-photo-turn",
+        "value": "up to 4 photos per pass stacked in one 4:3 frame; opacity 900ms ease-out and scale 1.04 to 1 over 1600ms; one turn every 3600ms, first at 1200ms + 750ms*pass index; pass and clone together; skipped while reel off screen or tab hidden; dots: 6px, active 14px stock, 320ms; none under reduced motion (first photo, dots hidden)",
+        "purpose": "Achievement photos take turns."
       },
       {
         "name": "agenda-preview",
-        "value": "quickTo x/y 0.55s power3, offset +28px x; show 0.4s expo.out random rot -4..4; hide 0.25s power2.in to scale .85",
-        "purpose": "Cursor-trailing activity photo."
+        "value": "quickTo x/y 0.55s power3, offset +28px x; show 0.4s expo.out random rot -4..4; hide 0.25s power2.in to scale .85; first hover (preview hidden) sets x = pointer+28, y = pointer - half height before fading in, so it opens at the cursor",
+        "purpose": "Cursor-trailing activity photo; opens at the cursor on first hover."
       },
       {
         "name": "cord-draw",
@@ -605,7 +630,7 @@
       },
       {
         "name": "reduced-motion",
-        "value": "no Lenis, no pendulum, no entrance; transitions 1ms; flip becomes 180ms linear opacity cross-fade; cord full; leaders drawn; reel stands still as a keyboard-scrollable snap row; preview duration 0",
+        "value": "no Lenis, no pendulum, no entrance; transitions 1ms; flip becomes 180ms linear opacity cross-fade; cord full; leaders drawn; dust drawn once and still; stickers do not float or lean; reel stands still as a keyboard-scrollable snap row (label \"Achievements, scroll sideways\") showing each pass's first photo, dots hidden; preview duration 0",
         "purpose": "prefers-reduced-motion: final readable state."
       },
       {
@@ -648,12 +673,12 @@
       {
         "name": "wide-hero-tune",
         "value": "max-width: 1100px",
-        "purpose": "Statement widens to 56vw; phone sticker to left 28%."
+        "purpose": "Statement block is 60vw wide."
       },
       {
         "name": "compact",
         "value": "max-width: 860px",
-        "purpose": "Single-column hero holding only the lanyard (strap 150px, badge 290px), hero stickers and cord dropped, pins re-anchored, no leaders, reel edge to edge, strap tops fade out, inline agenda photos, no clip marks, nav brand + CV only."
+        "purpose": "Single-column hero holding only the lanyard (strap 150px, badge 290px), hero stickers and cord dropped, pins re-anchored, no leaders, reel edge to edge (no pause button), lede at clamp(28px, calc((100vw - 80px) / 9.2), 64px), dust canvas stays, strap tops fade out, inline agenda photos, no clip marks, nav brand + CV only."
       },
       {
         "name": "wide-js",
@@ -697,7 +722,8 @@
       },
       {
         "name": "hero-sticker",
-        "value": 2
+        "value": 3,
+        "note": "Slot above the statement (2); the dust canvas is 1."
       },
       {
         "name": "pendulum",
@@ -766,6 +792,14 @@
       {
         "name": "pendulum-clasp",
         "value": 2
+      },
+      {
+        "name": "hero-dust",
+        "value": 1
+      },
+      {
+        "name": "hero-statement",
+        "value": 2
       }
     ],
     "materials": [
@@ -786,6 +820,12 @@
         "source": "mockup/assets/photos/owner-badge.jpg, mockup/assets/photos/owner-cutout.png",
         "generator": "Owner's own photo, cropped and duotoned #1D2640 to #EEEDE8 (provenance in mockup/assets/photos/SOURCES.txt); the CV copy has its background removed.",
         "display": "Badge ID row (4/5, 6px radius); CV header (31mm tall cut-out lifted 4mm, its torso fading over the lowest 28%)."
+      },
+      {
+        "name": "icon-stickers",
+        "source": "src/components/IconSticker.tsx (Phosphor Bold, MIT, 256 grid)",
+        "generator": "Same paths as the mockup i-b-* symbols; set of 8: browsers, database, cursor, pin, loading, team, rocket, wave",
+        "display": "Opt-in :name: tokens in owner copy (statement, About, closing); never on the CV. Hero 0.78em scrap (glyph 0.54em, radius 0.16em, stock on navy, white on concrete); About 0.9em; tilt cycle -7, 5, -4, 6, -5, 7deg continuing across statement lines."
       }
     ],
     "fonts": [
@@ -902,7 +942,7 @@
       "name": "Sticker with Caption",
       "kind": "custom",
       "refersTo": "sticker",
-      "description": "Die-cut screenshot sticker with white kiss-cut border; peels on hover/focus and only then shows an ink caption pill.",
+      "description": "Die-cut screenshot sticker with white kiss-cut border; peels on hover/focus and only then shows an ink caption pill. Sits in a li.slot-li (z 3) with an inner span.float; the three screens along the bottom edge (s-a, s-c, s-d) carry cap-top captions that open above.",
       "html": "<div class=\"ds-ground\"><a class=\"ds-sticker\" href=\"#\" style=\"--rot:-7deg\"><span class=\"ds-shot\"></span><span class=\"ds-cap\">Ledgerly: invoicing for 1,200 small shops</span></a></div>",
       "css": ":host{--ground:#1d2640;--ground-deep:#151c31;--stock:#f2f2ee;--ink:#111216;--ink-2:#45474d;--metal:#c9ccd6;--ease-out:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-ground{background:var(--ground);padding:40px 40px 80px;}.ds-sticker{position:relative;display:block;width:240px;aspect-ratio:1.6;background:#fff;padding:7px;border-radius:16px;box-shadow:0 14px 28px -10px rgba(10,11,18,.55),0 2px 4px rgba(10,11,18,.25);transform:rotate(var(--rot));transition:transform 420ms var(--ease-out),box-shadow 420ms var(--ease-out);text-decoration:none;}.ds-shot{display:block;width:100%;height:100%;border-radius:10px;background:#e9e9e4;}.ds-cap{position:absolute;left:50%;top:calc(100% + 14px);transform:translate(-50%,-6px);opacity:0;white-space:nowrap;background:var(--ink);color:var(--stock);border-radius:999px;padding:9px 14px;font-size:14px;font-weight:650;transition:opacity 220ms var(--ease-out),transform 320ms var(--ease-out);}.ds-sticker:hover,.ds-sticker:focus-visible{transform:rotate(calc(var(--rot)*.3)) translateY(-8px) scale(1.04);box-shadow:0 30px 50px -16px rgba(10,11,18,.7),0 6px 12px -4px rgba(10,11,18,.35);outline:none;}.ds-sticker:hover .ds-cap,.ds-sticker:focus-visible .ds-cap{opacity:1;transform:translate(-50%,0);}"
     },
@@ -926,7 +966,7 @@
       "name": "Achievement Pass",
       "kind": "custom",
       "refersTo": "achievement-pass",
-      "description": "White sticker-radius pass with a 6px frame hanging by a short navy strap threaded into its slot from the navy reel strap; 4:3 photo, rank tag and year, 24px title, one story line. Rotated per item with the pivot at the rail.",
+      "description": "White sticker-radius pass with a 6px frame hanging by a short navy strap threaded into its slot from the navy reel strap; 4:3 photo, rank tag and year, 24px title, one story line. Rotated per item with the pivot at the rail. Holds up to four photos that cross-fade in turn (3600ms cadence, staggered start) with a dot pill; the reel is a focusable region that slows to a quarter speed on hover and stops for focus and off screen.",
       "html": "<div class=\"ds-ground\"><div class=\"ds-rail\"></div><article class=\"ds-card\"><span class=\"ds-short\"></span><span class=\"ds-slot\"></span><div class=\"ds-photo\"></div><div class=\"ds-body\"><p class=\"ds-meta\"><span class=\"ds-rank is-winner\">Winner</span><span class=\"ds-year\">2024</span></p><h3>Nusantara Code Cup</h3><p class=\"ds-story\">Best product among 214 teams.</p></div></article></div>",
       "css": ":host{--navy:#1d2640;--ink:#111216;--ink-2:#45474d;--stock:#f2f2ee;font-family:Archivo,ui-sans-serif,system-ui,sans-serif;}.ds-ground{background:#e5e4df;position:relative;padding:56px 40px 40px;overflow:hidden;}.ds-rail{position:absolute;left:0;right:0;top:0;height:26px;background:var(--navy);box-shadow:inset 0 -2px 0 rgba(0,0,0,.25),0 3px 6px -2px rgba(10,11,18,.35);}.ds-card{position:relative;width:300px;background:#fff;color:var(--ink);border-radius:16px;padding:30px 6px 10px;box-shadow:0 14px 28px -10px rgba(10,11,18,.55),0 2px 4px rgba(10,11,18,.25);transform:rotate(-2deg);transform-origin:50% -43px;}.ds-short{position:absolute;z-index:1;left:50%;top:-43px;width:22px;height:59px;margin-left:-11px;background:var(--navy);box-shadow:inset 2px 0 0 rgba(255,255,255,.12),inset -3px 0 0 rgba(0,0,0,.25),0 2px 3px rgba(10,11,18,.3);}.ds-slot{position:absolute;left:50%;top:11px;width:52px;height:11px;margin-left:-26px;border-radius:8px;background:#151c31;box-shadow:inset 0 2px 3px rgba(0,0,0,.35);}.ds-photo{aspect-ratio:4/3;border-radius:10px;background:#d6d5cf;}.ds-body{padding:14px 10px 4px;}.ds-meta{display:flex;align-items:center;justify-content:space-between;margin:0;}.ds-year{font-size:15px;font-weight:800;color:var(--ink-2);font-feature-settings:'tnum' 1;}.ds-body h3{margin:12px 0 0;font-size:24px;line-height:1.05;font-weight:850;font-variation-settings:'wdth' 115;letter-spacing:-.02em;}.ds-story{margin:6px 0 0;font-size:15px;line-height:1.4;font-weight:550;color:var(--ink-2);}.ds-rank{display:inline-flex;align-items:center;min-height:28px;padding:0 11px;border-radius:3px;background:var(--ink);color:var(--stock);font-size:12.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-variation-settings:'wdth' 85;}.ds-rank.is-winner{clip-path:polygon(0 0,100% 0,calc(100% - 9px) 50%,100% 100%,0 100%);padding-right:21px;}"
     },
@@ -979,7 +1019,7 @@
       "Two woven webbing colourways, navy and concrete, alternating section by section with the raster twill on every panel and a stitched seam at every join.",
       "Content on off-white badge stock in near-black ink; 18px card corners, 16px sticker corners, full pills for buttons.",
       "One family, Archivo variable (wdth 62 to 125, wght 100 to 900), roles separated by width as much as weight.",
-      "Physical motion: a damped pendulum badge on a concrete strap with a metal ring and lobster clasp, stickers that slap down, leader lines that draw to the result.",
+      "Physical motion: a damped pendulum badge on a concrete strap with a metal ring and lobster clasp, stickers that slap down and then drift and lean with the pointer over a field of punched dust, leader lines that draw to the result.",
       "State by form and printed word, never by colour alone.",
       "Every creative moment has a plain readable path; reduced motion renders every section in its final state.",
       "Case studies read as an event program: a sticky index with a printed 'Reading' tag, one stock page per section, the cord as reading progress."
@@ -1059,7 +1099,8 @@
       "- **Do** end a case study's pages with \"What I'd do next\" (index label \"Next steps\"), followed by the Next project section on the ground.",
       "- **Do** use a mid-flow frame of the demo recording as its poster, and keep its provenance next to the video.",
       "- **Do** autoplay a demo only muted, looping, while at least half visible, and with motion allowed; pause it when it leaves view and let a user pause stick.",
-      "- **Do** draw lines (architecture cords) with `cubic-bezier(0.65, 0, 0.35, 1)`, the CSS twin of the leader lines' `power2.inOut`."
+      "- **Do** draw lines (architecture cords) with `cubic-bezier(0.65, 0, 0.35, 1)`, the CSS twin of the leader lines' `power2.inOut`.",
+      "- **Do** keep the achievements photos turning in step and out of step: 3600ms per pass, first turn at 1200ms plus 750ms per pass, pass and clone together."
     ],
     "donts": [
       "- **Don't** put eyebrow or kicker labels (small uppercase tracked text) above section headings or titles; printed labels live only on physical objects (rank tags, role tags, strap, seals, itinerary list labels).",
@@ -1068,7 +1109,7 @@
       "- **Don't** introduce an accent colour or give roles or ranks their own hue; sections differ only by the two webbing colourways in fixed alternation, and everything else by cut, length, and the printed word.",
       "- **Don't** fake screenshots with styled divs or CSS mock UIs; use real raster screenshots.",
       "- **Don't** use monospace type as costume (no terminal prompts, no code-styled labels); there is no monospace in the system.",
-      "- **Don't** add a marquee or ticker beyond the achievements reel. That reel is the one marquee, built because the owner asked for the motion (reference: danielsun.space); it must keep a visible pause button, pause on hover, focus and off screen, and stand still under reduced motion. A second moving strip is refused.",
+      "- **Don't** add a marquee or ticker beyond the achievements reel. That reel is the one marquee, built because the owner asked for the motion (reference: danielsun.space); it slows to a quarter speed on hover, stops for keyboard focus on the strip itself and when off screen, and stands still under reduced motion. It has no pause button (owner decision 2026-11-14); do not add round controls to it. A second moving strip is refused.",
       "- **Don't** use em dashes in copy; use commas, colons, or full stops.",
       "- **Don't** present synthetic or estimated metrics as real; a metric without a source does not ship.",
       "- **Don't** add a second type family or swap Archivo for a system display face.",
@@ -1077,7 +1118,7 @@
       "- **Don't** render any copy in canvas, WebGL, or images; all text is DOM text.",
       "- **Don't** add hero stickers beyond the five slots or let them cross into the lanyard's half of the hero; the badge hangs alone on the right.",
       "- **Don't** show a sticker caption at rest; captions appear on hover or focus only (touch-only wide screens excepted).",
-      "- **Don't** reintroduce leader lines, hero stickers, sticker captions, the cursor preview, the cord, or clip marks under 860px.",
+      "- **Don't** reintroduce leader lines, hero stickers, sticker captions, the cursor preview, the cord, or clip marks under 860px (The dust canvas and the icon stickers do stay on phones.)",
       "- **Don't** add a second column, a sidebar, skill bars or meters, or any colour beyond navy, ink, metal, and white to the CV, and never let it run past one A4 page. Icons on the CV are the small navy contact icons only.",
       "- **Don't** strike through before values or show change as struck-out text.",
       "- **Don't** repeat a screenshot within one page.",
@@ -1085,7 +1126,10 @@
       "- **Don't** add a floating table of contents, a hero banner, or a reading progress bar other than the cord.",
       "- **Don't** tell booth kinds apart by colour; people, systems, and external services differ by form.",
       "- **Don't** autoplay a demo with sound or under reduced motion.",
-      "- **Don't** show the \"Reading\" tag anywhere except the current index row on wide screens."
+      "- **Don't** show the \"Reading\" tag anywhere except the current index row on wide screens.",
+      "- **Don't** let the dust, the floating stickers, or the icon stickers carry meaning or copy: dust is canvas decoration only, a sticker still reads and links without its drift, and an icon sticker sits beside words, never replacing them.",
+      "- **Don't** drive sticker parallax or the float through `transform` on the slot; the slot's `transform` belongs to GSAP's entrance. Parallax goes through `translate` and the drift through the inner `float` span.",
+      "- **Don't** add icon stickers outside the closed set of eight, or print them in the CV; they appear only where the owner writes a `:name:` token in the statement, About, or closing copy."
     ],
     "detectorExceptions": [
       "Nested cards: architecture booths are cards inside the twill field inside a stock page; the nesting is physical (objects on fabric on a sheet).",
