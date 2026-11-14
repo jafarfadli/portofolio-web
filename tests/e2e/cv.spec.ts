@@ -10,6 +10,10 @@ test("CV lists sections in order, ranks achievements, and prints to one A4 page"
   await expect(achievements.locator("li").first()).toContainText("Winner, Nusantara Code Cup");
   await expect(page.locator(".cv-sheet")).not.toContainText("DevDays");
 
+  // Global site.css rules (.role pill, .back badge face) must not leak into the CV.
+  await expect(page.locator(".cv-head .cv-role")).toHaveCSS("text-transform", "none");
+  await expect(page.locator(".cv-bar .cv-back")).toHaveCSS("transform", "none");
+
   const pdf = await page.pdf({ format: "A4", preferCSSPageSize: true, printBackground: true });
   const pages = (pdf.toString("latin1").match(/\/Type\s*\/Page[^s]/g) ?? []).length;
   expect(pages).toBe(1);

@@ -8,7 +8,7 @@ export function CvDocument({ cv }: { cv: CvContent }) {
     <article className="cv-sheet" aria-label="Curriculum vitae">
       <header className="cv-head">
         <h1>{p.firstName} {p.lastName}</h1>
-        <p className="role">{p.role}</p>
+        <p className="cv-role">{p.role}</p>
         <ul className="contact">
           <li>{p.cvLocationLine}</li>
           <li><a href={`mailto:${p.email}`}>{p.email}</a></li>

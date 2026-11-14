@@ -18,7 +18,7 @@ export default function CvPage() {
   return (
     <div className="cv-page">
       <div className="cv-bar">
-        <a className="back" href="/"><Icon name="left" />Back to the site</a>
+        <a className="cv-back" href="/"><Icon name="left" />Back to the site</a>
         <span className="note">Generated from the same records as the site.</span>
         <PrintButton />
       </div>
