@@ -2,6 +2,12 @@
 
 These items were deferred during Plan 1 (Foundation + Public Site) execution and its reviews. Read this before writing Plan 2 and Plan 3.
 
+**Status after Plan 2.** Every item under "Start of Plan 2" is done except these:
+- `profile.remoteOk`, `achievements.category` and `achievements.mediaId` are deferred (spec section 14).
+- FK and cascade tests: `deleteItem` now removes CV picks. A database-level foreign key is still not possible, because `cv_profile_items.item_id` points at six tables.
+
+The "Plan 3 (CV builder + PDF)" section now belongs to Plan 4.
+
 ## Start of Plan 2 (admin)
 
 - **Migrations.**

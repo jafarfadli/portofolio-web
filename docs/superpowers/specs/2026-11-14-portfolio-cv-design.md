@@ -211,3 +211,20 @@ Rules:
 - Project motion clips (inspired by prompt-motion.com product UI videos): optional short muted loops per project, made from real screenshots with HTML + Playwright or Remotion, shown on hover with a still poster under reduced motion. Planned after real screenshots exist; out of v1 scope.
 - The DESIGN.md ceiling notes (satin ribbons, real clip hardware) need raster assets if pursued.
 - The availability dot stays as a real-state indicator driven by `profile.openToWork`. It is the single non-ultramarine hue and is documented as an exception.
+
+## 14. Amendments (Plan 2)
+
+Plan 2 (`docs/superpowers/plans/2026-11-14-plan-2-admin.md`) changed these points. This section wins over the text above where they differ.
+
+- **No revalidate endpoint.** Public routes render per request and read SQLite directly, so the admin process does not call `/api/revalidate`, and `REVALIDATE_SECRET` is not used. If a public route is ever made static, it needs revalidation again.
+- **Migrations only from the CLI.** No process migrates at boot; `pnpm db:migrate` (and `pnpm db:seed`) do. The public role opens the existing file with `fileMustExist` and `PRAGMA query_only = ON`.
+- **Tailnet identity.** The admin role compares `Tailscale-User-Login` with `ADMIN_TAILSCALE_LOGIN`, case-insensitively, and fails closed when it is unset. `next dev` skips the header check.
+- **Reordering.** Uses Move up and Move down buttons, which are keyboard friendly and meet WCAG 2.2 SC 2.5.7. Drag can be added later on the same store call.
+- **Selected work layout.** Follows position (wide, half, half, wide); `projects.layout` is stored but not edited.
+- **Deferred columns.** `profile.remoteOk`, `achievements.category`, `achievements.mediaId` and `admin_user.totpSecret` wait until a surface uses them.
+- **Case study content.** It is structured in the approved mockup (`mockup/project.html`), so its fields, editor and `/projects/[slug]` are built together in Plan 3. `caseStudyMd` is not edited in Plan 2.
+- **Uploads.** They use a server action. `serverActions.bodySizeLimit` and `proxyClientMaxBodySize` are both `16mb`.
+- **Security headers.**
+  - CSP is set per request in `src/proxy.ts`: scripts by nonce plus `'strict-dynamic'`, styles `'self' 'unsafe-inline'` (React style attributes), and `frame-ancestors 'self'` for the Plan 4 CV preview.
+  - HSTS, `nosniff`, `Referrer-Policy` and `Permissions-Policy` apply to both roles.
+- **Milestones.** Plan 3 is the case study page plus SEO and the OpenGraph image. Plan 4 is the CV builder and PDF. Plan 5 is the deploy.
