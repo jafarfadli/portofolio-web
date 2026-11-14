@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio + CV
 
-## Getting Started
+A personal portfolio site that is also the single source of truth for the owner's CV.
 
-First, run the development server:
+- Product context: `PRODUCT.md`
+- Visual system: `DESIGN.md`
+- Spec: `docs/superpowers/specs/2026-11-14-portfolio-cv-design.md`
+- Approved mockup: `mockup/` (serve it with `python3 -m http.server -d mockup 5178`)
+
+## Develop
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+pnpm db:seed            # sample content into ./.data (use --force to reset)
+pnpm dev                # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Native module note
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+`better-sqlite3` is pinned to `^12` on purpose: the v13 prebuilt binary segfaults on Node 23.1. On this Mac, building v12 from source needs the SDK's C++ headers on the include path:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+CXXFLAGS="-isystem $(xcrun --show-sdk-path)/usr/include/c++/v1" pnpm rebuild better-sqlite3
+```
 
-## Learn More
+Moving to Node LTS (planned for the Mac mini deploy) should let v13 be used.
 
-To learn more about Next.js, take a look at the following resources:
+## Test
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm test               # unit (vitest)
+pnpm e2e                # end-to-end (playwright, seeds .data-e2e, serves :3100)
+VISUAL=1 pnpm e2e tests/e2e/visual.spec.ts   # comparison captures in test-results/visual
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Data
 
-## Deploy on Vercel
+- `DATA_DIR` (default `./.data`) holds `portfolio.db` and `uploads/`. It is never committed.
+- The schema lives in `src/db/schema.ts`. After changing it, run `pnpm db:generate` and commit `drizzle/`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+All seeded content is sample data. It must be replaced before launch; see the list in `DESIGN.md`.
