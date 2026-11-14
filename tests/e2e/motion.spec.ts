@@ -38,7 +38,8 @@ test("entrance releases the pre-paint hold and ends with the hero visible", asyn
   await expect(page.locator("html")).not.toHaveClass(/motion-pending/);
   await expect(page.locator(".lede .line > span").first()).toBeVisible();
   await expect(page.locator("[data-badge]")).toBeVisible();
-  await expect(page.locator(".lede .line > span").first()).toHaveCSS("transform", "none");
+  // GSAP settles on the identity matrix rather than "none".
+  await expect(page.locator(".lede .line > span").first()).toHaveCSS("transform", /^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
   await expect(page.locator("[data-nav]")).toHaveCSS("opacity", "1");
 });
 
