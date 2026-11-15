@@ -43,6 +43,13 @@
       "when": 1794748953434,
       "tag": "0005_stale_shiver_man",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1794749513231,
+      "tag": "0006_worthless_blur",
+      "breakpoints": true
     }
   ]
 }

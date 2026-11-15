@@ -417,6 +417,55 @@ export function initHomeMotion(doc: Document): () => void {
       });
     }
 
+    /* ---------- Work: each card flips through its screenshots ---------- */
+    // Picking a feature shows its screenshot, with or without reduced motion. The show also moves on by itself (not
+    // under reduced motion): when every screenshot has a feature, the active feature's bar is the timer (its CSS fill
+    // pauses while the list is hovered, focus is in the card, or the card is off screen) and its end moves to the next;
+    // otherwise a plain interval does, under the same holds, and the bars do not fill.
+    doc.querySelectorAll<HTMLElement>(".project").forEach((card) => {
+      const imgs = [...card.querySelectorAll<HTMLImageElement>("[data-show] img")];
+      if (imgs.length < 2) return;
+      const buttons = [...card.querySelectorAll<HTMLButtonElement>("[data-features] button")];
+      const order = imgs.map((im) => im.dataset.step ?? "");
+      const barTimed = buttons.length === imgs.length;
+      card.classList.toggle("show-timed", !barTimed);
+      let at = 0;
+      const show = (k: number) => {
+        at = (k + order.length) % order.length;
+        const step = order[at];
+        imgs.forEach((im) => {
+          const isOn = im.dataset.step === step;
+          if (!isOn && im.classList.contains("is-on")) {
+            im.classList.add("is-out");
+            timeouts.push(win.setTimeout(() => im.classList.remove("is-out"), 720));
+          }
+          im.classList.toggle("is-on", isOn);
+        });
+        buttons.forEach((b) => {
+          const isOn = b.dataset.step === step;
+          b.classList.toggle("is-on", isOn);
+          b.setAttribute("aria-pressed", String(isOn));
+        });
+      };
+      buttons.forEach((b) => on(b, "click", () => {
+        const k = order.indexOf(b.dataset.step ?? "");
+        if (k >= 0 && k !== at) show(k);
+      }));
+      if (!reduce) {
+        const held = () => card.classList.contains("is-offscreen") || doc.hidden || card.matches(":has(:focus-visible)");
+        if (barTimed) {
+          on(card, "animationend", (e) => {
+            if ((e.target as Element).matches(".features button.is-on .bar")) show(at + 1);
+          });
+        } else {
+          intervals.push(win.setInterval(() => { if (!held()) show(at + 1); }, 4600));
+        }
+      }
+      const io = new IntersectionObserver((entries) => card.classList.toggle("is-offscreen", !entries.at(-1)!.isIntersecting), { threshold: 0.35 });
+      io.observe(card);
+      ac.signal.addEventListener("abort", () => io.disconnect());
+    });
+
     /* ---------- Achievements: passes ride past on a strap ---------- */
     // The server renders the second, hidden copy of the list; CSS moves the track by half its width.
     const reel = doc.querySelector<HTMLElement>("[data-reel]");

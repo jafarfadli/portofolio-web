@@ -79,6 +79,12 @@ export const projects = sqliteTable("projects", {
   screenshotId: integer("screenshot_id").references(() => media.id),
   /** Optional portrait capture of the mobile layout: the hero's phone sticker shows it. */
   phoneShotId: integer("phone_shot_id").references(() => media.id),
+  /** Screenshots 2 to 4: the card's print flips through them after the main screenshot. */
+  shot2Id: integer("shot2_id").references(() => media.id),
+  shot3Id: integer("shot3_id").references(() => media.id),
+  shot4Id: integer("shot4_id").references(() => media.id),
+  /** Up to 4 short feature names. Feature n goes with screenshot n (the first with the main screenshot). */
+  features: text("features", { mode: "json" }).$type<string[]>().notNull().default(sql`'[]'`),
   stickerCaption: text("sticker_caption").notNull(),
   cardArt: text("card_art", { mode: "json" }).$type<CardArt>().notNull(),
   layout: text("layout", { enum: ["wide", "half"] }).notNull(),

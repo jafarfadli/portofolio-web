@@ -21,7 +21,10 @@ export type Field = {
   section?: string;
   mediaKind?: MediaKind;
   min?: number;
+  /** Text: most characters. Lines: most characters per line. Number: highest value. */
   max?: number;
+  /** Lines: most lines. */
+  maxItems?: number;
   rows?: number;
 };
 
@@ -87,7 +90,9 @@ export function parseField(f: Field, raw: string | null): One {
     }
     case "lines": {
       const lines = s.split("\n").map((l) => l.trim()).filter(Boolean);
-      if (lines.some((l) => l.length > 300)) return { error: "Keep each line under 300 characters." };
+      if (f.maxItems !== undefined && lines.length > f.maxItems) return { error: `Use at most ${f.maxItems} lines.` };
+      const most = f.max ?? 300;
+      if (lines.some((l) => l.length > most)) return { error: `Keep each line under ${most} characters.` };
       return { value: lines };
     }
     case "media":

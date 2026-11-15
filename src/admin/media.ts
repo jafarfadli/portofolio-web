@@ -107,6 +107,12 @@ export function mediaUsage(db: Db, id: number): string[] {
     ...db.select({ name: projects.name }).from(projects).where(eq(projects.screenshotId, id)).all().map((r) => r.name),
     ...db.select({ name: projects.name }).from(projects).where(eq(projects.phoneShotId, id)).all().map((r) => `${r.name}, phone`),
     ...db
+      .select({ name: projects.name })
+      .from(projects)
+      .where(or(eq(projects.shot2Id, id), eq(projects.shot3Id, id), eq(projects.shot4Id, id)))
+      .all()
+      .map((r) => `${r.name}, gallery`),
+    ...db
       .select({ name: achievements.title })
       .from(achievements)
       .where(or(eq(achievements.photoId, id), eq(achievements.photo2Id, id), eq(achievements.photo3Id, id), eq(achievements.photo4Id, id)))

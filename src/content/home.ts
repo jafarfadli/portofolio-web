@@ -12,7 +12,14 @@ export type Activity = typeof activities.$inferSelect;
 export type Experience = typeof experiences.$inferSelect;
 export type Education = typeof education.$inferSelect;
 export type Skill = typeof skills.$inferSelect;
-export type HomeProject = Project & { screenshot: MediaRef | null; phoneShot: MediaRef | null };
+/** One step of a card's show: a screenshot and the feature it shows (may be empty). */
+export type ProjectStep = { shot: MediaRef | null; feature: string };
+export type HomeProject = Project & {
+  screenshot: MediaRef | null;
+  phoneShot: MediaRef | null;
+  /** Screenshot n paired with feature n, for every n that has either. */
+  steps: ProjectStep[];
+};
 export type HomeAchievement = Achievement & {
   /** The photos that are set, in column order. Empty when there are none. */
   photos: MediaRef[];
@@ -63,7 +70,14 @@ export function getHomeContent(db: Db): HomeContent | null {
     projects: onSite(db.select().from(projects).all())
       .filter((p) => p.featured)
       .slice(0, 4)
-      .map((p) => ({ ...fillProject(p), screenshot: ref(p.screenshotId), phoneShot: ref(p.phoneShotId) })),
+      .map((p) => ({
+        ...fillProject(p),
+        screenshot: ref(p.screenshotId),
+        phoneShot: ref(p.phoneShotId),
+        steps: [p.screenshotId, p.shot2Id, p.shot3Id, p.shot4Id]
+          .map((id, i) => ({ shot: ref(id), feature: p.features[i] ?? "" }))
+          .filter((st) => st.shot || st.feature),
+      })),
     achievements: onSite(db.select().from(achievements).all()).map((a) => ({
       ...fillAchievement(a),
       photos: [a.photoId, a.photo2Id, a.photo3Id, a.photo4Id].map(ref).filter((p): p is MediaRef => p !== null),
