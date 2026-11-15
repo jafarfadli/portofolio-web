@@ -16,7 +16,8 @@ describe("getDashboard", () => {
     db.update(projects).set({ screenshotId: null }).where(eq(projects.slug, "ledgerly")).run();
     const texts = getDashboard(db).warnings.map((w) => w.text);
     expect(texts).toContain("Ledgerly is featured but has no screenshot.");
-    expect(texts.some((t) => /^\d+ images have no alt text\.$/.test(t))).toBe(true);
+    expect(texts).toContain("Kanbo has an image with no alt text.");
+    expect(getDashboard(db).warnings.find((w) => w.text === "Kanbo has an image with no alt text.")?.href).toMatch(/^\/admin\/projects\/\d+$/);
   });
 
   it("asks for a profile first on an empty database", () => {

@@ -63,14 +63,20 @@ textarea.adm-input { line-height: 1.5; resize: vertical; }
 .adm-more[open] > summary { border-bottom: 2px solid rgba(17, 18, 22, 0.16); }
 .adm-more-body { display: grid; gap: 22px; padding: 18px; }
 
-/* A picked image previews under its select; the preview opens the full file. */
-.adm-pick { display: grid; gap: 10px; }
-.adm-pick-preview { justify-self: start; display: grid; gap: 6px; font-size: 14px; font-weight: 700; text-decoration: none; }
-.adm-pick-preview img, .adm-file-preview img {
-  display: block; width: auto; max-width: min(100%, 280px); height: auto; max-height: 150px; object-fit: contain;
-  border-radius: 7px; background: #ffffff; box-shadow: 0 0 0 2px rgba(17, 18, 22, 0.16);
-}
-.adm-pick-preview:hover span { text-decoration: underline; }
+/* Image field: preview on the left, upload / reuse / alt text on the right; stacked on phones. */
+.adm-image { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 16px; align-items: start; padding: 14px; border-radius: var(--r-sticker); box-shadow: inset 0 0 0 2px rgba(17, 18, 22, 0.16); }
+.adm-image-preview a { display: block; border-radius: 7px; }
+.adm-image-preview img { display: block; width: 100%; height: auto; max-height: 160px; object-fit: contain; border-radius: 7px; background: #ffffff; box-shadow: 0 0 0 2px rgba(17, 18, 22, 0.12); }
+.adm-image-preview a:hover img { box-shadow: 0 0 0 2px var(--ink); }
+.adm-image-empty { display: grid; place-items: center; aspect-ratio: 16 / 10; border-radius: 7px; border: 2px dashed rgba(17, 18, 22, 0.3); color: var(--ink-2); font-size: 14px; font-weight: 650; }
+.adm-image-controls { display: grid; gap: 12px; min-width: 0; }
+.adm-image-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.adm-image-reuse, .adm-image-alt { display: grid; gap: 4px; }
+.adm-image-reuse[hidden] { display: none; }
+.adm-sub { font-size: 14px; font-weight: 700; color: var(--ink-2); }
+.adm-file { cursor: pointer; }
+.adm-file:focus-within { outline: 3px solid var(--ground); outline-offset: 2px; }
+@media (max-width: 860px) { .adm-image { grid-template-columns: minmax(0, 1fr); } }
 
 /* ---------- Lists ---------- */
 .adm-table { width: 100%; border-collapse: collapse; }
@@ -106,23 +112,6 @@ textarea.adm-input { line-height: 1.5; resize: vertical; }
 .adm-danger { margin-top: 40px; padding-top: 20px; border-top: 2px solid rgba(17, 18, 22, 0.16); }
 .adm-danger summary { display: flex; align-items: center; min-height: 44px; font-weight: 750; cursor: pointer; }
 .adm-danger p { margin: 8px 0 14px; color: var(--ink-2); }
-
-/* ---------- Media library ---------- */
-.adm-upload {
-  display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; max-width: 900px;
-  padding: 20px; border-radius: var(--r-sticker); box-shadow: inset 0 0 0 2px rgba(17, 18, 22, 0.16);
-}
-.adm-upload .adm-kind { max-width: 280px; }
-.adm-upload + .adm-empty { margin-top: 20px; }
-.adm-media { list-style: none; margin: 28px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
-.adm-media > li { display: grid; gap: 10px; align-content: start; padding: 12px; border-radius: var(--r-sticker); box-shadow: inset 0 0 0 2px rgba(17, 18, 22, 0.16); }
-.adm-thumb-link { display: block; border-radius: 7px; }
-/* The whole image shows, letterboxed on white, so a tall phone capture is not cropped to a sliver. */
-.adm-thumb { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: contain; border-radius: 7px; background: #ffffff; box-shadow: 0 0 0 2px rgba(17, 18, 22, 0.1); }
-.adm-thumb-link:hover .adm-thumb { box-shadow: 0 0 0 2px var(--ink); }
-.adm-full { justify-self: start; font-size: 14px; font-weight: 700; }
-.adm-file-preview { display: grid; gap: 6px; font-size: 14px; color: var(--ink-2); }
-.adm-meta { font-size: 14px; color: var(--ink-2); }
 
 /* ---------- Sign in and first run ---------- */
 .adm-auth { min-height: 100dvh; display: grid; place-items: center; padding: 24px; }

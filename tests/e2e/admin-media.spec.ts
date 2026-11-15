@@ -1,48 +1,41 @@
 import { expect, test } from "@playwright/test";
 import { signIn } from "./admin-helpers";
 
-test("an uploaded screenshot gets resized copies and appears in the project picker", async ({ page }) => {
+// Images are uploaded inside the forms that use them; there is no separate library page.
+
+test("an image uploaded in a project form is stored with resized copies and its alt text", async ({ page }) => {
   await signIn(page);
-  await page.goto("/admin/media");
-  await page.getByLabel("Image", { exact: true }).setInputFiles("mockup/assets/screens/ledgerly-invoice.png");
-  await page.getByLabel("Kind").selectOption("screenshot");
-  await page.getByLabel("Alt text", { exact: true }).fill("Invoice detail uploaded in e2e");
-  await page.getByRole("button", { name: "Upload" }).click();
-  // A reused server already holds this image (same content hash), so the second run reports it instead.
-  await expect(page.locator("#upload-status")).toHaveText(
-    /^(Uploaded\.|That image is already in the library\. Edit its alt text below\.)$/,
-  );
+  await page.goto("/admin/projects");
+  await page.getByRole("link", { name: "Kanbo", exact: true }).click();
+  await page.getByLabel("Screenshot 2: upload an image").setInputFiles("mockup/assets/screens/ledgerly-invoice.png");
+  await expect(page.getByText("ledgerly-invoice.png is uploaded when you save.")).toBeVisible();
+  await page.locator("#f-shot2Id-alt").fill("Invoice detail uploaded in e2e");
+  await page.getByRole("button", { name: "Save changes" }).click();
+  await expect(page.getByRole("status")).toHaveText("Saved.");
 
-  const thumb = page.getByAltText("Invoice detail uploaded in e2e");
-  await expect(thumb).toBeVisible();
-  await expect(thumb).toHaveAttribute("src", /^\/media\/screens\/[0-9a-f]{12}-480\.webp$/);
+  const preview = page.locator(".adm-image", { has: page.locator("#f-shot2Id") }).locator(".adm-image-preview img");
+  await expect(preview).toHaveAttribute("src", /^\/media\/screens\/[0-9a-f]{12}-480\.webp$/);
+  await expect(page.locator("#f-shot2Id-alt")).toHaveValue("Invoice detail uploaded in e2e");
 
-  await page.goto("/admin/projects/new");
-  await expect(page.locator("#f-screenshotId").locator("option", { hasText: "Invoice detail uploaded in e2e" })).toHaveCount(1);
+  // Any form can reuse it.
+  await page.goto("/admin/achievements/new");
+  await expect(page.locator("#f-photoId").locator("option", { hasText: "Invoice detail uploaded in e2e" })).toHaveCount(1);
+
+  // Removing it from the project drops the unused image again, leaving the shared e2e data as seeded.
+  await page.goto("/admin/projects");
+  await page.getByRole("link", { name: "Kanbo", exact: true }).click();
+  await page.locator(".adm-image", { has: page.locator("#f-shot2Id") }).getByRole("button", { name: "Remove" }).click();
+  await page.getByRole("button", { name: "Save changes" }).click();
+  await expect(page.getByRole("status")).toHaveText("Saved.");
+  await page.goto("/admin/achievements/new");
+  await expect(page.locator("#f-photoId").locator("option", { hasText: "Invoice detail uploaded in e2e" })).toHaveCount(0);
 });
 
-test("a file that is not an image is refused, and the kind and alt text you chose stay", async ({ page }) => {
+test("a file that is not an image is refused next to its field", async ({ page }) => {
   await signIn(page);
-  await page.goto("/admin/media");
-  await page.getByLabel("Image", { exact: true }).setInputFiles({ name: "notes.png", mimeType: "image/png", buffer: Buffer.from("not an image") });
-  await page.getByLabel("Kind").selectOption("photo");
-  await page.getByLabel("Alt text", { exact: true }).fill("Kept after the error");
-  await page.getByRole("button", { name: "Upload" }).click();
-  await expect(page.locator("#upload-status")).toHaveText("That file is not an image.");
-  await expect(page.getByLabel("Kind")).toHaveValue("photo");
-  await expect(page.getByLabel("Alt text", { exact: true })).toHaveValue("Kept after the error");
-});
-
-test("a refused alt text stays typed in the library row", async ({ page }) => {
-  await signIn(page);
-  await page.goto("/admin/media");
-  const alt = page.locator('input[id^="alt-"]').first();
-  const original = await alt.inputValue();
-  const typed = "Too fancy \u2014 refused";
-  await alt.fill(typed);
-  await page.getByRole("button", { name: /^Save alt text/ }).first().click();
-  await expect(page.getByRole("status").filter({ hasText: /long dash/ })).toHaveCount(1);
-  await expect(page.locator('input[id^="alt-"]').first()).toHaveValue(typed);
-  await page.reload();
-  await expect(page.locator('input[id^="alt-"]').first()).toHaveValue(original);
+  await page.goto("/admin/projects");
+  await page.getByRole("link", { name: "Kanbo", exact: true }).click();
+  await page.getByLabel("Screenshot 3: upload an image").setInputFiles({ name: "notes.png", mimeType: "image/png", buffer: Buffer.from("not an image") });
+  await page.getByRole("button", { name: "Save changes" }).click();
+  await expect(page.locator("#f-shot3Id-error")).toHaveText("That file is not an image.");
 });

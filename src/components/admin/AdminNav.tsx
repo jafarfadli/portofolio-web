@@ -12,7 +12,6 @@ const LINKS = [
   ["/admin/experiences", "Experience"],
   ["/admin/education", "Education"],
   ["/admin/skills", "Skills"],
-  ["/admin/media", "Media"],
 ] as const;
 
 export function AdminNav() {

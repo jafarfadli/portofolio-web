@@ -72,26 +72,23 @@ describe("store", () => {
     expect(setFlag(db, "projects", fifth.id, "featured", true)).toEqual({ ok: true });
   });
 
-  it("checks that a picked image exists and is the right kind", () => {
+  it("checks that a picked image exists, of any kind", () => {
     const db = seededDb();
     const photo = db.select().from(media).where(eq(media.kind, "photo")).get()!;
     const shot = db.select().from(media).where(eq(media.kind, "screenshot")).get()!;
     const ledgerly = db.select().from(projects).where(eq(projects.slug, "ledgerly")).get()!;
-    const pickError = { ok: false, errors: { screenshotId: "Pick a screenshot from the media library." } };
-    expect(saveItem(db, "projects", ledgerly.id, { screenshotId: photo.id })).toEqual(pickError);
-    expect(saveItem(db, "projects", ledgerly.id, { screenshotId: 99_999 })).toEqual(pickError);
+    const gone = { ok: false, errors: { screenshotId: "That image is gone. Upload it again or pick another." } };
+    expect(saveItem(db, "projects", ledgerly.id, { screenshotId: 99_999 })).toEqual(gone);
+    expect(saveItem(db, "projects", ledgerly.id, { screenshotId: photo.id }).ok).toBe(true);
     expect(saveItem(db, "projects", ledgerly.id, { screenshotId: shot.id }).ok).toBe(true);
   });
 
   it("checks the profile's picked images the same way", () => {
     const db = seededDb();
-    const photo = db.select().from(media).where(eq(media.kind, "photo")).get()!;
     const shot = db.select().from(media).where(eq(media.kind, "screenshot")).get()!;
-    const msg = "Pick a photo from the media library.";
+    const msg = "That image is gone. Upload it again or pick another.";
     expect(checkMedia(db, PROFILE_FIELDS, { photoId: 99_999 })).toEqual({ photoId: msg });
-    expect(checkMedia(db, PROFILE_FIELDS, { photoId: shot.id, cvPhotoId: shot.id })).toEqual({ photoId: msg, cvPhotoId: msg });
-    expect(checkMedia(db, PROFILE_FIELDS, { photoId: null, cvPhotoId: null })).toEqual({});
-    expect(checkMedia(db, PROFILE_FIELDS, { photoId: photo.id, cvPhotoId: photo.id })).toEqual({});
+    expect(checkMedia(db, PROFILE_FIELDS, { photoId: shot.id, cvPhotoId: null })).toEqual({});
   });
 
   it("moves rows up and down and stops at the ends", () => {

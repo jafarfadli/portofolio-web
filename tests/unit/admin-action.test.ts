@@ -136,14 +136,12 @@ describe("saveProfileAction", () => {
     state.cookies[SESSION_COOKIE] = createSession(state.db, "test", new Date()).token;
   });
 
-  it("returns a field error, and saves nothing, for a deleted or wrong-kind image", async () => {
+  it("returns a field error, and saves nothing, for a deleted image", async () => {
     const before = state.db.select().from(profile).get()!;
-    const msg = "Pick a photo from the media library.";
+    const msg = "That image is gone. Upload it again or pick another.";
     const gone = await saveProfileAction(prev, profileForm({ photoId: "99999", firstName: "Changed" }));
     expect(gone).toMatchObject({ status: "error", errors: { photoId: msg } });
     expect(gone.values?.firstName).toBe("Changed");
-    const wrong = await saveProfileAction(prev, profileForm({ cvPhotoId: String(mediaId("screenshot")) }));
-    expect(wrong).toMatchObject({ status: "error", errors: { cvPhotoId: msg } });
     expect(state.db.select().from(profile).get()).toEqual(before);
   });
 

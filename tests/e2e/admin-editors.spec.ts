@@ -30,15 +30,15 @@ test("a saved project headline shows on the public site at once", async ({ page 
 test("with no badge or CV photo the public pages fall back to the plain layouts", async ({ page }) => {
   await page.goto("/admin/profile");
   await page.locator(".adm-more > summary").click(); // the CV photo lives in the closed group
-  const badge = page.getByLabel("Badge photo");
-  const cvPhoto = page.getByLabel("CV photo");
-  const [badgeBefore, cvBefore] = [await badge.inputValue(), await cvPhoto.inputValue()];
+  const badge = page.locator("#f-photoId");
+  const cvPhoto = page.locator("#f-cvPhotoId");
   const save = async () => {
     await page.getByRole("button", { name: "Save changes" }).click();
     await expect(page.getByRole("status")).toHaveText("Saved.");
   };
 
   try {
+    // Removing an image nothing else uses deletes it, so the photos are uploaded again afterwards.
     await badge.selectOption("");
     await cvPhoto.selectOption("");
     await save();
@@ -53,8 +53,11 @@ test("with no badge or CV photo the public pages fall back to the plain layouts"
     await expect(pub.locator(".cv-sheet img")).toHaveCount(0);
     await pub.close();
   } finally {
-    await badge.selectOption(badgeBefore); // leave the shared e2e data as seeded
-    await cvPhoto.selectOption(cvBefore);
+    // Leave the shared e2e data with both photos again.
+    await page.getByLabel("Badge photo: upload an image").setInputFiles("mockup/assets/photos/owner-badge.jpg");
+    await page.locator("#f-photoId-alt").fill("Portrait of Muhammad Jafar Fadli in a navy suit");
+    await page.getByLabel("CV photo: upload an image").setInputFiles("mockup/assets/photos/owner-cutout.png");
+    await page.locator("#f-cvPhotoId-alt").fill("Portrait of Muhammad Jafar Fadli");
     await save();
   }
   const back = await page.context().newPage();

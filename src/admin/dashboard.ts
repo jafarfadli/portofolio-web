@@ -1,6 +1,8 @@
 import { asc, count, eq, type SQL } from "drizzle-orm";
 import type { Db } from "@/db/client";
 import { achievements, activities, education, experiences, media, profile, projects, skills } from "@/db/schema";
+import { LIST_KEYS, PROFILE_FIELDS, RESOURCES } from "./resources";
+import { listItems } from "./store";
 
 export type Warning = { text: string; href: string };
 export type Count = { label: string; href: string; total: number; onSite: number };
@@ -40,9 +42,19 @@ export function getDashboard(db: Db): Dashboard {
     if (p.sample) warnings.push({ text: `${p.name} shows a sample metric.`, href: `/admin/projects/${p.id}` });
     if (p.featured && p.shot === null) warnings.push({ text: `${p.name} is featured but has no screenshot.`, href: `/admin/projects/${p.id}` });
   }
-  const noAlt = countRows(db, media, eq(media.alt, ""));
-  if (noAlt > 0) {
-    warnings.push({ text: `${noAlt} ${noAlt === 1 ? "image has" : "images have"} no alt text.`, href: "/admin/media" });
+  // Alt text is edited beside each image in its form, so the warning names the item to open.
+  const noAlt = new Set(db.select({ id: media.id }).from(media).where(eq(media.alt, "")).all().map((m) => m.id));
+  if (noAlt.size > 0) {
+    const missing = (fields: readonly { name: string; kind: string }[], row: Record<string, unknown>) =>
+      fields.some((f) => f.kind === "media" && noAlt.has(row[f.name] as number));
+    const owner = db.select().from(profile).get();
+    if (owner && missing(PROFILE_FIELDS, owner)) warnings.push({ text: "Profile has an image with no alt text.", href: "/admin/profile" });
+    for (const key of LIST_KEYS) {
+      const res = RESOURCES[key];
+      for (const row of listItems(db, key)) {
+        if (missing(res.fields, row)) warnings.push({ text: `${res.rowTitle(row)} has an image with no alt text.`, href: `/admin/${key}/${row.id}` });
+      }
+    }
   }
   return { counts, warnings };
 }

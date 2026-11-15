@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Field } from "@/admin/fields";
 import type { MediaOption, MediaOptions } from "@/admin/media-options";
 
@@ -41,7 +41,7 @@ export function FieldInput({ field: f, value, error, media }: Props) {
       </select>
     );
   } else if (f.kind === "media") {
-    control = <MediaPicker key={value} value={value} options={media[f.mediaKind ?? "screenshot"]} a11y={a11y} />;
+    control = <ImageField key={value} name={f.name} label={f.label} value={value} options={media} a11y={a11y} />;
   } else {
     const type = f.kind === "url" ? "url" : f.kind === "email" ? "email" : f.kind === "number" ? "number" : "text";
     control = <input className="adm-input" type={type} step={f.kind === "number" ? "any" : undefined} defaultValue={value} {...a11y} />;
@@ -62,22 +62,80 @@ export function FieldInput({ field: f, value, error, media }: Props) {
 
 type A11y = { id: string; name: string; "aria-invalid"?: boolean; "aria-describedby"?: string };
 
-/** A select of library images with a preview of the picked one; the preview opens the full image in a new tab. */
-function MediaPicker({ value, options, a11y }: { value: string; options: MediaOption[]; a11y: A11y }) {
+const ACCEPT = "image/jpeg,image/png,image/webp,image/avif";
+
+/**
+ * An image field: the image it shows, a button to upload a new one, a picker to reuse one uploaded before, and the
+ * image's alt text. The upload is stored when the form is saved (src/admin/images.ts); until then it only previews.
+ */
+function ImageField({ name, label, value, options, a11y }: { name: string; label: string; value: string; options: MediaOption[]; a11y: A11y }) {
   const [picked, setPicked] = useState(value);
   const current = options.find((o) => String(o.id) === picked);
+  const [file, setFile] = useState<{ url: string; name: string } | null>(null);
+  const [alt, setAlt] = useState(current?.alt ?? "");
+  const fileInput = useRef<HTMLInputElement>(null);
+  const fileUrl = file?.url;
+  useEffect(() => () => { if (fileUrl) URL.revokeObjectURL(fileUrl); }, [fileUrl]);
+
+  const clearFile = () => {
+    if (fileInput.current) fileInput.current.value = "";
+    setFile(null);
+    setAlt(current?.alt ?? "");
+  };
+  const shows = file ? "new" : current ? "picked" : "none";
   return (
-    <div className="adm-pick">
-      <select className="adm-input" defaultValue={value} onChange={(e) => setPicked(e.target.value)} {...a11y}>
-        <option value="">None</option>
-        {options.map((o) => <option key={o.id} value={String(o.id)}>{o.label}</option>)}
-      </select>
-      {current ? (
-        <a className="adm-pick-preview" href={current.full} target="_blank" rel="noreferrer">
-          <img src={current.thumb} alt="" width={current.width} height={current.height} />
-          <span>Open full size<span className="sr-only">, opens in a new tab</span></span>
-        </a>
-      ) : null}
+    <div className="adm-image">
+      <div className="adm-image-preview">
+        {file ? (
+          <img src={file.url} alt="" />
+        ) : current ? (
+          <a href={current.full} target="_blank" rel="noreferrer" title="Open full size in a new tab">
+            <img src={current.thumb} alt="" width={current.width} height={current.height} />
+            <span className="sr-only">Open {label} full size, in a new tab</span>
+          </a>
+        ) : (
+          <span className="adm-image-empty">No image</span>
+        )}
+      </div>
+      <div className="adm-image-controls">
+        <div className="adm-image-row">
+          <label className="adm-mini adm-file">
+            {shows === "none" ? "Upload an image" : "Upload a new one"}
+            <input
+              ref={fileInput} type="file" name={name + "__file"} accept={ACCEPT} className="sr-only"
+              aria-label={`${label}: upload an image`}
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                setFile(f ? { url: URL.createObjectURL(f), name: f.name } : null);
+                if (f) setAlt("");
+              }}
+            />
+          </label>
+          {file ? <button type="button" className="adm-mini" onClick={clearFile}>Cancel upload</button> : null}
+          {!file && current ? <button type="button" className="adm-mini" onClick={() => { setPicked(""); setAlt(""); }}>Remove</button> : null}
+        </div>
+        {file ? <p className="adm-help">{file.name} is uploaded when you save.</p> : null}
+        <div className="adm-image-reuse" hidden={!!file}>
+          <label className="adm-sub" htmlFor={a11y.id}>Or use an image you uploaded before</label>
+          <select
+            className="adm-input" value={picked}
+            onChange={(e) => { setPicked(e.target.value); setAlt(options.find((o) => String(o.id) === e.target.value)?.alt ?? ""); }}
+            {...a11y}
+          >
+            <option value="">None</option>
+            {options.map((o) => <option key={o.id} value={String(o.id)}>{o.label}</option>)}
+          </select>
+        </div>
+        {shows !== "none" ? (
+          <div className="adm-image-alt">
+            <label className="adm-sub" htmlFor={`${a11y.id}-alt`}>Alt text</label>
+            <input
+              className="adm-input" id={`${a11y.id}-alt`} name={name + "__alt"} value={alt} onChange={(e) => setAlt(e.target.value)}
+              placeholder="What the image shows, like: the inbox with two chats open"
+            />
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }

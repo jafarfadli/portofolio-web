@@ -91,13 +91,13 @@ function featuredOthers(db: Db, id: number | null): number {
   return db.select({ n: count() }).from(projects).where(where).get()?.n ?? 0;
 }
 
-/** A picked image must still exist and be the kind the field asks for. Shared by every list and the profile. */
+/** A picked image must still exist. Any image may go in any image field. Shared by every list and the profile. */
 export function checkMedia(db: Db, fields: readonly Field[], values: Record<string, unknown>): Record<string, string> {
   const errors: Record<string, string> = {};
   for (const f of fields) {
     if (f.kind !== "media" || !(f.name in values) || values[f.name] === null) continue;
-    const picked = db.select({ kind: media.kind }).from(media).where(eq(media.id, values[f.name] as number)).get();
-    if (!picked || picked.kind !== f.mediaKind) errors[f.name] = `Pick a ${f.mediaKind} from the media library.`;
+    const picked = db.select({ id: media.id }).from(media).where(eq(media.id, values[f.name] as number)).get();
+    if (!picked) errors[f.name] = "That image is gone. Upload it again or pick another.";
   }
   return errors;
 }
