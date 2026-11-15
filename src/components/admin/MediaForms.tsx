@@ -10,6 +10,14 @@ export function UploadForm() {
   const kind = state.kind ?? "screenshot";
   return (
     <form action={action} className="adm-upload">
+      <div className="adm-field adm-kind">
+        <label htmlFor="up-kind">Kind</label>
+        <select className="adm-input" id="up-kind" name="kind" key={kind} defaultValue={kind}>
+          <option value="screenshot">Screenshot</option>
+          <option value="photo">Photo</option>
+          <option value="logo">Logo</option>
+        </select>
+      </div>
       <div className="adm-field">
         <label htmlFor="up-file">Image</label>
         <input
@@ -19,19 +27,11 @@ export function UploadForm() {
         <p className="adm-help" id="up-file-help">JPEG, PNG, WebP or AVIF up to 15 MB. It is re-encoded, resized copies are made, and location data is removed.</p>
       </div>
       <div className="adm-field">
-        <label htmlFor="up-kind">Kind</label>
-        <select className="adm-input" id="up-kind" name="kind" key={kind} defaultValue={kind}>
-          <option value="screenshot">Screenshot</option>
-          <option value="photo">Photo</option>
-          <option value="logo">Logo</option>
-        </select>
-      </div>
-      <div className="adm-field adm-wide">
         <label htmlFor="up-alt">Alt text</label>
         <input className="adm-input" id="up-alt" name="alt" defaultValue={state.alt ?? ""} aria-describedby="up-alt-help" />
         <p className="adm-help" id="up-alt-help">What the image shows, for people using screen readers.</p>
       </div>
-      <div className="adm-actions adm-wide">
+      <div className="adm-actions">
         <button className="btn btn-ink" type="submit" disabled={pending}>{pending ? "Uploading" : "Upload"}</button>
         <p className="adm-status" id="upload-status" role="status" data-kind={kindOf(state)}>
           {state.error ?? state.notice ?? (state.done ? "Uploaded." : "")}
