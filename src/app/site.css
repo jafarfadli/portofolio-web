@@ -394,7 +394,7 @@ button.feat-tag { cursor: pointer; }
 .leader path { fill: none; stroke: var(--stock); stroke-width: 2.5; vector-effect: non-scaling-stroke; stroke-linecap: round; }
 .lead-dot { position: absolute; z-index: 4; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: var(--stock); border: 3px solid var(--ink); }
 .pin {
-  position: absolute; z-index: 4; background: var(--stock); color: var(--ink); line-height: 1.15; max-width: 300px;
+  position: absolute; z-index: 4; background: var(--stock); color: var(--ink); line-height: 1.15; width: max-content;
   padding: 12px 18px 13px 34px; border-radius: 0 6px 6px 0; translate: 0 -50%;
   clip-path: polygon(16px 0, 100% 0, 100% 100%, 16px 100%, 0 50%);
 }
@@ -410,7 +410,8 @@ button.feat-tag { cursor: pointer; }
 .project.is-half .pin b { font-size: clamp(17px, 2.6vw, 38px); }
 .pin.is-ink span { color: var(--metal); }
 .pin b { display: block; white-space: nowrap; font-size: clamp(26px, 2.6vw, 38px); font-weight: 850; font-variation-settings: "wdth" 112; letter-spacing: -0.02em; font-feature-settings: "tnum" 1; }
-.pin span { display: block; margin-top: 4px; font-size: 13.5px; font-weight: 600; color: var(--ink-2); }
+/* The value never wraps and sets the tag's width; the line under it wraps (160 to 250px, with the viewport) so the tag stays inside narrow fields. */
+.pin span { display: block; max-width: clamp(160px, 17vw, 250px); margin-top: 4px; font-size: 13.5px; font-weight: 600; color: var(--ink-2); }
 .pin.is-big b { font-size: clamp(34px, 3.6vw, 52px); }
 /* The pin hangs from its eyelet: it swings in on the leader line (home-motion.ts), then sways a little, like a tag
    on a string. The sway uses the individual rotate property, so it composes with GSAP's transform. */
