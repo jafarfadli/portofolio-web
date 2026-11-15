@@ -1,5 +1,6 @@
 import { Icon } from "@/components/Icon";
 import { MobileMenu } from "./MobileMenu";
+import { withBase } from "@/lib/base-path";
 
 export const SECTIONS = [
   { href: "#work", label: "Work" },
@@ -18,7 +19,7 @@ export function Nav({ name }: { name: string }) {
         ))}
       </nav>
       <div className="nav-actions">
-        <a className="btn btn-stock" href="/cv">Download CV <Icon name="download" /></a>
+        <a className="btn btn-stock" href={withBase("/cv")}>Download CV <Icon name="download" /></a>
         <MobileMenu sections={SECTIONS} />
       </div>
     </header>

@@ -3,6 +3,9 @@
    One family: Archivo (variable wdth 62 to 125, wght 100 to 900). */
 
 :root {
+  /* woven textures; the layout overrides these with the mount path when the app is served under one (BASE_PATH) */
+  --tex-twill: url("/textures/twill.png");
+  --tex-webbing: url("/textures/webbing.png");
   /* two webbing colourways; every section is sewn from one of them */
   --navy: #1d2640;
   --navy-deep: #151c31;
@@ -105,7 +108,7 @@ button { font: inherit; color: inherit; }
   color: var(--on-ground); caret-color: var(--on-ground);
   background-color: var(--ground);
   /* raster 2/2 twill tile (assets-src/make_textures.py); the first layer is a flat tint, not a gradient */
-  background-image: linear-gradient(var(--twill-tint), var(--twill-tint)), url("/textures/twill.png");
+  background-image: linear-gradient(var(--twill-tint), var(--twill-tint)), var(--tex-twill);
   background-size: auto, 24px 24px;
 }
 /* the seam: each panel is sewn onto the one above it */
@@ -119,7 +122,7 @@ button { font: inherit; color: inherit; }
 .cord.is-on { opacity: 1; }
 .cord::before { content: ""; position: absolute; inset: 0; background: rgba(127, 131, 145, 0.24); border-radius: 3px; }
 .cord-fill { position: absolute; inset: 0; background-color: var(--concrete); box-shadow: inset 0 0 0 1.5px rgba(17, 18, 22, 0.7); border-radius: 3px; transform-origin: top; transform: scaleY(0);
-  background-image: url("/textures/webbing.png"); background-size: 16px 16px; }
+  background-image: var(--tex-webbing); background-size: 16px 16px; }
 
 /* ---------- Buttons ---------- */
 .btn {
@@ -191,7 +194,7 @@ main { position: relative; z-index: 1; }
 .strap {
   position: absolute; top: -60px; left: -15px; width: 30px; height: calc(var(--strap-l) + 24px); /* ends 36px above the ring bar, inside the tab */
   background-color: var(--concrete);
-  background-image: url("/textures/webbing.png"); background-size: 16px 16px;
+  background-image: var(--tex-webbing); background-size: 16px 16px;
   overflow: hidden; transform-origin: 50% 100%;
   box-shadow: inset 2px 0 0 rgba(255, 255, 255, 0.35), inset -3px 0 0 rgba(17, 18, 22, 0.2);
 }
@@ -404,7 +407,7 @@ main { position: relative; z-index: 1; }
 /* each pass carries its own length of the strap, so the two copies join without a seam */
 .ach::before {
   content: ""; position: absolute; left: 0; right: calc(-1 * var(--ach-gap)); top: 0; height: 26px;
-  background: var(--navy) url("/textures/webbing.png") 0 0 / 16px 16px;
+  background: var(--navy) var(--tex-webbing) 0 0 / 16px 16px;
   box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.25), 0 3px 6px -2px rgba(10, 11, 18, 0.35);
 }
 /* a running stitch along both edges of the strap */
@@ -420,7 +423,7 @@ main { position: relative; z-index: 1; }
 .ach-card::before {
   content: ""; position: absolute; z-index: 1; left: 50%; top: -43px; width: 22px; height: 59px; margin-left: -11px;
   background-color: var(--navy);
-  background-image: linear-gradient(rgba(0, 0, 0, 0.3), transparent 9px, transparent calc(100% - 6px), rgba(0, 0, 0, 0.5)), url("/textures/webbing.png");
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), transparent 9px, transparent calc(100% - 6px), rgba(0, 0, 0, 0.5)), var(--tex-webbing);
   background-size: 100% 100%, 16px 16px;
   box-shadow: inset 2px 0 0 rgba(255, 255, 255, 0.12), inset -3px 0 0 rgba(0, 0, 0, 0.25), 0 2px 3px rgba(10, 11, 18, 0.3);
 }

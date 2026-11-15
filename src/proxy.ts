@@ -40,6 +40,7 @@ export function proxy(request: NextRequest) {
   return response;
 }
 
+// The matcher must be statically analyzable, so the prefetch exclusion is written out for each entry.
 export const config = {
   matcher: [
     // The admin guard must see every /admin request, prefetches included.
@@ -48,6 +49,14 @@ export const config = {
     // Nonces for every rendered page. Static files, uploads and API routes skip the proxy.
     {
       source: "/((?!_next/static|_next/image|media/|api/|icon.svg|favicon.ico).*)",
+      missing: [
+        { type: "header", key: "next-router-prefetch" },
+        { type: "header", key: "purpose", value: "prefetch" },
+      ],
+    },
+    // Under a basePath the pattern above only matches "<base>/...", not the bare "<base>"; Next maps "/" to the bare base.
+    {
+      source: "/",
       missing: [
         { type: "header", key: "next-router-prefetch" },
         { type: "header", key: "purpose", value: "prefetch" },

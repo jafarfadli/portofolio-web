@@ -3,6 +3,7 @@ import { IconSticker } from "@/components/IconSticker";
 import type { Profile } from "@/content/home";
 import { fullName } from "@/lib/name";
 import { SectionHead } from "./SectionHead";
+import { withBase } from "@/lib/base-path";
 
 export function Closing({ profile: p }: { profile: Profile }) {
   return (
@@ -11,7 +12,7 @@ export function Closing({ profile: p }: { profile: Profile }) {
       <p className="sub">{p.closingLine}</p>
       <div className="hero-actions">
         <a className="btn btn-stock" href={`mailto:${p.email}`}>Email me <Icon name="mail" /></a>
-        <a className="btn btn-line" href="/cv">Download CV <Icon name="download" /></a>
+        <a className="btn btn-line" href={withBase("/cv")}>Download CV <Icon name="download" /></a>
       </div>
       <div className="socials">
         <a href={p.githubUrl}><Icon name="github" /><span>GitHub</span></a>

@@ -4,6 +4,7 @@ import type { HomeContent } from "@/content/home";
 import { iconCount } from "@/lib/inline";
 import { statementLines } from "@/lib/statement";
 import { displayUrl } from "@/lib/url";
+import { withBase } from "@/lib/base-path";
 
 const SLOTS = ["s-a", "s-b", "s-c", "s-d"] as const;
 /** The three screens float in a row along the hero's bottom edge, so their captions open above them. */
@@ -41,7 +42,7 @@ export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: 
           {/* the tab: both lengths sewn flat into one end with a box-and-cross stitch, folded under round the ring bar */}
           <svg className="hw hw-tab" viewBox="0 0 64 46" aria-hidden="true">
             <defs>
-              <pattern id="webbing-tab" patternUnits="userSpaceOnUse" width="16" height="16"><rect width="16" height="16" fill="#e5e4df" /><image href="/textures/webbing.png" width="16" height="16" /></pattern>
+              <pattern id="webbing-tab" patternUnits="userSpaceOnUse" width="16" height="16"><rect width="16" height="16" fill="#e5e4df" /><image href={withBase("/textures/webbing.png")} width="16" height="16" /></pattern>
               <linearGradient id="tab-fold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#111216" stopOpacity="0" /><stop offset="1" stopColor="#111216" stopOpacity="0.26" /></linearGradient>
             </defs>
             <path fill="url(#webbing-tab)" d="M16 0H48V40.6Q48 44 44.6 44H19.4Q16 44 16 40.6Z" />
@@ -112,7 +113,7 @@ export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: 
                   <div className="qr">
                     <img src={qrDataUrl} alt="QR code linking to the CV page" width={196} height={196} />
                   </div>
-                  <a className="btn btn-ink" href="/cv">Download CV <Icon name="download" /></a>
+                  <a className="btn btn-ink" href={withBase("/cv")}>Download CV <Icon name="download" /></a>
                   <div className="back-links">
                     <a href={`mailto:${p.email}`}><Icon name="mail" /><span>{p.email}</span></a>
                     <a href={p.githubUrl}><Icon name="github" /><span>{displayUrl(p.githubUrl)}</span></a>
@@ -157,7 +158,7 @@ export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: 
         </p>
         <div className="hero-actions">
           <a className="btn btn-stock" href="#work">See the work <Icon name="arrow-ur" /></a>
-          <a className="btn btn-line" href="/cv">Download CV <Icon name="download" /></a>
+          <a className="btn btn-line" href={withBase("/cv")}>Download CV <Icon name="download" /></a>
         </div>
       </div>
     </section>

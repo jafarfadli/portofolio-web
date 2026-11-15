@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
+import { withBase } from "@/lib/base-path";
 
 type Section = { href: string; label: string };
 
@@ -43,7 +44,7 @@ export function MobileMenu({ sections }: { sections: readonly Section[] }) {
             </a>
           ))}
         </nav>
-        <a className="btn btn-ink" href="/cv" onClick={() => setOpen(false)}>Download CV</a>
+        <a className="btn btn-ink" href={withBase("/cv")} onClick={() => setOpen(false)}>Download CV</a>
       </div>
     </>
   );

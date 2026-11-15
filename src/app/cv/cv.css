@@ -3,7 +3,7 @@
 .cv-page {
   --paper: #ffffff; --rule: #d9d9d4; --metal: #a7abb7; /* the mockup's clip metal, not the site's lighter --metal */
   min-height: 100vh; color: var(--ink);
-  background: var(--navy) url("/textures/twill.png") 0 0 / 24px 24px;
+  background: var(--navy) var(--tex-twill) 0 0 / 24px 24px;
 }
 .cv-bar {
   position: sticky; top: 0; z-index: 5; display: flex; justify-content: space-between; align-items: center; gap: 16px;
@@ -25,7 +25,7 @@
 .cv-sheet ::selection { background: var(--navy); color: var(--stock); }
 .cv-sheet :focus-visible { outline-color: var(--ink); }
 /* the strap end: a band of navy webbing across the top of the sheet */
-.cv-sheet::before { content: ""; display: block; height: 6mm; margin: 0 -15mm; background: var(--navy) url("/textures/twill.png") 0 0 / 24px 24px; }
+.cv-sheet::before { content: ""; display: block; height: 6mm; margin: 0 -15mm; background: var(--navy) var(--tex-twill) 0 0 / 24px 24px; }
 /* punched slot, as on the badge */
 .cv-slot { display: block; width: 17mm; height: 3mm; margin: 3mm auto 2mm; border-radius: 2mm; background: var(--navy-deep); }
 
@@ -85,7 +85,7 @@
 .cv-skills b { display: inline-block; width: 24mm; font-size: 8.4pt; font-weight: 800; }
 .cv-skills .chips { display: inline; }
 /* foot: the other end of the strap */
-.cv-foot { position: absolute; left: 0; right: 0; bottom: 0; height: 3mm; background: var(--navy) url("/textures/twill.png") 0 0 / 24px 24px; }
+.cv-foot { position: absolute; left: 0; right: 0; bottom: 0; height: 3mm; background: var(--navy) var(--tex-twill) 0 0 / 24px 24px; }
 
 @media (max-width: 860px) {
   .cv-stage { padding: 16px 0 48px; overflow-x: auto; }

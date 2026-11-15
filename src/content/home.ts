@@ -1,5 +1,6 @@
 import "server-only";
 import type { Db } from "@/db/client";
+import { BASE_PATH } from "@/lib/base-path";
 import { achievements, activities, education, experiences, media, profile, projects, skills } from "@/db/schema";
 
 export type MediaRef = { url: string; width: number; height: number; alt: string; srcSet?: string };
@@ -29,7 +30,7 @@ export type HomeContent = {
 };
 
 export function mediaUrl(relPath: string): string {
-  return `/media/${relPath.split("/").map(encodeURIComponent).join("/")}`;
+  return `${BASE_PATH}/media/${relPath.split("/").map(encodeURIComponent).join("/")}`;
 }
 
 /** Uploads carry WebP variants; seeded media has none, so srcSet stays undefined and <img> uses src alone. */

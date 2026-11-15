@@ -1,4 +1,6 @@
 /** Plain module (no server-only, no database) so the proxy and the server code share one definition. */
+import { BASE_PATH } from "@/lib/base-path";
+
 export const SESSION_COOKIE = "pf_admin";
 export const SESSION_DAYS = 14;
 const DAY = 86_400_000;
@@ -16,7 +18,8 @@ export function sessionCookieOptions(expires: Date, nodeEnv: string | undefined 
     httpOnly: true,
     secure: nodeEnv !== "development",
     sameSite: "strict" as const,
-    path: "/",
+    // Scoped to the mount path so the session is never sent to the other apps on this hostname.
+    path: BASE_PATH || "/",
     expires,
   };
 }

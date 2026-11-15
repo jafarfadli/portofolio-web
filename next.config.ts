@@ -8,7 +8,18 @@ const securityHeaders = [
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
 ];
 
+/**
+ * Optional mount path (BASE_PATH=/portofolio) for serving under a sub-path. Build-time: it is inlined into the bundles.
+ * Exposed to code as NEXT_PUBLIC_BASE_PATH through src/lib/base-path.ts.
+ */
+const basePath = process.env.BASE_PATH ?? "";
+if (basePath && !/^\/[A-Za-z0-9._~-]+(\/[A-Za-z0-9._~-]+)*$/.test(basePath)) {
+  throw new Error(`BASE_PATH must look like /portofolio (leading slash, no trailing slash), got "${basePath}"`);
+}
+
 const nextConfig: NextConfig = {
+  basePath: basePath || undefined,
+  env: { NEXT_PUBLIC_BASE_PATH: basePath },
   serverExternalPackages: ["better-sqlite3"],
   poweredByHeader: false,
   experimental: {
