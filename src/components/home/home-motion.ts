@@ -439,15 +439,24 @@ export function initHomeMotion(doc: Document): () => void {
         reel.setAttribute("aria-label", "Achievements, scroll sideways");
         ac.signal.addEventListener("abort", () => { if (label !== null) reel.setAttribute("aria-label", label); });
       }
-      // Hover slows the strap to a stroll instead of stopping it (keyboard focus and leaving the screen still stop it,
-      // in CSS). The rate is eased on the running CSS animation itself.
-      if (!reduce && finePointer) {
+      // Hover, a click or a tap slow the strap to a stroll instead of stopping it; it eases back to pace when the
+      // pointer leaves, or a moment after a tap. Keyboard focus and leaving the screen still stop it, in CSS.
+      // The rate is eased on the running CSS animation itself.
+      if (!reduce) {
         const speed = { r: 1 };
+        let hovering = false;
+        let back = 0;
         const setRate = () => track.getAnimations().forEach((a) => { a.playbackRate = speed.r; });
         const ease = (to: number) => gsap.to(speed, { r: to, duration: 0.8, ease: "power2.out", overwrite: true, onUpdate: setRate });
-        on(reel, "pointerenter", () => ease(0.25));
-        on(reel, "pointerleave", () => ease(1));
-        ac.signal.addEventListener("abort", () => { speed.r = 1; setRate(); });
+        const resumeSoon = (ms: number) => { win.clearTimeout(back); back = win.setTimeout(() => { if (!hovering) ease(1); }, ms); };
+        if (finePointer) {
+          on(reel, "pointerenter", () => { hovering = true; win.clearTimeout(back); ease(0.25); });
+          on(reel, "pointerleave", () => { hovering = false; ease(1); });
+        }
+        on(reel, "pointerdown", () => { win.clearTimeout(back); ease(0.25); });
+        on(reel, "pointerup", () => { if (!hovering) resumeSoon(1800); });
+        on(reel, "pointercancel", () => { if (!hovering) resumeSoon(1800); });
+        ac.signal.addEventListener("abort", () => { win.clearTimeout(back); speed.r = 1; setRate(); });
       }
       // Each pass flips through its photos, a few seconds apart and out of step with its neighbours. A pass and its
       // clone turn together, so the loop's seam never shows two different photos. Nothing turns under reduced motion,
@@ -460,7 +469,7 @@ export function initHomeMotion(doc: Document): () => void {
           if (count < 2) return;
           let at = 0;
           const turn = () => {
-            if (reel.matches(":focus-within") || reel.classList.contains("is-offscreen") || doc.hidden) return;
+            if (reel.matches(":focus-visible, :has(:focus-visible)") || reel.classList.contains("is-offscreen") || doc.hidden) return;
             at = (at + 1) % count;
             pair.forEach((st) => {
               st.querySelectorAll(".ach-photo").forEach((im, i) => im.classList.toggle("is-on", i === at));

@@ -375,6 +375,8 @@ main { position: relative; z-index: 1; }
 .pin.points-r::before { left: auto; right: 13px; }
 .pin.is-ink { background: var(--ink); color: var(--stock); }
 .project.is-half .pin { max-width: 44%; }
+/* Half cards are narrow on phones: the metric shrinks before it can run past the card edge. */
+.project.is-half .pin b { font-size: clamp(17px, 2.6vw, 38px); }
 .pin.is-ink span { color: var(--metal); }
 .pin b { display: block; white-space: nowrap; font-size: clamp(26px, 2.6vw, 38px); font-weight: 850; font-variation-settings: "wdth" 112; letter-spacing: -0.02em; font-feature-settings: "tnum" 1; }
 .pin span { display: block; margin-top: 4px; font-size: 13.5px; font-weight: 600; color: var(--ink-2); }
@@ -398,8 +400,8 @@ main { position: relative; z-index: 1; }
 /* runs from the right edge to the page cord, and the passes slip away behind the cord (on phones, where there is no cord, edge to edge) */
 .reel { position: relative; margin: 0 calc(-1 * var(--gutter-r)) 0 calc(var(--cord-x) + 3px - var(--gutter)); overflow: hidden; padding-bottom: 40px; }
 .reel-track { display: flex; width: max-content; animation: reel var(--reel-dur, 70s) linear infinite; }
-/* hover only slows it (home-motion.ts eases the playback rate); keyboard focus and leaving the screen stop it */
-.reel:focus-within .reel-track, .reel.is-offscreen .reel-track { animation-play-state: paused; }
+/* hover, a click or a tap only slow it (home-motion.ts eases the playback rate); keyboard focus and leaving the screen stop it */
+.reel:focus-visible .reel-track, .reel:has(:focus-visible) .reel-track, .reel.is-offscreen .reel-track { animation-play-state: paused; }
 /* the strip itself takes focus (it is the stop); it runs to the screen edge (on phones, both edges), so its ring is drawn just inside it */
 .reel:focus-visible { outline-offset: -3px; }
 @keyframes reel { to { transform: translateX(-50%); } }
@@ -525,6 +527,8 @@ main { position: relative; z-index: 1; }
   .project.is-half { grid-column: span 12; }
   .project-body { grid-template-columns: 1fr; }
   .project-field { aspect-ratio: 4 / 3.2; }
+  /* wide cards share the phone field with half cards, so their print takes the half-card frame (16:10, uncropped) */
+  .project:not(.is-half) .print { left: 6% !important; top: 16% !important; width: 76% !important; height: 61% !important; }
   .stop { grid-template-columns: 1fr; gap: 6px; }
   .agenda .row { grid-template-columns: 1fr; gap: 10px; }
   .agenda .yr { order: -1; }
@@ -626,3 +630,11 @@ html.motion-pending .pendulum { transform: translateY(-100vh); }
 }
 .first-run-card h1 { font-size: clamp(30px, 2.9vw, 44px); line-height: 1.05; font-weight: 850; font-variation-settings: "wdth" 112; letter-spacing: -0.02em; }
 .first-run-card p { margin-top: 12px; color: var(--ink-2); }
+
+/* phones: smaller passes, so more than one is in view as the strap runs past */
+@media (max-width: 860px) {
+  .ach { width: min(62vw, 240px); }
+  .ach-card h3 { font-size: 19px; font-variation-settings: "wdth" 100; }
+  .ach-body > p:last-child { font-size: 13.5px; }
+  .ach-year { font-size: 13.5px; }
+}

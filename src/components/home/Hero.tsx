@@ -83,7 +83,7 @@ export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: 
             <div className="badge-inner">
               <div className="face front on-stock" data-face="front">
                 <span className="slot" aria-hidden="true" />
-                <p className="badge-head"><span>{displayUrl(p.siteUrl)}</span><span>Portfolio</span></p>
+                <p className="badge-head"><span>{badgeAddress(p)}</span><span>Portfolio</span></p>
                 <div className={photo ? "badge-id" : "badge-id no-photo"}>
                   {photo ? (
                     <img className="badge-photo" src={photo.url} srcSet={photo.srcSet} sizes="120px" alt={photo.alt} width={photo.width} height={photo.height} />
@@ -163,4 +163,10 @@ export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: 
       </div>
     </section>
   );
+}
+
+/** The badge band fits about 24 characters. A longer site address (no custom domain yet) shows the GitHub profile instead. */
+function badgeAddress(p: { siteUrl: string; githubUrl: string }): string {
+  const site = displayUrl(p.siteUrl);
+  return site.length <= 24 ? site : displayUrl(p.githubUrl);
 }
