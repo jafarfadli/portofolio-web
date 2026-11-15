@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Field } from "@/admin/fields";
 import type { MediaOption, MediaOptions } from "@/admin/media-options";
+import { formatBytes, shrinkImage } from "./shrink-image";
 
 type Props = { field: Field; value: string; error?: string; media: MediaOptions };
 
@@ -71,16 +72,37 @@ const ACCEPT = "image/jpeg,image/png,image/webp,image/avif";
 function ImageField({ name, label, value, options, a11y }: { name: string; label: string; value: string; options: MediaOption[]; a11y: A11y }) {
   const [picked, setPicked] = useState(value);
   const current = options.find((o) => String(o.id) === picked);
-  const [file, setFile] = useState<{ url: string; name: string } | null>(null);
+  const [file, setFile] = useState<{ url: string; name: string; size: number } | null>(null);
+  const [preparing, setPreparing] = useState(false);
   const [alt, setAlt] = useState(current?.alt ?? "");
   const fileInput = useRef<HTMLInputElement>(null);
+  const picks = useRef(0);
   const fileUrl = file?.url;
   useEffect(() => () => { if (fileUrl) URL.revokeObjectURL(fileUrl); }, [fileUrl]);
 
   const clearFile = () => {
+    picks.current++;
     if (fileInput.current) fileInput.current.value = "";
     setFile(null);
+    setPreparing(false);
     setAlt(current?.alt ?? "");
+  };
+  const pick = async (input: HTMLInputElement) => {
+    const original = input.files?.[0];
+    const turn = ++picks.current;
+    if (!original) return clearFile();
+    setAlt("");
+    setPreparing(true);
+    const f = await shrinkImage(original);
+    if (turn !== picks.current) return; // picked again or cancelled while this one was being scaled
+    if (f !== original) {
+      // The form sends what the input holds, so the smaller copy replaces the picked file there.
+      const dt = new DataTransfer();
+      dt.items.add(f);
+      input.files = dt.files;
+    }
+    setFile({ url: URL.createObjectURL(f), name: original.name, size: f.size });
+    setPreparing(false);
   };
   const shows = file ? "new" : current ? "picked" : "none";
   return (
@@ -103,18 +125,15 @@ function ImageField({ name, label, value, options, a11y }: { name: string; label
             {shows === "none" ? "Upload an image" : "Upload a new one"}
             <input
               ref={fileInput} type="file" name={name + "__file"} accept={ACCEPT} className="sr-only"
-              aria-label={`${label}: upload an image`}
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                setFile(f ? { url: URL.createObjectURL(f), name: f.name } : null);
-                if (f) setAlt("");
-              }}
+              aria-label={`${label}: upload an image`} data-preparing={preparing || undefined}
+              onChange={(e) => void pick(e.currentTarget)}
             />
           </label>
-          {file ? <button type="button" className="adm-mini" onClick={clearFile}>Cancel upload</button> : null}
-          {!file && current ? <button type="button" className="adm-mini" onClick={() => { setPicked(""); setAlt(""); }}>Remove</button> : null}
+          {file || preparing ? <button type="button" className="adm-mini" onClick={clearFile}>Cancel upload</button> : null}
+          {!file && !preparing && current ? <button type="button" className="adm-mini" onClick={() => { setPicked(""); setAlt(""); }}>Remove</button> : null}
         </div>
-        {file ? <p className="adm-help">{file.name} is uploaded when you save.</p> : null}
+        {preparing ? <p className="adm-help">Preparing the image…</p> : null}
+        {file ? <p className="adm-help">{file.name} ({formatBytes(file.size)}) is uploaded when you save.</p> : null}
         <div className="adm-image-reuse" hidden={!!file}>
           <label className="adm-sub" htmlFor={a11y.id}>Or use an image you uploaded before</label>
           <select

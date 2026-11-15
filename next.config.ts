@@ -23,9 +23,10 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["better-sqlite3"],
   poweredByHeader: false,
   experimental: {
-    // Uploads go through a server action: a 15 MB cap plus multipart overhead. The proxy buffers bodies too.
-    serverActions: { bodySizeLimit: "16mb" },
-    proxyClientMaxBodySize: "16mb",
+    // Uploads go through the save action, up to five images per form. The browser scales each one down first
+    // (src/components/admin/shrink-image.ts) and refuses to send more than 36 MB. The proxy buffers bodies too.
+    serverActions: { bodySizeLimit: "40mb" },
+    proxyClientMaxBodySize: "40mb",
   },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
