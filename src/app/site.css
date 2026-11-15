@@ -412,6 +412,15 @@ button.feat-tag { cursor: pointer; }
 .pin b { display: block; white-space: nowrap; font-size: clamp(26px, 2.6vw, 38px); font-weight: 850; font-variation-settings: "wdth" 112; letter-spacing: -0.02em; font-feature-settings: "tnum" 1; }
 .pin span { display: block; margin-top: 4px; font-size: 13.5px; font-weight: 600; color: var(--ink-2); }
 .pin.is-big b { font-size: clamp(34px, 3.6vw, 52px); }
+/* The pin hangs from its eyelet: it swings in on the leader line (home-motion.ts), then sways a little, like a tag
+   on a string. The sway uses the individual rotate property, so it composes with GSAP's transform. */
+.pin { transform-origin: 18px 50%; }
+.pin.points-r { transform-origin: calc(100% - 18px) 50%; }
+.pin.is-hung { animation: pin-sway 6.4s ease-in-out infinite alternate; }
+.project:nth-child(2n) .pin.is-hung { animation-duration: 7.3s; animation-delay: -2.1s; }
+@keyframes pin-sway { from { rotate: -1.1deg; } to { rotate: 1.4deg; } }
+/* The counting number sits inside the value; it must not take the label line's span styles. */
+.pin b .pin-n { display: inline; margin: 0; font: inherit; color: inherit; }
 
 .project-body { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px 40px; align-items: end; padding: clamp(22px, 2.4vw, 34px); }
 .project.is-half .project-body { grid-template-columns: 1fr; }
@@ -619,6 +628,7 @@ html.motion-pending .pendulum { transform: translateY(-100vh); }
   .leader, .lead-dot { display: none; }
   .pin, .pin.points-r { left: auto !important; top: auto !important; right: 12px; bottom: 12px; max-width: 66%; translate: none; padding: 10px 12px 10px 30px; clip-path: polygon(16px 0, 100% 0, 100% 100%, 16px 100%, 0 50%); border-radius: 0 6px 6px 0; }
   .pin.points-r::before { left: 11px; right: auto; }
+  .pin, .pin.points-r { transform-origin: 16px 50%; }
   .clip-mark { display: none; }
   .cord { display: none; } /* the cord rules the desktop page; on phones it only crossed the hero */
   .reel { margin-left: calc(-1 * var(--gutter)); }

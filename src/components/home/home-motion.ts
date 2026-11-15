@@ -399,21 +399,40 @@ export function initHomeMotion(doc: Document): () => void {
       }
     }
 
-    /* ---------- Work: leader lines draw to the result ---------- */
+    /* ---------- Work: leader lines draw to the result, and the result tag swings in ---------- */
+    // The dot pops, the line draws, then the tag drops onto it from its eyelet and swings to rest while its number
+    // counts to the result. At rest it sways (CSS .is-hung), and a pointer entering the card flicks it.
     if (!reduce) {
       doc.querySelectorAll<HTMLElement>(".project").forEach((card) => {
         const path = card.querySelector(".leader path");
         const dot = card.querySelector(".lead-dot");
-        const pin = card.querySelector(".pin");
+        const pin = card.querySelector<HTMLElement>(".pin");
         if (!path || !dot || !pin) return;
+        const count = pinCounter(pin);
         gsap.set(path, { strokeDasharray: 1, strokeDashoffset: 1 });
         gsap.set(dot, { opacity: 0 });
-        gsap.set(pin, { opacity: 0, y: 10, scale: 0.96 });
+        gsap.set(pin, { opacity: 0, rotation: pin.classList.contains("points-r") ? 16 : -16 });
+        count?.reset();
+        let hung = false;
         gsap
           .timeline({ scrollTrigger: { trigger: card, start: "top 72%", once: true } })
           .fromTo(dot, { scale: 0 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" })
           .to(path, { strokeDashoffset: 0, duration: 0.8, ease: "power2.inOut" }, 0.05)
-          .to(pin, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "expo.out" }, 0.62);
+          .to(pin, { opacity: 1, duration: 0.25, ease: "power1.out" }, 0.62)
+          .to(pin, {
+            rotation: 0, duration: 1.5, ease: "elastic.out(1, 0.32)",
+            onComplete: () => { gsap.set(pin, { clearProps: "transform" }); pin.classList.add("is-hung"); hung = true; },
+          }, 0.62)
+          .add(() => count?.run(), 0.7);
+        if (finePointer) {
+          on(card, "pointerenter", () => {
+            if (!hung) return;
+            gsap.fromTo(pin, { rotation: pin.classList.contains("points-r") ? -5 : 5 }, {
+              rotation: 0, duration: 1.2, ease: "elastic.out(1, 0.3)", overwrite: "auto",
+              onComplete: () => { gsap.set(pin, { clearProps: "transform" }); },
+            });
+          });
+        }
       });
     }
 
@@ -607,4 +626,59 @@ export function initHomeMotion(doc: Document): () => void {
     throw err;
   }
   return teardown;
+}
+
+const ORDINAL = (n: number) => {
+  const t = n % 100;
+  if (t >= 11 && t <= 13) return "th";
+  return ["th", "st", "nd", "rd"][n % 10] ?? "th";
+};
+
+/**
+ * Makes the first number in a result tag count to its value: up from 0 ("16 agents"), down from the field for a rank
+ * ("1st of 40" runs 40th, 39th ... 1st), and down from 9 to a zero ("0 terminals"). The tag is sized to its final
+ * text first, so it does not resize while counting. Values without a number, or with a huge one, stay as written.
+ */
+function pinCounter(pin: HTMLElement): { reset: () => void; run: () => void } | null {
+  const b = pin.querySelector("b");
+  const text = b?.textContent ?? "";
+  if (!b) return null;
+  const rank = /^(\D*?)(\d+)(st|nd|rd|th)(\s+of\s+)(\d+)(.*)$/i.exec(text);
+  const plain = /^(\D*?)(\d+(?:[.,]\d+)?)(.*)$/.exec(text);
+  let before: string, after: string, to: number, from: number, decimals = 0, suffix = false;
+  if (rank) {
+    [before, after] = [rank[1], rank[4] + rank[5] + rank[6]];
+    to = Number(rank[2]);
+    from = Number(rank[5]);
+    suffix = true;
+  } else if (plain) {
+    const raw = plain[2].replace(",", ".");
+    decimals = raw.includes(".") ? raw.split(".")[1].length : 0;
+    [before, after] = [plain[1], plain[3]];
+    to = Number(raw);
+    from = to === 0 ? 9 : 0;
+  } else return null;
+  if (!Number.isFinite(to) || to > 99_999 || from === to) return null;
+  const sep = plain && !rank && plain[2].includes(",") ? "," : ".";
+  const show = (v: number) => {
+    const n = decimals ? v.toFixed(decimals).replace(".", sep) : String(Math.round(v));
+    return suffix ? n + ORDINAL(Math.round(v)) : n;
+  };
+  const num = pin.ownerDocument.createElement("span");
+  num.className = "pin-n";
+  b.replaceChildren(before, num, after);
+  num.textContent = show(to);
+  b.style.minWidth = `${Math.ceil(b.getBoundingClientRect().width)}px`;
+  const state = { v: from };
+  return {
+    reset: () => { state.v = from; num.textContent = show(from); },
+    run: () => {
+      gsap.to(state, {
+        v: to, duration: suffix ? 1.3 : 1.1, ease: "power3.out",
+        onUpdate: () => { num.textContent = show(state.v); },
+        // The fixed width only matters while counting; afterwards the tag follows the type again (resizes, phones).
+        onComplete: () => { num.textContent = show(to); b.style.minWidth = ""; },
+      });
+    },
+  };
 }
