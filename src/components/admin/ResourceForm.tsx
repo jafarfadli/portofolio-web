@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { Fragment, useActionState } from "react";
 import type { FormState } from "@/admin/actions";
 import type { Field } from "@/admin/fields";
 import type { MediaOptions } from "@/admin/media-options";
@@ -35,12 +35,28 @@ export function ResourceForm({ fields, initial, action, media, submitLabel, just
       : state.status === "error"
         ? (state.message ?? `Fix ${fieldErrors} ${fieldErrors === 1 ? "field" : "fields"} below.`)
         : "";
+  const input = (f: Field) => (
+    <FieldInput key={f.name} field={f} value={values[f.name] ?? ""} error={state.errors[f.name]} media={media} />
+  );
+  const main = fields.filter((f) => !f.more);
+  const more = fields.filter((f) => f.more);
+  // A closed group would hide an error, so it opens when one of its fields fails.
+  const moreHasError = more.some((f) => state.errors[f.name]);
   return (
     <form action={formAction} className="adm-form" noValidate>
       <p className="adm-status" data-kind={kind} role="status">{message}</p>
-      {fields.map((f) => (
-        <FieldInput key={f.name} field={f} value={values[f.name] ?? ""} error={state.errors[f.name]} media={media} />
+      {main.map((f) => (
+        <Fragment key={f.name}>
+          {f.section ? <h2 className="adm-section">{f.section}</h2> : null}
+          {input(f)}
+        </Fragment>
       ))}
+      {more.length > 0 ? (
+        <details className="adm-more" open={moreHasError || undefined} key={moreHasError ? "open" : "closed"}>
+          <summary>More options <span className="adm-optional">({more.map((f) => f.label).join(", ")})</span></summary>
+          <div className="adm-more-body">{more.map(input)}</div>
+        </details>
+      ) : null}
       <div className="adm-actions">
         <button className="btn btn-ink" type="submit" disabled={pending}>{pending ? "Saving" : submitLabel}</button>
       </div>

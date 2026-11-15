@@ -64,7 +64,7 @@ export function CvDocument({ cv }: { cv: CvContent }) {
               <div key={pr.id} className="cv-entry">
                 <div className="cv-row">
                   <span>
-                    <b>{pr.name}</b>, {pr.cvTitle}{" "}
+                    <b>{pr.name}</b>{pr.cvTitle ? `, ${pr.cvTitle}` : ""}{" "}
                     <span className="tags">
                       {pr.tags.map((t, i) => (
                         <Fragment key={`${t}-${i}`}>{i > 0 ? " " : ""}<span>{t}</span></Fragment>

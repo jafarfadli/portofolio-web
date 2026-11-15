@@ -58,9 +58,12 @@ export function seed(db: Db, opts: { assetsDir: string; uploadsDir: string }): v
       .run();
 
     seedProjects.forEach((p, i) => {
-      const { screenshot, ...rest } = p;
+      const { screenshot, phoneShot, ...rest } = p;
       tx.insert(projects)
-        .values({ ...rest, sortOrder: i + 1, featured: true, metricIsSample: true, screenshotId: mediaId(screenshot) })
+        .values({
+          ...rest, sortOrder: i + 1, featured: true, metricIsSample: true, screenshotId: mediaId(screenshot),
+          phoneShotId: phoneShot ? mediaId(phoneShot) : null,
+        })
         .run();
     });
 

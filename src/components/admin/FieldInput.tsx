@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import type { Field } from "@/admin/fields";
-import type { MediaOptions } from "@/admin/media-options";
+import type { MediaOption, MediaOptions } from "@/admin/media-options";
 
 type Props = { field: Field; value: string; error?: string; media: MediaOptions };
 
@@ -36,16 +37,11 @@ export function FieldInput({ field: f, value, error, media }: Props) {
   } else if (f.kind === "enum") {
     control = (
       <select key={value} className="adm-input" defaultValue={value} {...a11y}>
-        {(f.options ?? []).map((o) => <option key={o} value={o}>{o}</option>)}
+        {(f.options ?? []).map((o) => <option key={o} value={o}>{f.optionLabels?.[o] ?? o}</option>)}
       </select>
     );
   } else if (f.kind === "media") {
-    control = (
-      <select key={value} className="adm-input" defaultValue={value} {...a11y}>
-        <option value="">None</option>
-        {media[f.mediaKind ?? "screenshot"].map((o) => <option key={o.id} value={String(o.id)}>{o.label}</option>)}
-      </select>
-    );
+    control = <MediaPicker key={value} value={value} options={media[f.mediaKind ?? "screenshot"]} a11y={a11y} />;
   } else {
     const type = f.kind === "url" ? "url" : f.kind === "email" ? "email" : f.kind === "number" ? "number" : "text";
     control = <input className="adm-input" type={type} step={f.kind === "number" ? "any" : undefined} defaultValue={value} {...a11y} />;
@@ -60,6 +56,28 @@ export function FieldInput({ field: f, value, error, media }: Props) {
       {control}
       {err}
       {help}
+    </div>
+  );
+}
+
+type A11y = { id: string; name: string; "aria-invalid"?: boolean; "aria-describedby"?: string };
+
+/** A select of library images with a preview of the picked one; the preview opens the full image in a new tab. */
+function MediaPicker({ value, options, a11y }: { value: string; options: MediaOption[]; a11y: A11y }) {
+  const [picked, setPicked] = useState(value);
+  const current = options.find((o) => String(o.id) === picked);
+  return (
+    <div className="adm-pick">
+      <select className="adm-input" defaultValue={value} onChange={(e) => setPicked(e.target.value)} {...a11y}>
+        <option value="">None</option>
+        {options.map((o) => <option key={o.id} value={String(o.id)}>{o.label}</option>)}
+      </select>
+      {current ? (
+        <a className="adm-pick-preview" href={current.full} target="_blank" rel="noreferrer">
+          <img src={current.thumb} alt="" width={current.width} height={current.height} />
+          <span>Open full size<span className="sr-only">, opens in a new tab</span></span>
+        </a>
+      ) : null}
     </div>
   );
 }

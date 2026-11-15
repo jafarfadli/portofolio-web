@@ -447,7 +447,8 @@ main { position: relative; z-index: 1; }
 .rank.is-finalist { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
 .ach-year { font-size: 15px; font-weight: 800; color: var(--ink-2); white-space: nowrap; font-feature-settings: "tnum" 1; }
 .ach-card h3 { margin-top: 12px; font-size: 24px; line-height: 1.05; font-weight: 850; font-variation-settings: "wdth" 115; letter-spacing: -0.02em; text-wrap: balance; }
-.ach-body > p:last-child { margin-top: 6px; font-size: 15px; line-height: 1.4; font-weight: 550; color: var(--ink-2); }
+.ach-org { margin-top: 6px; font-size: 13px; line-height: 1.3; font-weight: 750; letter-spacing: 0.04em; text-transform: uppercase; font-variation-settings: "wdth" 85; }
+.ach-story { margin-top: 6px; font-size: 15px; line-height: 1.4; font-weight: 550; color: var(--ink-2); }
 
 /* ---------- Activities: the agenda ---------- */
 .agenda { border-top: 2px solid var(--line-strong); }
@@ -635,6 +636,7 @@ html.motion-pending .pendulum { transform: translateY(-100vh); }
 @media (max-width: 860px) {
   .ach { width: min(62vw, 240px); }
   .ach-card h3 { font-size: 19px; font-variation-settings: "wdth" 100; }
-  .ach-body > p:last-child { font-size: 13.5px; }
+  .ach-story { font-size: 13.5px; }
+  .ach-org { font-size: 12px; }
   .ach-year { font-size: 13.5px; }
 }

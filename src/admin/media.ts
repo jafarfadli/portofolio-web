@@ -105,6 +105,7 @@ export function mediaUsage(db: Db, id: number): string[] {
     ...(owner?.photoId === id ? ["Profile, badge photo"] : []),
     ...(owner?.cvPhotoId === id ? ["Profile, CV photo"] : []),
     ...db.select({ name: projects.name }).from(projects).where(eq(projects.screenshotId, id)).all().map((r) => r.name),
+    ...db.select({ name: projects.name }).from(projects).where(eq(projects.phoneShotId, id)).all().map((r) => `${r.name}, phone`),
     ...db
       .select({ name: achievements.title })
       .from(achievements)

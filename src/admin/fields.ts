@@ -13,6 +13,12 @@ export type Field = {
   empty?: "null" | "blank";
   help?: string;
   options?: readonly string[];
+  /** What the select shows for each option; the stored value stays the option itself. */
+  optionLabels?: Readonly<Record<string, string>>;
+  /** Rarely changed: the form tucks it into a closed "More options" group under the main fields. */
+  more?: true;
+  /** Starts a new titled group in the form at this field. */
+  section?: string;
   mediaKind?: MediaKind;
   min?: number;
   max?: number;

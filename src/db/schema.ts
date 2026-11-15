@@ -77,6 +77,8 @@ export const projects = sqliteTable("projects", {
   tags: text("tags", { mode: "json" }).$type<string[]>().notNull(),
   fieldColor: text("field_color").notNull(),
   screenshotId: integer("screenshot_id").references(() => media.id),
+  /** Optional portrait capture of the mobile layout: the hero's phone sticker shows it. */
+  phoneShotId: integer("phone_shot_id").references(() => media.id),
   stickerCaption: text("sticker_caption").notNull(),
   cardArt: text("card_art", { mode: "json" }).$type<CardArt>().notNull(),
   layout: text("layout", { enum: ["wide", "half"] }).notNull(),
@@ -96,6 +98,8 @@ export const achievements = sqliteTable("achievements", {
   title: text("title").notNull(),
   rank: text("rank", { enum: ["winner", "finalist", "award"] }).notNull(),
   rankLabel: text("rank_label").notNull(),
+  /** Who ran it, e.g. "Chung-Ang University, Vietnam". The seal caption and the CV line are built from it. */
+  organizer: text("organizer").notNull().default(""),
   description: text("description").notNull(),
   year: text("year").notNull(),
   /** When set: the foil seal on the hero seal sticker. */

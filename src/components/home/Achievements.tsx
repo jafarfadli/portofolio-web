@@ -38,7 +38,8 @@ export function Achievements({ items }: { items: HomeAchievement[] }) {
           <div className="ach-body">
             <p className="ach-meta"><span className={`rank is-${a.rank}`}>{a.rankLabel}</span><span className="ach-year">{a.year}</span></p>
             <h3>{a.title}</h3>
-            <p>{a.story}</p>
+            {a.organizer ? <p className="ach-org">{a.organizer}</p> : null}
+            {a.story ? <p className="ach-story">{a.story}</p> : null}
           </div>
         </article>
       </li>

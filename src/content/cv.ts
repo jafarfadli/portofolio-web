@@ -5,6 +5,7 @@ import {
   achievements, activities, cvProfileItems, cvProfiles, education, experiences, media, projects, skills,
 } from "@/db/schema";
 import { withoutLead } from "@/lib/without-lead";
+import { fillAchievement, fillActivity, fillEducation, fillExperience, fillProfile, fillProject } from "./derive";
 import { resolveCvSection, type CvPick } from "@/lib/cv-resolve";
 import {
   getProfile, toMediaRef, type Achievement, type Activity, type Education, type Experience, type MediaRef, type Profile, type Project, type Skill,
@@ -36,8 +37,9 @@ export function groupSkills(rows: Skill[]): SkillGroup[] {
 
 /** No slug: the default CV profile (or plain fallback if none exists). Unknown slug or no profile yet: null. */
 export function getCvContent(db: Db, slug?: string): CvContent | null {
-  const p = getProfile(db);
-  if (!p) return null;
+  const row = getProfile(db);
+  if (!row) return null;
+  const p = fillProfile(row);
   const cvProfile = slug
     ? db.select().from(cvProfiles).where(eq(cvProfiles.slug, slug)).get()
     : db.select().from(cvProfiles).where(eq(cvProfiles.isDefault, true)).get();
@@ -53,16 +55,16 @@ export function getCvContent(db: Db, slug?: string): CvContent | null {
     profile: p,
     photo: photoRow ? toMediaRef(photoRow) : null,
     summary: cvProfile?.summaryOverride ?? p.cvSummary,
-    experiences: resolveCvSection(db.select().from(experiences).all(), "experience", picks),
-    projects: resolveCvSection(db.select().from(projects).all(), "project", picks),
+    experiences: resolveCvSection(db.select().from(experiences).all(), "experience", picks).map(fillExperience),
+    projects: resolveCvSection(db.select().from(projects).all(), "project", picks).map(fillProject),
     // Older rows repeat the rank, role or institution the CV already prints, so the CV drops that lead.
-    achievements: resolveCvSection(db.select().from(achievements).all(), "achievement", picks).map((a) => ({
+    achievements: resolveCvSection(db.select().from(achievements).all(), "achievement", picks).map(fillAchievement).map((a) => ({
       ...a, cvLine: withoutLead(a.cvLine, a.rankLabel),
     })),
-    activities: resolveCvSection(db.select().from(activities).all(), "activity", picks).map((a) => ({
+    activities: resolveCvSection(db.select().from(activities).all(), "activity", picks).map(fillActivity).map((a) => ({
       ...a, cvLine: withoutLead(a.cvLine, a.roleLabel),
     })),
-    education: resolveCvSection(db.select().from(education).all(), "education", picks).map((e) => ({
+    education: resolveCvSection(db.select().from(education).all(), "education", picks).map(fillEducation).map((e) => ({
       ...e, cvNote: withoutLead(e.cvNote, e.institution),
     })),
     skillGroups: groupSkills(resolveCvSection(db.select().from(skills).all(), "skill", picks)),

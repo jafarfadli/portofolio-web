@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { assertAdminAction } from "@/auth/admin";
 import { getDb } from "@/db/client";
+import { slugify } from "@/content/derive";
 import { echoValues, parseFields, toFormValues } from "./fields";
 import { getResource, PROFILE_FIELDS, type Flag, type Resource } from "./resources";
 import { checkMedia, deleteItem, moveItem, saveItem, saveProfile, setFlag } from "./store";
@@ -33,6 +34,12 @@ export async function saveResource(key: string, id: number | null, _prev: FormSt
   const parsed = parseFields(res.fields, form);
   if (Object.keys(parsed.errors).length > 0) {
     return { status: "error", errors: parsed.errors, values: echoValues(res.fields, form) };
+  }
+  // An empty slug is made from the name, so a new project needs no address typed by hand.
+  if (res.key === "projects" && parsed.values.slug === "") {
+    const slug = slugify(String(parsed.values.name ?? ""));
+    if (!slug) return { status: "error", errors: { slug: "Type a slug: the name has no letters or numbers to make one from." }, values: echoValues(res.fields, form) };
+    parsed.values.slug = slug;
   }
   const result = saveItem(getDb(), res.key, rowId, parsed.values);
   if (!result.ok) {

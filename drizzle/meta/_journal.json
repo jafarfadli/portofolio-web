@@ -36,6 +36,13 @@
       "when": 1794671745798,
       "tag": "0004_colorful_titanium_man",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1794748953434,
+      "tag": "0005_stale_shiver_man",
+      "breakpoints": true
     }
   ]
 }

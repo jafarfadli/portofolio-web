@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { saveAlt, uploadMedia, type MediaFormState } from "@/admin/media-actions";
 
 const kindOf = (s: MediaFormState) => (s.error ? "error" : s.done ? "saved" : "idle");
@@ -8,6 +8,16 @@ const kindOf = (s: MediaFormState) => (s.error ? "error" : s.done ? "saved" : "i
 export function UploadForm() {
   const [state, action, pending] = useActionState<MediaFormState, FormData>(uploadMedia, {});
   const kind = state.kind ?? "screenshot";
+  const [preview, setPreview] = useState<{ url: string; name: string; size?: string } | null>(null);
+  // The object URL lives only while it is shown; a new pick or leaving the page frees it.
+  const previewUrl = preview?.url;
+  useEffect(() => () => { if (previewUrl) URL.revokeObjectURL(previewUrl); }, [previewUrl]);
+  // A finished upload resets the file input, so the preview of the old pick goes with it.
+  const [shownFor, setShownFor] = useState(state);
+  if (shownFor !== state) {
+    setShownFor(state);
+    if (state.done) setPreview(null);
+  }
   return (
     <form action={action} className="adm-upload">
       <div className="adm-field adm-kind">
@@ -23,7 +33,24 @@ export function UploadForm() {
         <input
           className="adm-input" id="up-file" name="file" type="file" required
           accept="image/jpeg,image/png,image/webp,image/avif" aria-describedby="up-file-help"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            setPreview(file ? { url: URL.createObjectURL(file), name: file.name } : null);
+          }}
         />
+        {preview ? (
+          <div className="adm-file-preview">
+            <img
+              src={preview.url} alt=""
+              onLoad={(e) => {
+                const img = e.currentTarget;
+                const size = `${img.naturalWidth} by ${img.naturalHeight}`;
+                setPreview((p) => (p && p.url === preview.url && p.size !== size ? { ...p, size } : p));
+              }}
+            />
+            <span>{preview.name}{preview.size ? `, ${preview.size}` : ""}</span>
+          </div>
+        ) : null}
         <p className="adm-help" id="up-file-help">JPEG, PNG, WebP or AVIF up to 15 MB. It is re-encoded, resized copies are made, and location data is removed.</p>
       </div>
       <div className="adm-field">

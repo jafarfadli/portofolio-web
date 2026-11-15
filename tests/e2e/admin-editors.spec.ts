@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
 test("a saved project headline shows on the public site at once", async ({ page }) => {
   await page.goto("/admin/projects");
   await page.getByRole("link", { name: "Ledgerly", exact: true }).click();
-  const headline = page.getByLabel("Impact headline");
+  const headline = page.getByLabel("One-line pitch");
   const original = await headline.inputValue();
 
   await headline.fill("**Ledgerly** gets small shops paid sooner, edited in e2e.");
@@ -66,8 +66,8 @@ test("with no badge or CV photo the public pages fall back to the plain layouts"
 test("a changed select keeps its value after saving, and the next save does not revert it", async ({ page }) => {
   await page.goto("/admin/achievements");
   await page.locator(".adm-title").first().click();
-  const rank = page.getByLabel("Rank", { exact: true });
-  const ribbon = page.getByLabel("Rank word");
+  const rank = page.getByLabel("Tag shape");
+  const ribbon = page.getByLabel("Award", { exact: true });
   const originalRank = await rank.inputValue();
   const originalRibbon = await ribbon.inputValue();
   const changed = originalRank === "finalist" ? "award" : "finalist";
@@ -81,21 +81,21 @@ test("a changed select keeps its value after saving, and the next save does not 
   await page.getByRole("button", { name: "Save changes" }).click();
   await expect(page.getByRole("status")).toHaveText("Saved.");
   await page.reload();
-  await expect(page.getByLabel("Rank", { exact: true })).toHaveValue(changed);
+  await expect(page.getByLabel("Tag shape")).toHaveValue(changed);
 
   // Leave the shared e2e data as seeded.
-  await page.getByLabel("Rank", { exact: true }).selectOption(originalRank);
-  await page.getByLabel("Rank word").fill(originalRibbon);
+  await page.getByLabel("Tag shape").selectOption(originalRank);
+  await page.getByLabel("Award", { exact: true }).fill(originalRibbon);
   await page.getByRole("button", { name: "Save changes" }).click();
   await expect(page.getByRole("status")).toHaveText("Saved.");
   await page.reload();
-  await expect(page.getByLabel("Rank", { exact: true })).toHaveValue(originalRank);
-  await expect(page.getByLabel("Rank word")).toHaveValue(originalRibbon);
+  await expect(page.getByLabel("Tag shape")).toHaveValue(originalRank);
+  await expect(page.getByLabel("Award", { exact: true })).toHaveValue(originalRibbon);
 });
 
 test("invalid input is refused next to its field and kept for fixing", async ({ page }) => {
   await page.goto("/admin/achievements/new");
-  const title = page.getByLabel("Title", { exact: true });
+  const title = page.getByLabel("Competition", { exact: true });
   await title.fill("Best app \u2014 2026");
   await page.getByRole("button", { name: "Add achievement" }).click();
   await expect(page.getByRole("status")).toHaveText(/^Fix \d+ fields? below\.$/);

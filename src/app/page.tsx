@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import QRCode from "qrcode";
 import { FirstRun } from "@/components/home/FirstRun";
 import { HomePage } from "@/components/home/HomePage";
+import { fillProfile } from "@/content/derive";
 import { getHomeContent, getProfile } from "@/content/home";
 import { getDb } from "@/db/client";
 import { fullName } from "@/lib/name";
@@ -10,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 export function generateMetadata(): Metadata {
   const p = getProfile(getDb());
-  return p ? { title: `${fullName(p)}, ${p.role}`, description: p.cvSummary } : { title: "Portfolio" };
+  return p ? { title: `${fullName(p)}, ${p.role}`, description: fillProfile(p).cvSummary } : { title: "Portfolio" };
 }
 
 export default async function Page() {

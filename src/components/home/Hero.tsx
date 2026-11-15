@@ -6,9 +6,8 @@ import { statementLines } from "@/lib/statement";
 import { displayUrl } from "@/lib/url";
 import { withBase } from "@/lib/base-path";
 
-const SLOTS = ["s-a", "s-b", "s-c", "s-d"] as const;
-/** The three screens float in a row along the hero's bottom edge, so their captions open above them. */
-const CAP_TOP = new Set<string>(["s-a", "s-c", "s-d"]);
+/** Three landscape screens float in a row along the hero's bottom edge, so their captions open above them. */
+const SCREEN_SLOTS = ["s-a", "s-c", "s-d"] as const;
 
 /** The seal prints its caption on two lines: everything before the last word, then the last word (the year). */
 function SealCaption({ text }: { text: string | null }) {
@@ -21,6 +20,10 @@ function SealCaption({ text }: { text: string | null }) {
 export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: string }) {
   const { profile: p, photo, projects, achievements } = content;
   const seal = achievements.find((a) => a.sealText);
+  // The phone sticker is tall, so only a real phone capture goes on it. That project then leaves the screen row,
+  // and the first three other featured projects with a desktop screenshot fill it in order.
+  const phone = projects.find((pr) => pr.phoneShot);
+  const screens = projects.filter((pr) => pr !== phone && pr.screenshot).slice(0, SCREEN_SLOTS.length);
   const name = `${p.firstName} ${p.lastName}`.toUpperCase();
   // The mockup's " &nbsp; " (space, no-break space, space), so the gap between repeats survives white-space collapsing.
   const strap = Array.from({ length: 3 }, () => name).join(" \u00a0 ");
@@ -125,18 +128,26 @@ export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: 
         </div>
 
         <ul className="stickers" data-stickers aria-label="Projects">
-          {projects.map((pr, i) =>
-            pr.screenshot ? (
-              <li key={pr.id} className={`slot-li ${SLOTS[i]}`}>
-                <span className="float">
-                  <a className="sticker" href={`#p-${pr.slug}`}>
-                    <img src={pr.screenshot.url} srcSet={pr.screenshot.srcSet} sizes="(max-width: 860px) 60vw, 330px" alt={pr.screenshot.alt} width={pr.screenshot.width} height={pr.screenshot.height} loading={i < 2 ? undefined : "lazy"} />
-                    <span className={CAP_TOP.has(SLOTS[i]) ? "sticker-cap cap-top" : "sticker-cap"}>{pr.stickerCaption} <Icon name="arrow-ur" /></span>
-                  </a>
-                </span>
-              </li>
-            ) : null,
-          )}
+          {screens.map((pr, i) => (
+            <li key={pr.id} className={`slot-li ${SCREEN_SLOTS[i]}`}>
+              <span className="float">
+                <a className="sticker" href={`#p-${pr.slug}`}>
+                  <img src={pr.screenshot!.url} srcSet={pr.screenshot!.srcSet} sizes="(max-width: 860px) 60vw, 330px" alt={pr.screenshot!.alt} width={pr.screenshot!.width} height={pr.screenshot!.height} loading={i < 1 ? undefined : "lazy"} />
+                  <span className="sticker-cap cap-top">{pr.stickerCaption} <Icon name="arrow-ur" /></span>
+                </a>
+              </span>
+            </li>
+          ))}
+          {phone?.phoneShot ? (
+            <li className="slot-li s-b">
+              <span className="float">
+                <a className="sticker" href={`#p-${phone.slug}`}>
+                  <img src={phone.phoneShot.url} srcSet={phone.phoneShot.srcSet} sizes="100px" alt={phone.phoneShot.alt} width={phone.phoneShot.width} height={phone.phoneShot.height} />
+                  <span className="sticker-cap">{phone.stickerCaption} <Icon name="arrow-ur" /></span>
+                </a>
+              </span>
+            </li>
+          ) : null}
           {seal ? (
             <li className="slot-li s-award">
               <span className="float">

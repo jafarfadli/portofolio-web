@@ -30,7 +30,10 @@ export default async function MediaPage({ searchParams }: Props) {
             const thumb = m.variants.find((v) => v.width === 480) ?? m;
             return (
               <li key={m.id}>
-                <img className="adm-thumb" src={mediaUrl(thumb.path)} alt={m.alt} width={thumb.width} height={thumb.height} loading="lazy" />
+                <a className="adm-thumb-link" href={mediaUrl(m.path)} target="_blank" rel="noreferrer">
+                  <img className="adm-thumb" src={mediaUrl(thumb.path)} alt={m.alt} width={thumb.width} height={thumb.height} loading="lazy" />
+                  <span className="sr-only">Open image {m.id} full size, in a new tab</span>
+                </a>
                 <p className="adm-meta">
                   {KIND_LABEL[m.kind]}, {m.width} by {m.height}.{" "}
                   {m.usedBy.length > 0 ? `Used by ${m.usedBy.join(", ")}.` : "Not used yet."}

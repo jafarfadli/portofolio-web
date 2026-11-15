@@ -56,7 +56,7 @@ export const seedProfile = {
 
 type SeedProject = {
   slug: string; name: string; headline: string; period: string; roleLine: string; tags: string[];
-  fieldColor: string; screenshot: string; stickerCaption: string; cardArt: CardArt; layout: "wide" | "half";
+  fieldColor: string; screenshot: string; phoneShot?: string; stickerCaption: string; cardArt: CardArt; layout: "wide" | "half";
   metricValue: string; metricLabel: string; liveUrl: string | null; codeUrl: string | null; cvTitle: string; cvLine: string;
 };
 
@@ -79,7 +79,7 @@ export const seedProjects: SeedProject[] = [
     slug: "rute", name: "Rute",
     headline: "**Rute** shows Jakarta commuters when the next bus actually arrives.",
     period: "2024", roleLine: "mobile and API", tags: ["React Native", "Go", "Redis"],
-    fieldColor: "#FF6A2B", screenshot: "rute", stickerCaption: "Rute: live bus arrivals",
+    fieldColor: "#FF6A2B", screenshot: "rute", phoneShot: "rute", stickerCaption: "Rute: live bus arrivals",
     cardArt: {
       print: { left: 12, top: 12, width: 30, height: 132, rot: -3 },
       leader: { d: "M 40 71 C 48 70, 50 52, 54 46", dot: { x: 40, y: 71 } },
