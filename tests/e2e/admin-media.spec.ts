@@ -18,7 +18,7 @@ test("an uploaded screenshot gets resized copies and appears in the project pick
   await expect(thumb).toHaveAttribute("src", /^\/media\/screens\/[0-9a-f]{12}-480\.webp$/);
 
   await page.goto("/admin/projects/new");
-  await expect(page.getByLabel("Screenshot").locator("option", { hasText: "Invoice detail uploaded in e2e" })).toHaveCount(1);
+  await expect(page.locator("#f-screenshotId").locator("option", { hasText: "Invoice detail uploaded in e2e" })).toHaveCount(1);
 });
 
 test("a file that is not an image is refused, and the kind and alt text you chose stay", async ({ page }) => {

@@ -29,6 +29,7 @@ test("a saved project headline shows on the public site at once", async ({ page 
 
 test("with no badge or CV photo the public pages fall back to the plain layouts", async ({ page }) => {
   await page.goto("/admin/profile");
+  await page.locator(".adm-more > summary").click(); // the CV photo lives in the closed group
   const badge = page.getByLabel("Badge photo");
   const cvPhoto = page.getByLabel("CV photo");
   const [badgeBefore, cvBefore] = [await badge.inputValue(), await cvPhoto.inputValue()];

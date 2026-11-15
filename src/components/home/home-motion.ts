@@ -418,21 +418,20 @@ export function initHomeMotion(doc: Document): () => void {
     }
 
     /* ---------- Work: each card flips through its screenshots ---------- */
-    // Picking a feature shows its screenshot, with or without reduced motion. The show also moves on by itself (not
-    // under reduced motion): when every screenshot has a feature, the active feature's bar is the timer (its CSS fill
-    // pauses while the list is hovered, focus is in the card, or the card is off screen) and its end moves to the next;
-    // otherwise a plain interval does, under the same holds, and the bars do not fill.
+    // The print turns to its next screenshot every few seconds, and the feature tag on its corner is peeled on fresh
+    // with the new feature. It holds while the pointer is on the print, while focus is in the card, while the card is
+    // mostly off screen, and in a hidden tab. Pressing the tag turns it at once. Nothing turns by itself under reduced
+    // motion; the tag still works.
     doc.querySelectorAll<HTMLElement>(".project").forEach((card) => {
+      const print = card.querySelector<HTMLElement>("[data-show]");
       const imgs = [...card.querySelectorAll<HTMLImageElement>("[data-show] img")];
-      if (imgs.length < 2) return;
-      const buttons = [...card.querySelectorAll<HTMLButtonElement>("[data-features] button")];
-      const order = imgs.map((im) => im.dataset.step ?? "");
-      const barTimed = buttons.length === imgs.length;
-      card.classList.toggle("show-timed", !barTimed);
+      if (!print || imgs.length < 2) return;
+      const tag = card.querySelector<HTMLElement>("[data-feat-tag]");
+      const lines = tag ? [...tag.querySelectorAll<HTMLElement>(".feat-line")] : [];
       let at = 0;
       const show = (k: number) => {
-        at = (k + order.length) % order.length;
-        const step = order[at];
+        at = (k + imgs.length) % imgs.length;
+        const step = imgs[at].dataset.step;
         imgs.forEach((im) => {
           const isOn = im.dataset.step === step;
           if (!isOn && im.classList.contains("is-on")) {
@@ -441,25 +440,23 @@ export function initHomeMotion(doc: Document): () => void {
           }
           im.classList.toggle("is-on", isOn);
         });
-        buttons.forEach((b) => {
-          const isOn = b.dataset.step === step;
-          b.classList.toggle("is-on", isOn);
-          b.setAttribute("aria-pressed", String(isOn));
+        lines.forEach((l) => {
+          const isOn = l.dataset.step === step;
+          l.classList.toggle("is-on", isOn);
+          if (isOn) l.removeAttribute("aria-hidden");
+          else l.setAttribute("aria-hidden", "true");
         });
-      };
-      buttons.forEach((b) => on(b, "click", () => {
-        const k = order.indexOf(b.dataset.step ?? "");
-        if (k >= 0 && k !== at) show(k);
-      }));
-      if (!reduce) {
-        const held = () => card.classList.contains("is-offscreen") || doc.hidden || card.matches(":has(:focus-visible)");
-        if (barTimed) {
-          on(card, "animationend", (e) => {
-            if ((e.target as Element).matches(".features button.is-on .bar")) show(at + 1);
-          });
-        } else {
-          intervals.push(win.setInterval(() => { if (!held()) show(at + 1); }, 4600));
+        if (tag && !reduce) {
+          tag.classList.remove("is-stuck");
+          void tag.offsetWidth; // restart the stick animation
+          tag.classList.add("is-stuck");
         }
+      };
+      if (tag) on(tag, "click", () => show(at + 1));
+      if (!reduce) {
+        const held = () =>
+          card.classList.contains("is-offscreen") || doc.hidden || print.matches(":hover") || card.matches(":has(:focus-visible)");
+        intervals.push(win.setInterval(() => { if (!held()) show(at + 1); }, 4600));
       }
       const io = new IntersectionObserver((entries) => card.classList.toggle("is-offscreen", !entries.at(-1)!.isIntersecting), { threshold: 0.35 });
       io.observe(card);
