@@ -130,8 +130,8 @@ export const activities = sqliteTable("activities", {
   ...listCols(),
   title: text("title").notNull(),
   subtitle: text("subtitle").notNull(),
-  /** Shape of the role tag (state by form): speaker | organizer | mentor | volunteer. */
-  role: text("role", { enum: ["speaker", "organizer", "mentor", "volunteer"] }).notNull(),
+  /** Shape of the role tag (state by form): speaker | exhibitor | organizer | mentor | volunteer. */
+  role: text("role", { enum: ["speaker", "exhibitor", "organizer", "mentor", "volunteer"] }).notNull(),
   /** Printed word on the tag, e.g. "Host" uses the organizer shape. */
   roleLabel: text("role_label").notNull(),
   year: text("year").notNull(),

@@ -147,7 +147,7 @@ export const defaultCvAchievementOrder = [
 ];
 
 type SeedActivity = {
-  title: string; subtitle: string; role: "speaker" | "organizer" | "mentor" | "volunteer"; roleLabel: string;
+  title: string; subtitle: string; role: "speaker" | "exhibitor" | "organizer" | "mentor" | "volunteer"; roleLabel: string;
   year: string; photo: string; showInCv: boolean; cvLine: string;
 };
 

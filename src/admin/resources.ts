@@ -111,8 +111,8 @@ export const RESOURCES: Record<ListKey, Resource> = {
       { name: "title", label: "Event", kind: "text", max: 100 },
       { name: "subtitle", label: "What you did", kind: "text", max: 140, help: "Like Talk: self-hosting Next.js." },
       {
-        name: "role", label: "Role", kind: "enum", options: ["speaker", "organizer", "mentor", "volunteer"],
-        optionLabels: { speaker: "Speaker", organizer: "Organizer", mentor: "Mentor", volunteer: "Volunteer" },
+        name: "role", label: "Role", kind: "enum", options: ["speaker", "exhibitor", "organizer", "mentor", "volunteer"],
+        optionLabels: { speaker: "Speaker", exhibitor: "Exhibitor: ran a booth or showcase stand", organizer: "Organizer", mentor: "Mentor", volunteer: "Volunteer" },
       },
       { name: "year", label: "Year", kind: "text", max: 12 },
       { name: "photoId", label: "Photo", kind: "media", mediaKind: "photo", empty: "null" },

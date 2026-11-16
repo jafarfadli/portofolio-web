@@ -508,6 +508,8 @@ button.feat-tag { cursor: pointer; }
 }
 /* role is told by its cut, not its colour */
 .role[data-role="speaker"] { clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 50%, 100% 100%, 0 100%); padding-right: 22px; }
+/* exhibitor: a signpost point, like the arrow to a booth */
+.role[data-role="exhibitor"] { clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%); padding-right: 22px; }
 .role[data-role="organizer"] { border-radius: var(--r-pill); }
 .role[data-role="mentor"] { border-radius: 3px 3px 14px 14px; }
 .role[data-role="volunteer"] { background: transparent; color: var(--on-ground); box-shadow: inset 0 0 0 2px var(--on-ground); }
