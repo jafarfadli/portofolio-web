@@ -727,6 +727,27 @@ html.swarm-pending main > section > *:not(.hero-dust) { visibility: hidden; anim
   .sticker-cap, .sticker.is-resting .sticker-cap { display: none; } /* stickers stay links to their project cards */
   .pin b, .pin.is-big b { font-size: 26px; }
   .pin span { font-size: 12.5px; }
+  /* The field is too small on a phone to lay the tag and the pin over the screenshot: they stack with it instead,
+     the feature tag above the print and the pin below it, and the whole screenshot shows. */
+  /* the statement opens the phone hero, the pass hangs under it, and the two buttons follow the pass */
+  .hero .statement { display: contents; }
+  /* the strap's top rises about 36px above the stage: the gap under the statement keeps it clear of the type */
+  .hero .statement > * { order: -1; position: relative; z-index: 2; margin-bottom: 48px; }
+  .hero .statement > .hero-actions { order: 1; margin: 12px 0 0; }
+  .project-field, .project.is-half .project-field { aspect-ratio: auto; display: flex; flex-direction: column; padding: 40px 16px 18px; }
+  .print, .project:not(.is-half) .print {
+    position: relative; left: auto !important; top: auto !important; width: 100% !important; height: auto !important;
+    display: flex; flex-direction: column; padding: 0; background: none; box-shadow: none !important; transform: rotate(var(--rot, -1deg));
+  }
+  .project:hover .print { transform: rotate(var(--rot, -1deg)); }
+  .print-win {
+    position: relative; inset: auto; order: 2; width: 100%; aspect-ratio: 16 / 10; border: 7px solid #fff; border-radius: var(--r-sticker);
+    background: #fff; box-shadow: 0 22px 40px -18px rgba(0, 0, 0, 0.55);
+  }
+  .print.has-stack .print-win { box-shadow: 6px 6px 0 -1px #ecece8, 11px 11px 0 -2px #dcdcd6, 0 22px 40px -18px rgba(0, 0, 0, 0.55); }
+  .feat-tag, .project.is-half .feat-tag { position: relative; left: -6px; top: auto; bottom: auto; order: 1; align-self: flex-start; max-width: 92%; margin-bottom: 12px; }
+  .pin, .pin.points-r, .project.is-half .pin { position: relative; right: auto; bottom: auto; align-self: flex-end; max-width: 88%; margin-top: 18px; }
+  .project.is-half .pin b { font-size: 26px; }
 }
 
 /* narrow phones: shorter strap and a smaller pass so the statement reaches the first screen */

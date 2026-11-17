@@ -20,9 +20,7 @@ export function Closing({ profile: p }: { profile: Profile }) {
         <a href={`mailto:${p.email}`}><Icon name="mail" /><span>{p.email}</span></a>
       </div>
       <footer className="footer">
-        <span>{fullName(p)}, {new Date().getFullYear()}</span>
-        <span>Built with Next.js, served from a Mac mini</span>
-      </footer>
+        <span>{fullName(p)}, {new Date().getFullYear()}</span>      </footer>
     </section>
   );
 }
