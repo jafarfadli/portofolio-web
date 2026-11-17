@@ -583,6 +583,58 @@ button.feat-tag { cursor: pointer; }
   .preview { display: none; }
 }
 
+/* ---------- Agent crew: cursors that carry stickers and tags in, and rebuild the page on request ----------
+   Printed like the rest of the kit: a stock arrow with an ink rim, and a name on a small ink tag with a live dot.
+   The layer sits over the page in page coordinates and never takes the pointer. */
+.crew { position: absolute; left: 0; top: 0; width: 100%; z-index: 60; overflow: clip; pointer-events: none; }
+.crew-cursor { position: absolute; left: 0; top: 0; will-change: transform; }
+.crew-ptr { position: absolute; left: 0; top: 0; display: block; transform-origin: 0 0; }
+.crew-ptr svg { position: absolute; display: none; overflow: visible; filter: drop-shadow(0 3px 4px rgba(10, 11, 18, 0.4)); }
+.crew-ptr .is-arrow { left: -2px; top: -2px; fill: var(--stock); stroke: var(--ink); stroke-width: 1.5; stroke-linejoin: round; }
+.crew-ptr .is-text { left: -6px; top: -11px; fill: none; stroke: var(--ink); stroke-width: 1.7; stroke-linecap: round; paint-order: stroke; }
+.crew-ptr .is-cross { left: -11px; top: -11px; fill: none; stroke: var(--ink); stroke-width: 1.7; stroke-linecap: round; }
+.crew-cursor[data-shape="arrow"] .is-arrow, .crew-cursor[data-shape="text"] .is-text, .crew-cursor[data-shape="cross"] .is-cross { display: block; }
+/* the I-beam and crosshair are thin, so a stock halo keeps them readable on the navy ground */
+.crew-ptr .is-text, .crew-ptr .is-cross { filter: drop-shadow(0 0 1.2px var(--stock)) drop-shadow(0 0 1.2px var(--stock)); }
+.crew-name {
+  position: absolute; left: 14px; top: 19px; display: inline-flex; align-items: center; gap: 5px; padding: 3px 7px 3px 6px; white-space: nowrap;
+  background: var(--ink); color: var(--stock); border-radius: 3px; box-shadow: 0 0 0 1px rgba(242, 242, 238, 0.35);
+  font-size: 10.5px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; font-variation-settings: "wdth" 85;
+}
+.crew-name i { width: 6px; height: 6px; border-radius: 50%; background: #5ee08c; }
+.crew-cursor.is-small .crew-ptr { transform: scale(0.78); }
+.crew-cursor.is-small .crew-name { display: none; }
+/* the frame an agent drags out: a light rule that reads on navy and on stock alike */
+.crew-frame { position: absolute; left: 0; top: 0; border: 1.5px solid #fff; background: rgba(127, 131, 145, 0.16); mix-blend-mode: difference; }
+.crew-frame.is-text { background: transparent; border-style: dashed; }
+.crew-frame span {
+  position: absolute; left: 0; bottom: -22px; padding: 2px 5px; border-radius: 3px; background: #fff; color: #000;
+  font-size: 10px; font-weight: 700; font-feature-settings: "tnum" 1; white-space: nowrap;
+}
+.crew-wait { opacity: 0 !important; transition: opacity 0.45s var(--ease-out); }
+.crew-bar {
+  position: fixed; left: 50%; bottom: 18px; z-index: 70; translate: -50% 0; display: flex; align-items: center; gap: 6px;
+  max-width: calc(100vw - 32px); padding: 6px 6px 6px 14px; border-radius: var(--r-pill); background: var(--ink); color: var(--stock);
+  box-shadow: var(--shadow-lift);
+}
+.crew-status { margin: 0; overflow: hidden; font-size: 13px; font-weight: 650; font-feature-settings: "tnum" 1; white-space: nowrap; text-overflow: ellipsis; }
+.crew-btn {
+  flex: none; min-height: 34px; padding: 0 12px; border: 0; border-radius: var(--r-pill); background: rgba(242, 242, 238, 0.12); color: var(--stock);
+  font: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+}
+.crew-btn:hover { background: rgba(242, 242, 238, 0.22); }
+.crew-btn:focus-visible { outline: 3px solid var(--stock); outline-offset: 2px; }
+.crew-go {
+  display: inline-flex; align-items: center; gap: 8px; padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer;
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px;
+}
+.crew-go:hover { color: var(--on-ground); }
+.crew-go[disabled] { opacity: 0.5; cursor: default; }
+.crew-go[hidden] { display: none; }
+@media (max-width: 560px) {
+  .crew-status { font-size: 12px; }
+}
+
 /* ---------- First-load entrance: hold the start state until the island runs ----------
    A script in <head> adds .motion-pending on "/" when motion is allowed; initHomeMotion removes it in the same task
    in which GSAP applies the same start values, so the server-painted hero never shows, vanishes, then drops in.

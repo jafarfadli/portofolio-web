@@ -159,6 +159,12 @@
         ],
         "createdAt": "2026-11-14T15:38:03.772Z",
         "reason": "achievement passes cross-fade a stack of photos; the waiting photos sit at opacity 0 by design"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "sfmono-regular",
+        "createdAt": "2026-11-16T15:15:10.440Z",
+        "reason": "agent decision: admin-only JSON card-layout textarea (.adm-input.is-code) uses system monospace for editing raw JSON; not on public site, not costume; predates this session"
       }
     ]
   }

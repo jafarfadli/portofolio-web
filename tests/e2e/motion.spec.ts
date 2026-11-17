@@ -77,6 +77,8 @@ test("hero stickers sit above the statement box, so each one can be hovered", as
   await expect(page.locator("html")).not.toHaveClass(/motion-pending/);
   const slots = page.locator("[data-stickers] .slot-li");
   await expect(slots).toHaveCount(5);
+  // On a first visit the stickers are still being carried in; they sit in place once the agents have gone.
+  await expect(page.locator(".crew-cursor")).toHaveCount(0, { timeout: 6000 });
   for (const slot of await slots.all()) {
     const hit = await slot.evaluate((li) => {
       const r = li.getBoundingClientRect();
@@ -203,6 +205,45 @@ test("entrance releases the pre-paint hold and ends with the hero visible", asyn
   await expect(page.locator("[data-nav]")).toHaveCSS("opacity", "1");
 });
 
+test("on the first visit agents carry the stickers in and leave; a reload in the same tab skips them", async ({ page }) => {
+  await page.goto("/");
+  const slots = page.locator(".stickers .slot-li");
+  const n = await slots.count();
+  await expect(page.locator(".crew .crew-cursor")).toHaveCount(n);
+  await expect(page.locator(".crew .crew-name").first()).toHaveText("agent-01");
+  // Every agent clocks out, and each sticker ends on its own place with no leftover transform.
+  await expect(page.locator(".crew .crew-cursor")).toHaveCount(0, { timeout: 6000 });
+  for (let i = 0; i < n; i++) await expect(slots.nth(i)).not.toHaveAttribute("style", /transform/);
+  await page.reload();
+  await expect(page.locator("html")).not.toHaveClass(/motion-pending/);
+  await page.waitForTimeout(300);
+  await expect(page.locator(".crew .crew-cursor")).toHaveCount(0);
+});
+
+test("agents can rebuild the page on request; Skip shows it all at once and Esc does too", async ({ page }) => {
+  await page.goto("/");
+  const go = page.getByRole("button", { name: "Watch AI agents rebuild this page" });
+  await go.scrollIntoViewIfNeeded();
+  await go.click();
+  await expect(go).toBeDisabled();
+  const status = page.getByRole("status").filter({ hasText: /agents rebuilding/ });
+  await expect(status).toHaveText(/^\d+ agents rebuilding: \d+ of \d+$/);
+  await expect(page.locator(".crew-wait").first()).toBeAttached();
+  await expect(page.getByRole("button", { name: /^Sound (on|off)$/ })).toBeVisible();
+  await expect.poll(() => page.locator(".crew .crew-cursor").count()).toBeGreaterThan(3);
+  await page.getByRole("button", { name: "Skip" }).click();
+  await expect(page.locator(".crew-wait")).toHaveCount(0);
+  await expect(page.locator(".crew-bar")).toHaveCount(0);
+  await expect(page.locator(".crew-cursor")).toHaveCount(0);
+  await expect(go).toBeEnabled();
+
+  await go.click();
+  await expect(page.locator(".crew-wait").first()).toBeAttached();
+  await page.keyboard.press("Escape");
+  await expect(page.locator(".crew-wait")).toHaveCount(0);
+  await expect(page.locator(".crew-bar")).toHaveCount(0);
+});
+
 test("the CV page never gets the entrance hold", async ({ page }) => {
   await page.goto("/cv");
   await expect(page.locator("html")).not.toHaveClass(/motion-pending/);
@@ -213,6 +254,9 @@ test.describe("reduced motion", () => {
 
   test("renders final states without waiting for scroll", async ({ page }) => {
     await page.goto("/");
+    // No agent crew at all: no carried stickers, and no rebuild button.
+    await expect(page.locator(".crew")).toHaveCount(0);
+    await expect(page.locator("[data-crew-go]")).toBeHidden();
     await expect(page.locator(".lede .line > span").first()).toHaveCSS("transform", "none");
     await page.locator("#work").scrollIntoViewIfNeeded();
     await expect(page.locator(".pin").first()).toHaveCSS("opacity", "1");
