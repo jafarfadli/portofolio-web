@@ -1,9 +1,7 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
-import { agentName, crewLayer, offstage, pageRect, spawnCursor, type Cursor } from "./crew/cursor";
-import { startRebuild, type Rebuild } from "./crew/rebuild";
-import * as sfx from "./crew/sound";
+import { Swarm } from "./swarm/swarm";
 
 type Ticker = (time: number, deltaTime: number) => void;
 
@@ -28,14 +26,15 @@ export function initHomeMotion(doc: Document): () => void {
   const timeouts: number[] = [];
   const intervals: number[] = [];
   let lenis: Lenis | null = null;
-  // The agent crew's layer (cursors that carry things in). None under reduced motion.
-  const crew = reduce ? null : crewLayer(doc);
-  let rebuild: Rebuild | null = null;
+  // The agent swarm: on the first visit of a session it builds the page in front of the visitor (and the entrances
+  // below stand aside for it); afterwards its crew stays on the page. None under reduced motion.
+  const swarmStart = reduce ? null : Swarm.startMode(win);
+  const building = swarmStart === "build";
+  let swarm: Swarm | null = null;
 
   const teardown = () => {
     ac.abort();
-    rebuild?.stop();
-    crew?.destroy();
+    swarm?.destroy();
     tickers.forEach((fn) => gsap.ticker.remove(fn));
     timeouts.forEach((t) => win.clearTimeout(t));
     intervals.forEach((t) => win.clearInterval(t));
@@ -207,20 +206,12 @@ export function initHomeMotion(doc: Document): () => void {
     doc.documentElement.classList.remove("motion-pending");
     // The sticker lean waits for the entrance. While the slots' from() runs, GSAP folds their individual transforms
     // into `transform` and writes `translate: none` on them, which would hold the lean back and then let it jump.
-    let entered = false;
+    // When the swarm builds the page, it is the entrance: none of the authored ones run.
+    let entered = building;
     let onEntered = () => {};
-    if (!reduce) {
-      // Once per visit (per tab), agents carry the stickers in; after that, and when storage is blocked, they slap down.
-      // The mark is written once the entrance is over, so an init that is torn down early (React dev) leaves none.
-      let carried = false;
-      try {
-        carried = win.sessionStorage.getItem("crew-hero") === "1";
-      } catch {
-        carried = true;
-      }
-      const markCarried = () => { try { win.sessionStorage.setItem("crew-hero", "1"); } catch { /* blocked storage */ } };
+    if (!reduce && !building) {
       const intro = gsap
-        .timeline({ delay: 0.12, defaults: { ease: "expo.out" }, onComplete: () => { entered = true; markCarried(); onEntered(); } })
+        .timeline({ delay: 0.12, defaults: { ease: "expo.out" }, onComplete: () => { entered = true; onEntered(); } })
         .from(nav, { opacity: 0, duration: 0.6 }, 0)
         .from(
           pendulum,
@@ -232,10 +223,9 @@ export function initHomeMotion(doc: Document): () => void {
         )
         .from(".lede .line > span", { yPercent: 108, duration: 0.9, stagger: 0.09 }, 0.78)
         .from(".statement .hero-actions .btn", { opacity: 0, y: 14, duration: 0.6, stagger: 0.07 }, 1.0);
-      // On a phone the stickers are not shown (each project is a full card below), so there is nothing to carry.
+      // On a phone the stickers are not shown (each project is a full card below).
       const slots = gsap.utils.toArray<HTMLElement>(".stickers .slot-li").filter((el) => el.getClientRects().length > 0);
-      if (!carried && crew) carryStickers(intro, slots, crew.layer, 0.5);
-      else if (slots.length) intro.from(slots, { opacity: 0, scale: 1.22, rotation: 9, duration: 0.5, ease: "back.out(1.5)", stagger: 0.075, clearProps: "transform" }, 0.62);
+      if (slots.length) intro.from(slots, { opacity: 0, scale: 1.22, rotation: 9, duration: 0.5, ease: "back.out(1.5)", stagger: 0.075, clearProps: "transform" }, 0.62);
 
       gsap.from("[data-chips] .chip", {
         opacity: 0, scale: 1.3, rotation: "+=10", duration: 0.45, ease: "back.out(1.6)", stagger: 0.045,
@@ -421,7 +411,14 @@ export function initHomeMotion(doc: Document): () => void {
 
     /* ---------- Work: leader lines draw to the result, and the result tag swings in ---------- */
     // The dot pops, the line draws, then the tag drops onto it from its eyelet and swings to rest while its number
-    // counts to the result. At rest it sways (CSS .is-hung), and a pointer entering the card flicks it.
+    // counts to the result. At rest it sways (CSS .is-hung), and a pointer entering the card flicks it. When the swarm
+    // builds the page, it draws the line and types the tag; the count and the swing follow its typing (swarmBuilt).
+    const counters = new Map<HTMLElement, { reset: () => void; run: () => void }>();
+    const hang = (pin: HTMLElement) =>
+      gsap.fromTo(pin, { rotation: pin.classList.contains("points-r") ? 10 : -10 }, {
+        rotation: 0, duration: 1.4, ease: "elastic.out(1, 0.32)", overwrite: "auto",
+        onComplete: () => { gsap.set(pin, { clearProps: "transform" }); pin.classList.add("is-hung"); },
+      });
     if (!reduce) {
       doc.querySelectorAll<HTMLElement>(".project").forEach((card) => {
         const path = card.querySelector(".leader path");
@@ -429,33 +426,26 @@ export function initHomeMotion(doc: Document): () => void {
         const pin = card.querySelector<HTMLElement>(".pin");
         if (!path || !dot || !pin) return;
         const count = pinCounter(pin);
-        gsap.set(path, { strokeDasharray: 1, strokeDashoffset: 1 });
-        gsap.set(dot, { opacity: 0 });
-        gsap.set(pin, { opacity: 0, rotation: pin.classList.contains("points-r") ? 16 : -16 });
-        count?.reset();
-        let hung = false;
-        // An agent carries the tag in by its eyelet and lets go as the line reaches it; a tag that reads "16 agents"
-        // brings a crowd of them.
-        const tl = gsap
-          .timeline({ scrollTrigger: { trigger: card, start: "top 72%", once: true } })
-          .fromTo(dot, { scale: 0 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" })
-          .to(path, { strokeDashoffset: 0, duration: 0.8, ease: "power2.inOut" }, 0.05);
-        if (crew) {
-          tl.call(() => carryPin(pin, crew.layer, 0.5), [], 0.12).to(pin, { opacity: 1, duration: 0.15 }, 0.14);
-          const crowd = /^(\d+)\s+agents?\b/i.exec(pin.querySelector("b")?.textContent?.trim() ?? "");
-          if (crowd) tl.call(() => swarmAround(pin, crew.layer, Math.min(8, Number(crowd[1]))), [], 0.75);
-        } else {
-          tl.to(pin, { opacity: 1, duration: 0.25, ease: "power1.out" }, 0.62);
+        if (count) counters.set(pin, count);
+        if (!building) {
+          gsap.set(path, { strokeDasharray: 1, strokeDashoffset: 1 });
+          gsap.set(dot, { opacity: 0 });
+          gsap.set(pin, { opacity: 0, rotation: pin.classList.contains("points-r") ? 16 : -16 });
+          count?.reset();
+          gsap
+            .timeline({ scrollTrigger: { trigger: card, start: "top 72%", once: true } })
+            .fromTo(dot, { scale: 0 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" })
+            .to(path, { strokeDashoffset: 0, duration: 0.8, ease: "power2.inOut" }, 0.05)
+            .to(pin, { opacity: 1, duration: 0.25, ease: "power1.out" }, 0.62)
+            .to(pin, {
+              rotation: 0, duration: 1.5, ease: "elastic.out(1, 0.32)",
+              onComplete: () => { gsap.set(pin, { clearProps: "transform" }); pin.classList.add("is-hung"); },
+            }, 0.62)
+            .add(() => count?.run(), 0.7);
         }
-        tl
-          .to(pin, {
-            rotation: 0, duration: 1.5, ease: "elastic.out(1, 0.32)",
-            onComplete: () => { gsap.set(pin, { clearProps: "transform" }); pin.classList.add("is-hung"); hung = true; },
-          }, 0.62)
-          .add(() => count?.run(), 0.7);
         if (finePointer) {
           on(card, "pointerenter", () => {
-            if (!hung) return;
+            if (!pin.classList.contains("is-hung")) return;
             gsap.fromTo(pin, { rotation: pin.classList.contains("points-r") ? -5 : 5 }, {
               rotation: 0, duration: 1.2, ease: "elastic.out(1, 0.3)", overwrite: "auto",
               onComplete: () => { gsap.set(pin, { clearProps: "transform" }); },
@@ -646,27 +636,27 @@ export function initHomeMotion(doc: Document): () => void {
       ScrollTrigger.create({ trigger: agenda, start: "top bottom", end: "bottom top", onUpdate: recheck, onLeave: hide, onLeaveBack: hide });
     }
 
-    /* ---------- Footer: the agents rebuild the page on request ---------- */
-    const go = doc.querySelector<HTMLButtonElement>("[data-crew-go]");
-    if (!reduce && go) {
-      sfx.unlockOnFirstGesture(ac.signal);
-      go.hidden = false;
-      on(go, "click", () => {
-        if (rebuild) return;
-        sfx.unlock();
-        go.disabled = true;
-        rebuild = startRebuild(doc, {
-          toTop: () => (lenis ? lenis.scrollTo(0, { immediate: true }) : win.scrollTo(0, 0)),
-          onEnd: () => { rebuild = null; go.disabled = false; },
-        });
-      });
+    /* ---------- The agent swarm: builds the page on the first visit, then its crew stays ---------- */
+    if (swarmStart) {
+      const swarmBuilt = (el: HTMLElement) => {
+        // a result tag's number counts up once it is typed in, and the tag swings onto its line once it is complete
+        if (el.matches(".pin b")) {
+          const c = counters.get(el.closest<HTMLElement>(".pin")!);
+          c?.reset();
+          c?.run();
+        } else if (el.matches(".pin > span")) hang(el.closest<HTMLElement>(".pin")!);
+        // the badge swings once the last of it is in place, as if let go on its lanyard
+        else if (el.closest(".pendulum") && swarm?.isBuilt(pendulum)) kick(46);
+      };
+      swarm = new Swarm(doc, { built: swarmBuilt });
+      swarm.start(swarmStart);
     }
   };
 
   try {
     ctx.add(body);
   } catch (err) {
-    doc.documentElement.classList.remove("motion-pending");
+    doc.documentElement.classList.remove("motion-pending", "swarm-pending");
     teardown();
     throw err;
   }
@@ -726,111 +716,4 @@ function pinCounter(pin: HTMLElement): { reset: () => void; run: () => void } | 
       });
     },
   };
-}
-
-/* ---------- Agent crew helpers ---------- */
-
-/** A point on a soft curve from a to b, bowed sideways by `bend` px, at progress t. */
-function arc(a: { x: number; y: number }, b: { x: number; y: number }, bend: number, t: number) {
-  const mx = (a.x + b.x) / 2;
-  const my = (a.y + b.y) / 2;
-  const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
-  const cx = mx + (-(b.y - a.y) / len) * bend;
-  const cy = my + ((b.x - a.x) / len) * bend;
-  const u = 1 - t;
-  return { x: u * u * a.x + 2 * u * t * cx + t * t * b.x, y: u * u * a.y + 2 * u * t * cy + t * t * b.y };
-}
-
-/** Sends an agent off screen the nearest way, fading, then removes it. */
-function clockOut(c: Cursor, delay = 0) {
-  const doc = c.el.ownerDocument;
-  const away = offstage(doc, c.x, c.y, 40);
-  const tl = gsap.timeline({ delay });
-  c.to(c.x + (away.x - c.x) * 0.6, c.y + (away.y - c.y) * 0.6, 0.7, tl);
-  tl.to(c.el, { opacity: 0, duration: 0.35 }, "-=0.35").call(() => c.remove());
-}
-
-/**
- * The first-visit entrance: each sticker is carried in from the nearest screen edge by its own agent, pressed into its
- * slot with a soft thock, and the agent leaves. The slots end with their transforms cleared, as the plain entrance does.
- */
-function carryStickers(tl: gsap.core.Timeline, slots: HTMLElement[], layer: HTMLElement, at: number) {
-  const doc = layer.ownerDocument;
-  slots.forEach((slot, i) => {
-    const r = pageRect(slot);
-    const grab = { x: r.x + r.w * 0.62, y: r.y + r.h * 0.58 };
-    const start = offstage(doc, grab.x, grab.y, 160);
-    const c = spawnCursor(layer, agentName(i));
-    c.place(start.x, start.y);
-    const tilt = i % 2 ? 8 : -8;
-    gsap.set(slot, { x: start.x - grab.x, y: start.y - grab.y, rotation: tilt, scale: 1.08, opacity: 1 });
-    const fly = { t: 0 };
-    const bend = (i % 2 ? 1 : -1) * 60;
-    const t = at + i * 0.16;
-    tl.to(fly, {
-      t: 1, duration: 0.8, ease: "power3.out",
-      onUpdate: () => {
-        const p = arc(start, grab, bend, fly.t);
-        c.place(p.x, p.y);
-        gsap.set(slot, { x: p.x - grab.x, y: p.y - grab.y });
-      },
-    }, t);
-    c.press(tl, t + 0.78);
-    tl.call(() => sfx.thock(grab.x - (doc.defaultView?.scrollX ?? 0)), [], t + 0.8);
-    tl.to(slot, { rotation: 0, scale: 1, duration: 0.45, ease: "back.out(2.2)", clearProps: "transform" }, t + 0.8);
-    tl.call(() => clockOut(c, 0.15), [], t + 0.9);
-  });
-}
-
-/** Carries a result tag in by its eyelet over `dur` seconds, presses it onto the line's end, and leaves. */
-function carryPin(pin: HTMLElement, layer: HTMLElement, dur: number) {
-  const doc = layer.ownerDocument;
-  const r = pageRect(pin);
-  const right = pin.classList.contains("points-r");
-  const grab = { x: right ? r.x + r.w - 16 : r.x + 16, y: r.y + r.h / 2 };
-  const start = { x: grab.x + (right ? 1 : -1) * 220, y: grab.y + 140 };
-  const c = spawnCursor(layer, agentName(right ? 1 : 0));
-  c.place(start.x, start.y);
-  gsap.set(pin, { x: start.x - grab.x, y: start.y - grab.y });
-  const fly = { t: 0 };
-  gsap.to(fly, {
-    t: 1, duration: dur, ease: "power2.out",
-    onUpdate: () => {
-      const p = arc(start, grab, right ? -50 : 50, fly.t);
-      c.place(p.x, p.y);
-      gsap.set(pin, { x: p.x - grab.x, y: p.y - grab.y });
-    },
-    onComplete: () => {
-      gsap.set(pin, { x: 0, y: 0 });
-      sfx.click(grab.x - (doc.defaultView?.scrollX ?? 0));
-      c.press();
-      clockOut(c, 0.35);
-    },
-  });
-}
-
-/** A crowd of small agents gathers round a tag while its number counts, busy for a moment, then scatters. */
-function swarmAround(pin: HTMLElement, layer: HTMLElement, n: number) {
-  const doc = layer.ownerDocument;
-  const r = pageRect(pin);
-  const cx = r.x + r.w / 2;
-  const cy = r.y + r.h / 2;
-  for (let i = 0; i < n; i++) {
-    const a = (i / n) * Math.PI * 2 + Math.random() * 0.4;
-    const rad = Math.max(r.w, r.h) * 0.55 + 18 + Math.random() * 26;
-    const spot = { x: cx + Math.cos(a) * rad, y: cy + Math.sin(a) * rad * 0.7 };
-    const from = offstage(doc, spot.x, spot.y, 300);
-    const c = spawnCursor(layer, agentName(i + 2), { small: true });
-    c.place(from.x, from.y);
-    const tl = gsap.timeline({ delay: i * 0.07 });
-    c.to(spot.x, spot.y, 0.6 + Math.random() * 0.25, tl);
-    tl.call(() => sfx.click(spot.x - (doc.defaultView?.scrollX ?? 0)));
-    c.press(tl);
-    // a little busy work: two nudges and a press each
-    for (let k = 0; k < 2; k++) {
-      c.to(spot.x + (Math.random() - 0.5) * 22, spot.y + (Math.random() - 0.5) * 16, 0.32, tl, "+=0.12");
-      c.press(tl);
-    }
-    tl.call(() => clockOut(c, Math.random() * 0.2));
-  }
 }

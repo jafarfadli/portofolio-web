@@ -22,8 +22,6 @@ export function Closing({ profile: p }: { profile: Profile }) {
       <footer className="footer">
         <span>{fullName(p)}, {new Date().getFullYear()}</span>
         <span>Built with Next.js, served from a Mac mini</span>
-        {/* shown by home-motion.ts when motion is allowed; the page reads the same without it */}
-        <button type="button" className="crew-go" data-crew-go hidden>Watch AI agents rebuild this page</button>
       </footer>
     </section>
   );
