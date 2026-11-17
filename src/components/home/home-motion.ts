@@ -503,7 +503,7 @@ export function initHomeMotion(doc: Document): () => void {
       if (!reduce) {
         const held = () =>
           card.classList.contains("is-offscreen") || doc.hidden || print.matches(":hover") || card.matches(":has(:focus-visible)");
-        intervals.push(win.setInterval(() => { if (!held()) show(at + 1); }, 4600));
+        intervals.push(win.setInterval(() => { if (!held()) show(at + 1); }, 2800));
       }
       const io = new IntersectionObserver((entries) => card.classList.toggle("is-offscreen", !entries.at(-1)!.isIntersecting), { threshold: 0.35 });
       io.observe(card);
