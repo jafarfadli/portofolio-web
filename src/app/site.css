@@ -583,11 +583,95 @@ button.feat-tag { cursor: pointer; }
   .preview { display: none; }
 }
 
+/* ---------- Agent swarm: a crew of multiplayer cursors builds the page, then parks and checks it (components/home/swarm) ----------
+   A design tool's marks in the page's own palette, by the ground under them: stock on navy, ink on concrete, metal
+   placeholders, and the live dot's green for copies and gaps. Agents wear the tones of their section's ground
+   (light ones on navy, navy and ink on concrete, green on both), each with a printed tag of its initials. The layer
+   sits over the page in page coordinates, clipped to it, and never takes the pointer. */
+:root { --sw-accent: #5ee08c; --sw-accent-ink: color-mix(in oklab, #5ee08c 62%, var(--ink)); }
+.sw-layer { position: absolute; left: 0; top: 0; width: 100%; z-index: 60; overflow: clip; pointer-events: none; }
+.sw-layer [hidden] { display: none !important; }
+.sw-ink { position: absolute; left: 0; top: 0; width: 100%; overflow: visible; }
+.sw-ghost { pointer-events: none; }
+.sw-hide { visibility: hidden !important; }
+.sw-mute, .sw-mute * { color: transparent !important; -webkit-text-fill-color: transparent !important; text-shadow: none !important; }
+.sw-mute svg, .sw-mute img { visibility: hidden !important; }
+/* while the page is built the floating screens hold still and the nav stays put; a section's strip waits for it */
+.sw-building .float, .sw-building .ico-stk.is-wave { animation-play-state: paused !important; }
+.sw-building .slot-li { translate: none !important; }
+.sw-building .nav.is-hidden { transform: none; }
+.reel-track.sw-hold { animation-play-state: paused !important; }
+
+/* the agents */
+.sw-cur { position: absolute; left: 0; top: 0; z-index: 3; will-change: transform; }
+.sw-ptrs { position: absolute; left: 0; top: 0; transform: scale(var(--press, 1)); transform-origin: 0 0; }
+.sw-ptr { position: absolute; left: var(--hx, 0); top: var(--hy, 0); display: none; overflow: visible; filter: drop-shadow(0 1.5px 2px rgba(10, 11, 18, 0.4)); }
+.sw-ptr .body { fill: var(--c); stroke: var(--rim); stroke-width: 1.5; stroke-linejoin: round; }
+.sw-ptr .ghost { fill: var(--rim); stroke: var(--c); stroke-width: 1.4; stroke-linejoin: round; }
+.sw-ptr .halo { fill: none; stroke: var(--rim); stroke-linecap: round; stroke-linejoin: round; }
+.sw-ptr .line { fill: none; stroke: var(--c); stroke-linecap: round; stroke-linejoin: round; }
+.sw-ptr .nib { fill: none; stroke: var(--rim); stroke-width: 1.2; stroke-linecap: round; }
+.sw-cur[data-shape="arrow"] [data-s="arrow"], .sw-cur[data-shape="dup"] [data-s="dup"], .sw-cur[data-shape="cross"] [data-s="cross"],
+.sw-cur[data-shape="ibeam"] [data-s="ibeam"], .sw-cur[data-shape="pen"] [data-s="pen"], .sw-cur[data-shape="rotate"] [data-s="rotate"],
+.sw-cur[data-shape="ew"] [data-s="ew"], .sw-cur[data-shape="ns"] [data-s="ns"] { display: block; }
+/* a printed tag with the agent's initials, in its tone; it stays on while the agent is parked in its crew's huddle */
+.sw-name {
+  position: absolute; left: 12px; top: 20px; padding: 2px 5px 3px; border-radius: 3px; white-space: nowrap;
+  background: var(--c); color: var(--rim); box-shadow: 0 0 0 1px color-mix(in srgb, var(--rim) 22%, transparent), 0 1px 3px rgba(10, 11, 18, 0.3);
+  font-family: var(--font); font-size: 10.5px; font-weight: 750; line-height: 1.3; letter-spacing: 0.08em; font-feature-settings: "tnum" 1;
+}
+.sw-cur.is-small .sw-ptrs { scale: 0.86; }
+.sw-cur.is-small .sw-name { left: 10px; top: 17px; padding: 1px 4px 2px; font-size: 9.5px; }
+
+/* marks: stock on the navy grounds, ink on the concrete ones */
+.sw-box, .sw-badge, .sw-caret, .sw-hl, .sw-pen, .sw-band, .sw-anchor { --sw-line: var(--stock); --sw-ground: var(--navy); }
+.sw-box.is-light, .sw-badge.is-light, .sw-caret.is-light, .sw-hl.is-light, .sw-pen.is-light, .sw-band.is-light, .sw-anchor.is-light { --sw-line: var(--ink); --sw-ground: var(--concrete); }
+.sw-box { position: absolute; left: 0; top: 0; box-sizing: border-box; border: 1.5px solid var(--sw-line); }
+.sw-box.is-thin { border-width: 1px; border-style: dashed; }
+.sw-box.is-copy { border-color: var(--sw-accent); border-style: dashed; }
+.sw-box.is-copy.is-light { border-color: var(--sw-accent-ink); }
+.sw-ph { position: absolute; inset: 0; display: none; place-items: center; background: var(--metal); color: var(--metal-dark); opacity: var(--ph-op, 1); }
+.sw-box.is-light .sw-ph { background: var(--metal-mid); color: var(--ink-2); }
+.sw-ph svg { display: none; }
+.sw-box[data-ph="1"] .sw-ph, .sw-box[data-ph="2"] .sw-ph { display: grid; }
+.sw-box[data-ph="2"] .sw-ph svg { display: block; }
+.sw-box > b { position: absolute; display: none; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; box-sizing: border-box; background: var(--sw-ground); border: 1.5px solid var(--sw-line); }
+.sw-box.has-hd > b { display: block; }
+.sw-box > b[data-c="tl"] { left: 0; top: 0; }
+.sw-box > b[data-c="tr"] { left: 100%; top: 0; }
+.sw-box > b[data-c="bl"] { left: 0; top: 100%; }
+.sw-box > b[data-c="br"] { left: 100%; top: 100%; }
+.sw-badge {
+  position: absolute; left: 0; top: 0; translate: -50% 0; padding: 1px 5px 2px; border-radius: 3px; white-space: nowrap;
+  background: var(--sw-line); color: var(--sw-ground); font-family: var(--font); font-size: 11px; font-weight: 700; line-height: 1.3; font-feature-settings: "tnum" 1;
+}
+.sw-badge.is-copy { background: var(--sw-accent); color: var(--ink); }
+.sw-caret { position: absolute; width: 2px; margin-left: -1px; border-radius: 1px; background: var(--sw-line); }
+.sw-hl { position: absolute; background: color-mix(in srgb, var(--sw-accent) 38%, transparent); }
+.sw-mline { fill: none; stroke: var(--sw-accent); stroke-width: 1.2; }
+.sw-pen { fill: none; stroke: var(--sw-line); stroke-width: 1.5; stroke-linejoin: round; }
+.sw-band { fill: none; stroke: var(--sw-line); stroke-width: 1; stroke-dasharray: 4 3; opacity: 0.7; }
+.sw-anchor { fill: var(--sw-ground); stroke: var(--sw-line); stroke-width: 1.5; }
+
+/* the swarm's one control: sound, in the nav */
+.sound-btn {
+  display: inline-grid; flex: none; place-items: center; width: 42px; height: 42px; padding: 0; border: 1.5px solid var(--line-strong);
+  border-radius: 50%; background: transparent; color: var(--on-ground); cursor: pointer; transition: background-color 200ms var(--ease-out);
+}
+.sound-btn[hidden] { display: none; }
+.sound-btn:hover { background: rgba(242, 242, 238, 0.1); }
+.sound-btn:focus-visible { outline: 3px solid var(--stock); outline-offset: 2px; }
+.sound-btn svg { width: 20px; height: 20px; }
+.sound-btn .cone { fill: currentColor; }
+.sound-btn .wave { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.sound-btn.is-waiting .wave { opacity: 0.4; }
+
 /* ---------- First-load entrance: hold the start state until the island runs ----------
    A script in <head> adds .motion-pending on "/" when motion is allowed; initHomeMotion removes it in the same task
    in which GSAP applies the same start values, so the server-painted hero never shows, vanishes, then drops in.
-   Only the entrance targets are hidden. If the script never runs, the keyframes below restore everything after 2.5s. */
-html.motion-pending .nav,
+   Only the entrance targets are hidden. If the script never runs, the keyframes below restore everything after 2.5s.
+   When the swarm builds the page (swarm-pending), the nav has no entrance: it is simply there. */
+html.motion-pending:not(.swarm-pending) .nav,
 html.motion-pending .stickers .slot-li,
 html.motion-pending .statement .hero-actions .btn { opacity: 0; animation: motion-pending-fade 0.01s linear 2.5s forwards; }
 html.motion-pending .lede .line > span,
@@ -596,6 +680,10 @@ html.motion-pending .lede .line > span { transform: translateY(108%); }
 html.motion-pending .pendulum { transform: translateY(-100vh); }
 @keyframes motion-pending-fade { to { opacity: 1; } }
 @keyframes motion-pending-place { to { transform: none; } }
+/* First visit: the swarm builds the page below the nav, so its parts are held hidden until it hides each one itself
+   (section grounds stay). If the script never runs, they show after 4s. */
+html.swarm-pending main > section > *:not(.hero-dust) { visibility: hidden; animation: swarm-pending-show 0.01s linear 4s forwards; }
+@keyframes swarm-pending-show { to { visibility: visible; } }
 
 /* ---------- Reduced motion: final, readable state ---------- */
 @media (prefers-reduced-motion: reduce) {

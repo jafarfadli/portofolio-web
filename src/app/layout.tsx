@@ -14,10 +14,11 @@ const archivo = localFont({
 
 /**
  * Runs before first paint. On "/" with motion allowed, marks the page so site.css can hold the entrance start state
- * until HomeMotion takes over (see "First-load entrance" in site.css). Other routes never get the class.
+ * until HomeMotion takes over (see "First-load entrance" in site.css). On the first visit of a browser session it also
+ * holds the page for the agent swarm to build (swarm-pending). Other routes never get the classes.
  */
 const MOTION_PENDING =
-  `(function(){try{var h=location.pathname.replace(/\\/$/,"");if(h===${JSON.stringify(BASE_PATH)}&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion-pending")}catch(e){}})()`;
+  `(function(){try{var h=location.pathname.replace(/\\/$/,"");if(h===${JSON.stringify(BASE_PATH)}&&!matchMedia("(prefers-reduced-motion: reduce)").matches){var c=document.documentElement.classList;c.add("motion-pending");var built=true;try{built=sessionStorage.getItem("swarm-built")==="1"}catch(e){}if(!built)c.add("swarm-pending")}}catch(e){}})()`;
 
 /** Texture URLs that move with the mount path; empty at the root, where site.css already points at the right place. */
 const TEXTURE_VARS = BASE_PATH
