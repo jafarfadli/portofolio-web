@@ -263,20 +263,10 @@ test.describe("first visit: AI agents build the page", () => {
     await expect.poll(() => page.locator(".sw-cur").count()).toBeGreaterThan(0);
   });
 
-  test("the only control is a sound switch in the nav", async ({ page }) => {
+  test("the swarm has no controls and no sound", async ({ page }) => {
     await page.goto("/");
-    const sound = page.locator("[data-sound]");
-    await expect(sound).toBeVisible();
-    await expect(page.getByRole("button", { name: /skip|rebuild|hide|tour/i })).toHaveCount(0);
-    // Browsers keep sound locked until a click: the switch's first press turns it on, the next turns it off.
-    await expect(page.getByRole("button", { name: "Sound", exact: true })).toBeVisible();
-    await expect(sound).toHaveAttribute("aria-pressed", "false");
-    await sound.click();
-    await expect(sound).toHaveAttribute("aria-pressed", "true");
-    await expect(sound).toHaveAttribute("title", "Sound on");
-    await sound.click();
-    await expect(sound).toHaveAttribute("aria-pressed", "false");
-    await expect(sound).toHaveAttribute("title", "Sound off");
+    await expect(page.locator("[data-sound]")).toHaveCount(0);
+    await expect(page.getByRole("button", { name: /sound|skip|rebuild|hide|tour/i })).toHaveCount(0);
   });
 });
 
@@ -290,10 +280,9 @@ test.describe("reduced motion", () => {
 
   test("renders final states without waiting for scroll", async ({ page }) => {
     await page.goto("/");
-    // No agent swarm at all: nothing held or built, no agents, no sound switch.
+    // No agent swarm at all: nothing held or built, no agents.
     await expect(page.locator(".sw-layer")).toHaveCount(0);
     await expect(page.locator(".sw-hide")).toHaveCount(0);
-    await expect(page.locator("[data-sound]")).toBeHidden();
     await expect(page.locator(".lede .line > span").first()).toHaveCSS("transform", "none");
     await page.locator("#work").scrollIntoViewIfNeeded();
     await expect(page.locator(".pin").first()).toHaveCSS("opacity", "1");

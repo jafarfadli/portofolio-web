@@ -653,18 +653,6 @@ button.feat-tag { cursor: pointer; }
 .sw-band { fill: none; stroke: var(--sw-line); stroke-width: 1; stroke-dasharray: 4 3; opacity: 0.7; }
 .sw-anchor { fill: var(--sw-ground); stroke: var(--sw-line); stroke-width: 1.5; }
 
-/* the swarm's one control: sound, in the nav */
-.sound-btn {
-  display: inline-grid; flex: none; place-items: center; width: 42px; height: 42px; padding: 0; border: 1.5px solid var(--line-strong);
-  border-radius: 50%; background: transparent; color: var(--on-ground); cursor: pointer; transition: background-color 200ms var(--ease-out);
-}
-.sound-btn[hidden] { display: none; }
-.sound-btn:hover { background: rgba(242, 242, 238, 0.1); }
-.sound-btn:focus-visible { outline: 3px solid var(--stock); outline-offset: 2px; }
-.sound-btn svg { width: 20px; height: 20px; }
-.sound-btn .cone { fill: currentColor; }
-.sound-btn .wave { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
-.sound-btn.is-waiting .wave { opacity: 0.4; }
 
 /* ---------- First-load entrance: hold the start state until the island runs ----------
    A script in <head> adds .motion-pending on "/" when motion is allowed; initHomeMotion removes it in the same task

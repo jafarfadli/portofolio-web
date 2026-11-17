@@ -4,7 +4,6 @@
  */
 import { clamp, easeInOut, easeOut, frameBounds, rand, type Box, type Frame, type Pt } from "./geom";
 import { ghostOf } from "./ghost";
-import * as sfx from "./sound";
 import type { Swarm } from "./swarm";
 import type { Act, Agent, Group, Member, Ov, Part, Piece, Task } from "./types";
 
@@ -32,7 +31,6 @@ function* frameOut(sw: Swarm, a: Agent, p: Piece, o: { img?: boolean; mute?: boo
   a.shape = "cross";
   yield* sw.moveTo(a, () => sw.local(sw.frame(p), 0, 0));
   a.press = 1;
-  sfx.press(a.x - sw.sx);
   const draw = { w: 0, h: 0 };
   a.ov = () => [{ t: "box", f: sw.frame(p), b: { x: 0, y: 0, w: draw.w, h: draw.h }, handles: true, badge: size(draw.w, draw.h), ph }];
   const end = dragEnd(sw, f0);
@@ -58,7 +56,6 @@ function* frameOut(sw: Swarm, a: Agent, p: Piece, o: { img?: boolean; mute?: boo
   if (o.mute) sw.set(p, { mute: true });
   sw.reveal(p, o.how ?? (o.img ? "sweep" : "fade"));
   o.shown?.();
-  sw.note(sw.bounds(f0));
   let op = 1;
   a.ov = () => [{ t: "box", f: sw.frame(p), b: full(f0), handles: true, badge: size(f0.w, f0.h), ph, phOp: op }];
   while (op > 0) op = Math.max(0, op - (yield) / 0.22);
@@ -100,7 +97,6 @@ function* text(sw: Swarm, a: Agent, t: Task): Act {
   yield* sw.moveTo(a, () => sw.local(sw.frame(p), L0.x, L0.y));
   if (all.w * sc() > 110) {
     a.press = 1;
-    sfx.press(a.x - sw.sx);
     const d = { w: 0, h: 0 };
     a.ov = () => [{ t: "box", f: sw.frame(p), b: { x: L0.x, y: L0.y, w: d.w, h: d.h }, handles: true, badge: size(d.w * sc(), d.h * sc()) }];
     yield* sw.moveTo(a, () => sw.local(sw.frame(p), all.x + all.w, L0.y + L0.h), {
@@ -119,17 +115,14 @@ function* text(sw: Swarm, a: Agent, t: Task): Act {
   yield* sw.type(a, p, T.lines.map((_, i) => i), t.data.pace ? Number(t.data.pace) : 1);
   a.caret = null;
   sw.endTyping(p);
-  sw.note(sw.bounds(sw.frame(p)));
   a.shape = "arrow";
   a.ov = () => [sel(sw.frame(p), { badge: size(p.base!.w * sc(), p.base!.h * sc()) })];
   if (grow && p.look.sc !== null) {
     const from = p.look.sc * fs;
     const steps = [24, 32, 40, 48, 56, 64, 72, 88, 104, 120, 144, 168].filter((s) => s > from + 2 && s < fs - 2);
-    let k = 0;
     for (const s of [...steps, fs]) {
       yield* sw.wait(0.045);
       sw.set(p, { sc: s / fs });
-      sfx.grow(k++, a.x - sw.sx);
     }
     sw.set(p, { sc: null });
     yield* sw.wait(0.12);
@@ -186,7 +179,6 @@ function* tilt(sw: Swarm, a: Agent, t: Task): Act {
   yield* sw.moveTo(a, corner);
   a.shape = "rotate";
   a.press = 1;
-  sfx.press(a.x - sw.sx);
   a.ov = () => [sel(sw.frame(p), { badge: `${Math.round(p.look.tilt ?? to)}°` })];
   let k = 0;
   while (k < 1) {
@@ -196,7 +188,6 @@ function* tilt(sw: Swarm, a: Agent, t: Task): Act {
     a.x = c.x;
     a.y = c.y;
   }
-  sfx.snap(a.x - sw.sx);
   a.shape = "arrow";
   yield* sw.wait(0.12);
   a.ov = null;
@@ -227,7 +218,6 @@ function* line(sw: Swarm, a: Agent, t: Task): Act {
   a.ov = () => [{ t: "pen", pts: placed, c: a.color }];
   if (!how.draw) sw.reveal(p, "fade");
   t.ready = true;
-  sw.note(sw.bounds(sw.frame(p)));
   yield* sw.moveTo(a, { x: a.x + rand(14, 30), y: a.y + rand(10, 24) }, { speed: 1.4 });
   a.ov = null;
   how.done?.();
@@ -245,7 +235,6 @@ function* count(sw: Swarm, a: Agent, t: Task): Act {
   a.ov = () => [{ t: "box", f: sw.frame(p), b: full(sw.frame(p)), thin: true }];
   for (let i = 0; i < 10; i++) {
     yield* sw.wait(0.07);
-    sfx.key(a.x - sw.sx, i % 4 === 3);
   }
   a.shape = "arrow";
   a.ov = null;
@@ -278,7 +267,6 @@ function* par(sw: Swarm, a: Agent, t: Task): Act {
   const all = T.lines.every((l, i) => T.shown[i] >= l.w);
   if (all) {
     sw.endTyping(p);
-    sw.note(sw.bounds(sw.frame(p)));
     a.shape = "arrow";
     a.ov = () => [sel(sw.frame(p))];
     yield* sw.wait(0.3);
@@ -342,7 +330,6 @@ function* dup(sw: Swarm, a: Agent, t: Task): Act {
   a.shape = "dup";
   yield* sw.wait(0.1);
   a.press = 1;
-  sfx.press(a.x - sw.sx);
   const g = sw.ghost(ghostOf(src.root, sf, sw.sx, sw.sy));
   t.data.ghost = g;
   const u = { x: a.x, y: a.y };
@@ -365,7 +352,6 @@ function* dup(sw: Swarm, a: Agent, t: Task): Act {
       g.style.rotate = `${(r1 - r0) * e}deg`;
     },
   });
-  sw.note(sw.bounds(df));
   sw.dropGhost(g);
   t.data.ghost = null;
   sw.settleCopy(dst, src, false);
@@ -403,11 +389,9 @@ function* edit(sw: Swarm, a: Agent, t: Task): Act {
   a.ov = null;
   if (part.kind === "text" && (p.el.textContent ?? "").replace(/\s+/g, " ").trim().length > PASTE) {
     // a long text is pasted over the selection, not retyped: it lands at once, selected
-    sfx.key(a.x - sw.sx, true);
     sw.set(p, { hide: false, mute: false });
     const rects = sw.textRects(p.el);
     a.ov = () => [{ t: "hl", rects }];
-    sw.note(sw.bounds(sw.frame(p)));
     yield* sw.wait(0.24);
     a.ov = null;
     a.shape = "arrow";
@@ -442,7 +426,6 @@ function* swap(sw: Swarm, a: Agent, t: Task): Act {
     sw.reveal(p, "now");
     old.animate([{ clipPath: "inset(0 0 0 0)" }, { clipPath: "inset(100% 0 0 0)" }], { duration: 480, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" });
   } else sw.reveal(p, p.el.matches(".ico-stk") ? "pop" : "sweep");
-  sw.note(sw.bounds(f));
   yield* sw.wait(0.42);
   if (old) {
     sw.dropGhost(old);

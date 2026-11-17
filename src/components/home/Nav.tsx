@@ -19,8 +19,6 @@ export function Nav({ name }: { name: string }) {
         ))}
       </nav>
       <div className="nav-actions">
-        {/* the agent swarm's sound switch: shown and drawn by swarm.ts when motion is allowed */}
-        <button type="button" className="sound-btn" data-sound hidden aria-pressed="false" aria-label="Sound" />
         <a className="btn btn-stock" href={withBase("/cv")}>Download CV <Icon name="download" /></a>
         <MobileMenu sections={SECTIONS} />
       </div>

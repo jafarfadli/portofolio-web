@@ -15,7 +15,7 @@
  * or not); work left far above is finished at once, so nothing stays missing. Escape finishes it all at once.
  *
  * Once a section is built, its whole crew dashes off the screen (the owner preferred an empty page to parked huddles;
- * the huddle code stays, with no one kept in it). The only control is a sound switch in the nav.
+ * the huddle code stays, with no one kept in it). There are no controls: Escape puts everything in place at once.
  *
  * Every agent runs one small script at a time (a generator, stepped once per frame with the frame's time). The page
  * parts' looks are written by the renderer once per frame, after all reads.
@@ -26,7 +26,6 @@ import { ghostOf, textGhostOf } from "./ghost";
 import { HOT, POINTER_SVG, TONES, TONES_LIGHT, initials, type Shape, type Tone } from "./look";
 import { partsOf, planPage } from "./plan";
 import { Overlay } from "./render";
-import * as sfx from "./sound";
 import type { Act, Agent, Crew, Group, Look, Member, Ov, Part, Piece, PieceKind, Section, Task } from "./types";
 
 export type SwarmHooks = {
@@ -55,9 +54,6 @@ const TAG_SMALL = { w: 38, h: 35 };
 const neutral = (): Look => ({ hide: false, mute: false, clip: null, tilt: null, sc: null });
 
 type Mode = "off" | "build" | "finale" | "idle";
-
-const SPEAKER_ON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path class="cone" d="M4 9.5H7.5L12 5.5V18.5L7.5 14.5H4Z"/><path class="wave" d="M15.5 9.2A4 4 0 0 1 15.5 14.8M18 7A7.2 7.2 0 0 1 18 17"/></svg>';
-const SPEAKER_OFF = '<svg viewBox="0 0 24 24" aria-hidden="true"><path class="cone" d="M4 9.5H7.5L12 5.5V18.5L7.5 14.5H4Z"/><path class="wave" d="M16 9.5L21 14.5M21 9.5L16 14.5"/></svg>';
 
 export class Swarm {
   readonly doc: Document;
@@ -98,7 +94,6 @@ export class Swarm {
   private readonly cap: number;
   private readonly stay: number;
   private readonly live: HTMLElement;
-  private readonly soundBtn: HTMLButtonElement | null;
 
   constructor(doc: Document, hooks: SwarmHooks) {
     this.doc = doc;
@@ -114,23 +109,6 @@ export class Swarm {
     this.live.setAttribute("aria-live", "polite");
     doc.body.append(this.live);
     const sig = { signal: this.ac.signal };
-    sfx.unlockOnFirstGesture(this.ac.signal);
-    // the one control: sound, in the nav
-    this.soundBtn = doc.querySelector<HTMLButtonElement>("[data-sound]");
-    if (this.soundBtn) {
-      const btn = this.soundBtn;
-      btn.hidden = false;
-      btn.addEventListener("click", () => {
-        if (!sfx.isLive()) {
-          sfx.unlock();
-          sfx.setMuted(false);
-        } else sfx.setMuted(!sfx.isMuted());
-        this.paintSound();
-      }, sig);
-      const off = sfx.onChange(() => this.paintSound());
-      this.ac.signal.addEventListener("abort", () => { off(); btn.hidden = true; });
-      this.paintSound();
-    }
     this.win.addEventListener("pointermove", (e) => {
       if (e.pointerType === "mouse") this.pointer = { x: e.pageX, y: e.pageY };
     }, sig);
@@ -149,20 +127,6 @@ export class Swarm {
     this.readView();
     // for checking the plan from the console: /?swarm-debug
     if (/[?&]swarm-debug\b/.test(this.win.location.search)) (this.win as unknown as { __swarm: Swarm }).__swarm = this;
-  }
-
-  /** The sound switch: a speaker with waves when sound plays, crossed out when it is off. */
-  private paintSound(): void {
-    const btn = this.soundBtn;
-    if (!btn) return;
-    const on = !sfx.isMuted();
-    const playing = on && sfx.isLive();
-    btn.innerHTML = on ? SPEAKER_ON : SPEAKER_OFF;
-    // a toggle: one name, its state in aria-pressed; the tooltip says what a press does
-    btn.setAttribute("aria-label", "Sound");
-    btn.setAttribute("aria-pressed", String(playing));
-    btn.title = playing ? "Sound on" : on ? "Sound: press to turn on" : "Sound off";
-    btn.classList.toggle("is-waiting", on && !playing);
   }
 
   /* ------------------------------------------------------------------ lifecycle */
@@ -258,7 +222,6 @@ export class Swarm {
     const secs = (this.clock - this.t0).toFixed(1);
     const n = this.nextAgent - 1;
     this.live.textContent = `The page is built: ${n} agents, ${secs} seconds.`;
-    sfx.chord();
     this.crews.forEach((c) => { c.started = true; c.done = true; });
     this.agents.forEach((a) => { if (!a.leaving) this.setJob(a, null); a.task = null; a.ov = null; a.caret = null; a.shape = "arrow"; a.idle = true; });
     this.placeAt = this.clock + 0.05;
@@ -853,19 +816,13 @@ export class Swarm {
       a.caret = { p, i };
       while (T.shown[i] < l.w) {
         budget += yield;
-        let keys = 0;
         while (budget > 0 && T.shown[i] < l.w) {
           let d = rand(0.016, 0.042);
           if (Math.random() < 0.025) d += rand(0.08, 0.18);
           budget -= d * k;
           T.shown[i] = Math.min(l.w, T.shown[i] + T.perChar);
-          keys++;
         }
-        if (keys) {
-          this.mark(p);
-          const c = this.caretPoint(p, i);
-          sfx.key(c.x - this.sx, Math.random() < 0.16);
-        }
+        this.mark(p);
       }
     }
   }
@@ -1019,13 +976,7 @@ export class Swarm {
 
   *click(a: Agent): Act {
     a.press = 1;
-    sfx.press(a.x - this.sx);
     yield* this.wait(0.07);
-  }
-
-  /** A soft note for something set in place, by its size on screen and where it is. */
-  note(b: Box): void {
-    sfx.note(Math.sqrt((b.w * b.h) / Math.max(1, this.vw * this.vh)), b.x + b.w / 2 - this.sx);
   }
 
   inView(b: Box, margin = 0): boolean {
