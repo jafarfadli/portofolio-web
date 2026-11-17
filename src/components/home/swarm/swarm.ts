@@ -1,8 +1,8 @@
 /**
  * The agent swarm: a crew of multiplayer cursors that builds this page in front of the visitor, the way a team builds a
- * page in a design tool, and then stays on it.
+ * page in a design tool, and then leaves.
  *
- * Build (the first visit of a browser session): every visible part of the page below the nav (which is simply there)
+ * Build (every load of the page, a reload too): every visible part of the page below the nav (which is simply there)
  * is planned as a task (plan.ts): boxes dragged out with a crosshair and a live W x H badge over a placeholder, images
  * swept in, text typed under an I-beam, headings typed small and grown, lines drawn with a pen tool, tilted things
  * rotated into their tilt, and repeated parts (chips, tags, rows, passes, cards, the headline's lines) built once and
@@ -14,10 +14,8 @@
  * Tasks unlock top down as the visitor scrolls (a part on screen also pulls in whatever it waits for, below the fold
  * or not); work left far above is finished at once, so nothing stays missing. Escape finishes it all at once.
  *
- * Once a section is built, a few of its crew go straight to a huddle in one of its corners (sections alternate sides,
- * and a corner with something in it is passed over), wearing their initials, and the rest dash off the screen. One
- * comes over to whatever the visitor points at. Parked agents move aside for the pointer. The only control is a sound
- * switch in the nav.
+ * Once a section is built, its whole crew dashes off the screen (the owner preferred an empty page to parked huddles;
+ * the huddle code stays, with no one kept in it). The only control is a sound switch in the nav.
  *
  * Every agent runs one small script at a time (a generator, stepped once per frame with the frame's time). The page
  * parts' looks are written by the renderer once per frame, after all reads.
@@ -108,7 +106,8 @@ export class Swarm {
     this.hooks = hooks;
     this.small = this.win.matchMedia("(max-width: 860px)").matches;
     this.cap = this.small ? 16 : 36;
-    this.stay = this.small ? 2 : 3;
+    // nobody stays once a section is built: the whole crew heads off the screen
+    this.stay = 0;
     this.ov = new Overlay(doc);
     this.live = doc.createElement("p");
     this.live.className = "sr-only";
@@ -255,9 +254,7 @@ export class Swarm {
   private finale(): void {
     this.setMode("finale");
     this.doc.documentElement.classList.remove("sw-building");
-    try {
-      this.win.sessionStorage.setItem(BUILT, "1");
-    } catch { /* storage blocked */ }
+    // not remembered: a reload builds the page again (only a test sets swarm-built, to skip the build)
     const secs = (this.clock - this.t0).toFixed(1);
     const n = this.nextAgent - 1;
     this.live.textContent = `The page is built: ${n} agents, ${secs} seconds.`;

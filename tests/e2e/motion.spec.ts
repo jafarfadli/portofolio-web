@@ -1,9 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
 
-/** A visit after the first in this tab: the agents have built the page already, so it shows at once. */
+/** Skips the build (a flag only tests set), so the page shows at once. */
 const returning = (page: Page) => page.addInitScript(() => { try { sessionStorage.setItem("swarm-built", "1"); } catch { /* blocked */ } });
 
-test.describe("a returning visit: the page shows at once and the crew is parked", () => {
+test.describe("with the build skipped, the page shows at once", () => {
   test.beforeEach(({ page }) => returning(page));
 
   test("a short press turns the badge over and back; there is no flip button", async ({ page }) => {
@@ -247,28 +247,20 @@ test.describe("first visit: AI agents build the page", () => {
     await expect(page.locator(".sw-ghost")).toHaveCount(0);
     await expect(page.locator("html")).not.toHaveClass(/sw-building/);
     await expect(page.locator("[data-reel-track]")).not.toHaveClass(/sw-hold/);
-    // The crews do not leave: every section keeps a few, parked in a huddle inside it.
-    await expect.poll(() => page.locator(".sw-cur.is-parked").count(), { timeout: 8000 }).toBeGreaterThan(3);
-    await expect.poll(() => page.evaluate(() => {
-      const secs = [...document.querySelectorAll("main > section")].map((s) => {
-        const r = s.getBoundingClientRect();
-        return { top: r.top + scrollY, bottom: r.bottom + scrollY };
-      });
-      const at = [...document.querySelectorAll<HTMLElement>(".sw-cur.is-parked")].map((c) => new DOMMatrix(getComputedStyle(c).transform).m42);
-      return secs.filter((s) => at.filter((y) => y > s.top && y < s.bottom).length >= 2).length;
-    }), { timeout: 8000 }).toBe(await page.locator("main > section").count());
-    expect(await page.evaluate(() => sessionStorage.getItem("swarm-built"))).toBe("1");
+    // Nobody stays: once the page is built every agent heads off the screen, and nothing is remembered.
+    await expect.poll(() => page.locator(".sw-cur").count(), { timeout: 8000 }).toBe(0);
+    expect(await page.evaluate(() => sessionStorage.getItem("swarm-built"))).toBeNull();
   });
 
-  test("a reload in the same tab shows the page at once, with the crew parked", async ({ page }) => {
+  test("a reload in the same tab builds the page again", async ({ page }) => {
     await page.goto("/");
     await expect.poll(() => page.locator(".sw-cur").count()).toBeGreaterThan(3);
     await page.keyboard.press("Escape");
     await expect(page.locator(".sw-hide")).toHaveCount(0);
     await page.reload();
     await expect(page.locator("html")).not.toHaveClass(/swarm-pending/);
-    await expect(page.locator(".sw-hide")).toHaveCount(0);
-    await expect.poll(() => page.locator(".sw-cur.is-parked").count(), { timeout: 8000 }).toBeGreaterThan(3);
+    await expect(page.locator(".sw-hide").first()).toBeAttached();
+    await expect.poll(() => page.locator(".sw-cur").count()).toBeGreaterThan(0);
   });
 
   test("the only control is a sound switch in the nav", async ({ page }) => {
