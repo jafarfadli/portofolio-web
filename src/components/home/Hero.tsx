@@ -20,8 +20,9 @@ function SealCaption({ text }: { text: string | null }) {
 export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: string }) {
   const { profile: p, photo, projects, achievements } = content;
   const seal = achievements.find((a) => a.sealText);
-  // The phone sticker is tall, so only a real phone capture goes on it. That project then leaves the screen row,
-  // and the first three other featured projects with a desktop screenshot fill it in order.
+  // The first featured project with a phone capture gets the slot beside the action row (s-b), shown landscape with
+  // its desktop screenshot. It then leaves the screen row, and the first three other featured projects with a desktop
+  // screenshot fill that row in order.
   const phone = projects.find((pr) => pr.phoneShot);
   const screens = projects.filter((pr) => pr !== phone && pr.screenshot).slice(0, SCREEN_SLOTS.length);
   const name = `${p.firstName} ${p.lastName}`.toUpperCase();
@@ -138,11 +139,11 @@ export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: 
               </span>
             </li>
           ))}
-          {phone?.phoneShot ? (
+          {phone?.screenshot ? (
             <li className="slot-li s-b">
               <span className="float">
                 <a className="sticker" href={`#p-${phone.slug}`}>
-                  <img src={phone.phoneShot.url} srcSet={phone.phoneShot.srcSet} sizes="100px" alt={phone.phoneShot.alt} width={phone.phoneShot.width} height={phone.phoneShot.height} />
+                  <img src={phone.screenshot.url} srcSet={phone.screenshot.srcSet} sizes="(max-width: 860px) 60vw, 220px" alt={phone.screenshot.alt} width={phone.screenshot.width} height={phone.screenshot.height} />
                   <span className="sticker-cap">{phone.stickerCaption} <Icon name="arrow-ur" /></span>
                 </a>
               </span>

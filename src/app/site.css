@@ -299,7 +299,7 @@ main { position: relative; z-index: 1; }
    gutter + 390px (the row is 354px, the phone's tilt reaches 10px past its box, the rest is clearance) and the seal keeps its
    1.5em step from the phone. Under 1100px the pair moves again (see Responsive) */
 .s-a { left: 7%; bottom: 7%; width: clamp(200px, 17vw, 260px); aspect-ratio: 1.6; --rot: -4deg; --float-t: 7.4s; --float-d: -1.2s; --float-y: 9px; --float-r: 1deg; }
-.s-b { left: max(calc(var(--gutter) + 6.3 * var(--lede-fs)), calc(var(--gutter) + 390px)); top: calc(13% + 3.3 * var(--lede-fs)); width: clamp(80px, 6.4vw, 96px); aspect-ratio: 0.47; --rot: 7deg; --float-t: 6.2s; --float-d: -3.4s; --float-y: 11px; --float-r: 1.6deg; --float-x: 3px; }
+.s-b { left: max(calc(var(--gutter) + 5.2 * var(--lede-fs)), calc(var(--gutter) + 385px)); top: calc(13% + 4.6 * var(--lede-fs)); width: clamp(160px, 13vw, 200px); aspect-ratio: 1.6; --rot: 5deg; --float-t: 6.2s; --float-d: -3.4s; --float-y: 11px; --float-r: 1.6deg; --float-x: 3px; }
 .s-c { left: 27%; bottom: 3%; width: clamp(180px, 15vw, 230px); aspect-ratio: 1.6; --rot: -3deg; --float-t: 8.6s; --float-d: -5.1s; --float-y: 8px; --float-r: 0.8deg; --float-x: 6px; }
 .s-d { left: 47%; bottom: 11%; width: clamp(150px, 12vw, 185px); aspect-ratio: 1.6; --rot: 3deg; --float-t: 6.9s; --float-d: -2.3s; --float-y: 10px; --float-r: 1.3deg; }
 .s-d img { object-position: center 18%; }
@@ -552,14 +552,11 @@ button.feat-tag { cursor: pointer; }
 /* ---------- Responsive ---------- */
 @media (max-width: 1100px) {
   .statement { width: 60vw; }
-  /* the seal no longer fits between the phone and the badge: it drops below the action row, under Download CV
-     (4.16 lede ems is the four lede lines; 76px is the row's 28px margin and 48px height; 28px is clearance) */
-  .s-award { left: calc(var(--gutter) + 250px); top: calc(13% + 4.16 * var(--lede-fs) + 104px); }
-}
-@media (max-width: 900px) {
-  /* nor does the phone beside the action row: the pair drops below it together, the seal on the phone's corner as at full width */
+  /* the screen beside the action row would cover Download CV: it drops below the row, under Download CV, with the
+     seal on its corner (4.16 lede ems is the four lede lines; 76px is the row's 28px margin and 48px height; 28px is
+     clearance) */
   .s-b { left: calc(var(--gutter) + 250px); top: calc(13% + 4.16 * var(--lede-fs) + 104px); }
-  .s-award { left: calc(var(--gutter) + 250px + 1.5 * var(--lede-fs)); top: calc(13% + 4.46 * var(--lede-fs) + 104px); }
+  .s-award { left: calc(var(--gutter) + 250px + 2.2 * var(--lede-fs)); top: calc(13% + 4.16 * var(--lede-fs) + 84px); }
 }
 @media (max-width: 860px) {
   .nav-links { display: none; }

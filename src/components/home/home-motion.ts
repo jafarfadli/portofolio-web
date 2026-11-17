@@ -209,6 +209,13 @@ export function initHomeMotion(doc: Document): () => void {
     // When the swarm builds the page, it is the entrance: none of the authored ones run.
     let entered = building;
     let onEntered = () => {};
+    // the swarm leaves the badge alone: it drops in on its lanyard by itself
+    if (!reduce && building && pendulum) {
+      gsap.from(pendulum, {
+        y: () => -win.innerHeight * 0.95, duration: 0.78, ease: "power3.in", delay: 0.4,
+        onComplete: () => { gsap.set(pendulum, { clearProps: "y" }); render(); kick(58); },
+      });
+    }
     if (!reduce && !building) {
       const intro = gsap
         .timeline({ delay: 0.12, defaults: { ease: "expo.out" }, onComplete: () => { entered = true; onEntered(); } })
@@ -226,7 +233,9 @@ export function initHomeMotion(doc: Document): () => void {
       // On a phone the stickers are not shown (each project is a full card below).
       const slots = gsap.utils.toArray<HTMLElement>(".stickers .slot-li").filter((el) => el.getClientRects().length > 0);
       if (slots.length) intro.from(slots, { opacity: 0, scale: 1.22, rotation: 9, duration: 0.5, ease: "back.out(1.5)", stagger: 0.075, clearProps: "transform" }, 0.62);
-
+    }
+    // the skill chips pop in as they scroll in, whether or not the swarm builds the page
+    if (!reduce) {
       gsap.from("[data-chips] .chip", {
         opacity: 0, scale: 1.3, rotation: "+=10", duration: 0.45, ease: "back.out(1.6)", stagger: 0.045,
         scrollTrigger: { trigger: "[data-chips]", start: "top 82%", once: true },
@@ -427,7 +436,7 @@ export function initHomeMotion(doc: Document): () => void {
         if (!path || !dot || !pin) return;
         const count = pinCounter(pin);
         if (count) counters.set(pin, count);
-        if (!building) {
+        {
           gsap.set(path, { strokeDasharray: 1, strokeDashoffset: 1 });
           gsap.set(dot, { opacity: 0 });
           gsap.set(pin, { opacity: 0, rotation: pin.classList.contains("points-r") ? 16 : -16 });

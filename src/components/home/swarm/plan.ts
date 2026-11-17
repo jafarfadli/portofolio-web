@@ -4,16 +4,15 @@
  *  nav           not built: it is there from the start
  *  hero          first and alone, the headline's lead line ("AI integrations") is typed small and grown; then it is
  *                copied into the lines above and below it and each copy retyped. Meanwhile the screens are dropped
- *                in as image boxes and turned into their tilt, the badge is assembled and its lanyard drawn with the
- *                pen, and one button is built and the other copied from it
- *  about         several agents type the paragraph at once, a line each; one chip is made, then copied out in a burst
- *  work          big frames dragged out, screenshots swept in, leader lines drawn with the pen, result tags count up;
- *                two half-width cards side by side are built at the same time
- *  achievements  the strip stops; every pass in view is built at the same time, each swung into its tilt on the
- *                strap; then the strip runs again
- *  activities    the agenda rule is drawn with the pen; the first row is built and copied down
+ *                in as image boxes and turned into their tilt, and one button is built and the other copied from it.
+ *                The badge is not built: it drops in on its lanyard by itself (home-motion)
+ *  about         several agents type the paragraph at once, a line each; the skill chips are not built, they pop in
+ *                by themselves as they scroll in
+ *  work          the heading only; the cards are there from the start
+ *  achievements  the heading only; the passes are there from the start and the strip keeps running
+ *  activities    the heading only; the agenda is there from the start
  *  experience    the card is drawn, the first stop typed, the rest copied down
- *  closing       "Let's talk." grows a size at a time; buttons and links copied; the footer rule drawn with the pen
+ *  closing       "Let's talk." grows a size at a time and its wave is dropped in; the rest is there from the start
  *
  * Classification is generic (a part with words is typed, a part with a fill or a rule is a box, pictures are media),
  * so whatever the owner puts in the editor is covered; the sections only choose how.
@@ -145,6 +144,12 @@ class Planner {
   /** Marks elements a recipe handles itself, so the generic pass leaves them alone. */
   claim(el: Element): void {
     this.planned.add(el);
+  }
+
+  /** Leaves an element and everything in it out of the build: it is on the page from the start. */
+  skip(el: Element): void {
+    this.planned.add(el);
+    this.whole.add(el);
   }
 
   private pieceFor(s: Spec, parent: Piece | null): Piece {
@@ -306,13 +311,8 @@ export function planPage(sw: Swarm): void {
     if (s.matches(".hero")) P.section("hero", s, () => hero(P, s));
     else if (s.id === "about") P.section("about", s, () => about(P, s));
     else if (s.id === "work") P.section("work", s, () => work(P, s));
-    else if (s.id === "achievements") {
-      const track = $(s, "[data-reel-track]");
-      P.section("achievements", s, () => achievements(P, s), {
-        onStart: () => track?.classList.add("sw-hold"),
-        onDone: () => track?.classList.remove("sw-hold"),
-      });
-    } else if (s.id === "activities") P.section("activities", s, () => activities(P, s));
+    else if (s.id === "achievements") P.section("achievements", s, () => achievements(P, s));
+    else if (s.id === "activities") P.section("activities", s, () => activities(P, s));
     else if (s.id === "experience") P.section("experience", s, () => experience(P, s));
     else if (s.id === "contact") P.section("closing", s, () => closing(P, s));
     else P.section(s.id || "section", s, () => heads(P, s));
@@ -340,14 +340,9 @@ function hero(P: Planner, s: HTMLElement): void {
   const btns = $$(s, ".statement .hero-actions .btn").filter(shown);
   P.group(btns, first);
   $$(s, ".stickers .sticker").filter(shown).forEach((st) => P.tree(st, first));
+  // the badge on its lanyard is not built: it drops in on its own (home-motion)
   const pend = $(s, "[data-pendulum]");
-  if (pend) {
-    const straps = $$(pend, ".strap").filter(shown).map((st) => P.tree(st, first, () => ({ act: "line", data: { axis: "strap" } }))).flat();
-    const hung = straps.length ? straps.slice(-1) : first;
-    $$(pend, ":scope > .hw").filter(shown).forEach((hw) => P.tree(hw, hung));
-    const face = $(pend, ".face.front");
-    if (face) P.tree(face, hung, headings);
-  }
+  if (pend) P.skip(pend);
 }
 
 function about(P: Planner, s: HTMLElement): void {
@@ -368,49 +363,28 @@ function about(P: Planner, s: HTMLElement): void {
     // the icon stickers in the paragraph are dropped in once it is typed
     P.tree(text, typists, (sp) => (sp.el === text ? { skip: true } : undefined));
   }
-  // many small chips: copied out in one big burst, not three at a time
-  P.group($$(s, ".stack-sheet .chip").filter(shown), [], undefined, P.sw.small ? 5 : 8);
-}
-
-function cardFlavor(): Flavor {
-  return (sp) => {
-    if (sp.el.matches(".leader")) return { act: "line", data: { axis: "leader" } };
-    if (sp.el.matches(".pin b")) return { act: "count" };
-    if (sp.el.matches(".tag")) return { skip: true };
-    return headings(sp, 0);
-  };
+  // the skill chips are not built: they pop in on their own as they scroll in (home-motion)
+  const sheet = $(s, ".stack-sheet");
+  if (sheet) P.skip(sheet);
 }
 
 function work(P: Planner, s: HTMLElement): void {
   heads(P, s);
-  const cards = $$(s, ".work-grid > .project").filter(shown);
-  // a card's tags: the first one is made, the rest copied along the row and retyped
-  const tagsOf = (card: HTMLElement, after: Task[]): Task[] => {
-    const tags = $$(card, ".tags .tag").filter(shown);
-    return tags.length ? P.group(tags, after.slice(0, 1)).all : [];
-  };
-  // every card is built where it is; two half cards side by side are built at the same time, each by its own hands
-  for (const card of cards) tagsOf(card, P.tree(card, [], cardFlavor()));
+  // the cards are not built: they are on the page from the start, and their leader lines draw on as they scroll in
+  for (const card of $$(s, ".work-grid > .project")) P.skip(card);
 }
 
 function achievements(P: Planner, s: HTMLElement): void {
   heads(P, s);
-  const vw = P.sw.vw;
-  const passes = $$(s, ".reel-track > .ach:not(.is-clone)").filter((li) => {
-    const r = li.getBoundingClientRect();
-    return shown(li) && r.left < vw && r.right > 0;
-  });
-  // every pass in view is built at once, each by its own hands, instead of one built and the rest copied from it
-  for (const li of passes) P.tree(li);
+  // the passes are not built: they are on the page from the start, and the strip keeps running
+  for (const li of $$(s, ".reel-track > .ach")) P.skip(li);
 }
 
 function activities(P: Planner, s: HTMLElement): void {
   heads(P, s);
+  // the agenda is not built: it is on the page from the start
   const agenda = $(s, "[data-agenda]");
-  if (!agenda) return;
-  const rule = P.tree(agenda, [], (sp) => (sp.el === agenda ? { act: "line", data: { axis: "top" } } : { skip: true }));
-  P.group($$(agenda, ":scope > li").filter(shown), rule.slice(0, 1), headings);
-  P.claim(agenda);
+  if (agenda) P.skip(agenda);
 }
 
 function experience(P: Planner, s: HTMLElement): void {
@@ -423,11 +397,7 @@ function experience(P: Planner, s: HTMLElement): void {
 }
 
 function closing(P: Planner, s: HTMLElement): void {
+  // only the heading and its wave are built; the rest is on the page from the start
   heads(P, s);
-  const sub = $(s, ".sub");
-  if (sub) P.tree(sub);
-  P.group($$(s, ".hero-actions .btn").filter(shown), []);
-  P.group($$(s, ".socials a").filter(shown), []);
-  const foot = $(s, ".footer");
-  if (foot) P.tree(foot, [], (sp) => (sp.el === foot ? { act: "line", data: { axis: "top" } } : undefined));
+  for (const el of $$(s, ":scope > *")) if (!el.matches(".section-head")) P.skip(el);
 }
