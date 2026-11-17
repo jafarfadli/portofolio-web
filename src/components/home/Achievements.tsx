@@ -56,6 +56,10 @@ export function Achievements({ items }: { items: HomeAchievement[] }) {
           {passes(true)}
         </ul>
       </div>
+      {/* phones: where the swiped strip is in the list (site.css shows it under 861px) */}
+      <div className="reel-dots" data-reel-dots aria-hidden="true">
+        {items.map((a, i) => <i key={a.id} className={i === 0 ? "is-on" : undefined} />)}
+      </div>
     </section>
   );
 }

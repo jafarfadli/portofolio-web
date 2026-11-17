@@ -563,6 +563,34 @@ export function initHomeMotion(doc: Document): () => void {
           timeouts.push(win.setTimeout(() => { intervals.push(win.setInterval(turn, 3600)); }, 1200 + k * 750));
         });
       }
+      // Phones: the strip is swiped (site.css). It steps on a pass every few seconds while no finger has touched it
+      // lately, back to the first after the last, and the dots follow where it is.
+      const phone = win.matchMedia("(max-width: 860px)");
+      const dots = [...doc.querySelectorAll<HTMLElement>("[data-reel-dots] i")];
+      const origs = [...track.querySelectorAll<HTMLElement>(".ach:not(.is-clone)")];
+      if (origs.length > 1) {
+        const at = () => {
+          const x = reel.scrollLeft + origs[0].offsetLeft;
+          let best = 0;
+          origs.forEach((li, i) => { if (Math.abs(li.offsetLeft - x) < Math.abs(origs[best].offsetLeft - x)) best = i; });
+          return best;
+        };
+        on(reel, "scroll", () => { const i = at(); dots.forEach((d, k) => d.classList.toggle("is-on", k === i)); });
+        let touched = 0;
+        const touch = () => { touched = Date.now(); };
+        on(reel, "pointerdown", touch);
+        on(reel, "touchstart", touch);
+        on(reel, "wheel", touch);
+        if (!reduce) {
+          intervals.push(win.setInterval(() => {
+            if (!phone.matches || Date.now() - touched < 6000 || doc.hidden || track.classList.contains("sw-hold")) return;
+            if (reel.classList.contains("is-offscreen") || reel.matches(":focus-visible, :has(:focus-visible)")) return;
+            const end = reel.scrollLeft >= reel.scrollWidth - reel.clientWidth - 4;
+            const next = end ? 0 : Math.min(at() + 1, origs.length - 1);
+            reel.scrollTo({ left: origs[next].offsetLeft - origs[0].offsetLeft, behavior: "smooth" });
+          }, 3400));
+        }
+      }
       // The latest entry wins: a jump to #achievements queues "out" and "in" in one batch.
       const io = new IntersectionObserver((entries) => reel.classList.toggle("is-offscreen", !entries.at(-1)!.isIntersecting));
       io.observe(reel);
