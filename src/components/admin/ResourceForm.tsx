@@ -45,6 +45,10 @@ export function ResourceForm({ fields, initial, action, media, submitLabel, just
   });
   const [blocked, setBlocked] = useState<string | null>(null);
   const values = state.values ?? initial;
+  // Fields that only show for one value of another field (showWhen) follow that field as it changes.
+  const watched = new Set(fields.flatMap((f) => (f.showWhen ? [f.showWhen.field] : [])));
+  const [live, setLive] = useState<Record<string, string>>({});
+  const shown = (f: Field) => !f.showWhen || (live[f.showWhen.field] ?? values[f.showWhen.field] ?? "") === f.showWhen.is;
   const fieldErrors = Object.keys(state.errors).filter((k) => k !== "_form").length;
   // While a submit runs, the previous result would be stale, so the status line stays empty until the new one lands.
   const kind = blocked ? "error" : pending ? "idle" : state.status;
@@ -58,7 +62,9 @@ export function ResourceForm({ fields, initial, action, media, submitLabel, just
         ? (state.message ?? `Fix ${fieldErrors} ${fieldErrors === 1 ? "field" : "fields"} below.`)
         : "";
   const input = (f: Field) => (
-    <FieldInput key={f.name} field={f} value={values[f.name] ?? ""} error={state.errors[f.name]} media={media} />
+    <div key={f.name} className="adm-cond" hidden={!shown(f)}>
+      <FieldInput field={f} value={values[f.name] ?? ""} error={state.errors[f.name]} media={media} />
+    </div>
   );
   const main = fields.filter((f) => !f.more);
   const more = fields.filter((f) => f.more);
@@ -67,6 +73,10 @@ export function ResourceForm({ fields, initial, action, media, submitLabel, just
   return (
     <form
       action={formAction} className="adm-form" noValidate
+      onChange={(e) => {
+        const t = e.target as unknown as HTMLInputElement | HTMLSelectElement;
+        if (watched.has(t.name)) setLive((l) => ({ ...l, [t.name]: t.value }));
+      }}
       onSubmit={(e: FormEvent<HTMLFormElement>) => {
         const why = blockedSend(e.currentTarget);
         setBlocked(why);

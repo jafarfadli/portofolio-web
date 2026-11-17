@@ -34,6 +34,13 @@ describe("other fills", () => {
     expect(a.roleLabel).toBe("Mentor");
     expect(a.cvLine).toBe("Code Camp");
   });
+  it("activity: only other prints its own tag word", () => {
+    const tag = (role: string, roleLabel: string) => (fillActivity({ role, roleLabel, title: "x", cvLine: "x" } as never) as Record<string, string>).roleLabel;
+    expect(tag("bootcamp", "")).toBe("Bootcamp");
+    expect(tag("exhibitor", "Booth")).toBe("Exhibitor");
+    expect(tag("other", "Host")).toBe("Host");
+    expect(tag("other", "")).toBe("Other");
+  });
   it("experience: the summary becomes the one CV bullet", () => {
     const e = fillExperience({ period: "2024", cvPeriod: "", summary: "Did **x**.", cvBullets: [] } as never) as Record<string, unknown>;
     expect(e.cvPeriod).toBe("2024");

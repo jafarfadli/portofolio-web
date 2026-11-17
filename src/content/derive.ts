@@ -39,7 +39,8 @@ export function fillAchievement<T extends Achievement>(a: T): T {
 export function fillActivity<T extends Activity>(a: T): T {
   return {
     ...a,
-    roleLabel: blank(a.roleLabel) ? a.role.charAt(0).toUpperCase() + a.role.slice(1) : a.roleLabel,
+    // The tag prints the role word. Only "other" carries its own word (an old row may hold one for any role).
+    roleLabel: a.role === "other" ? (blank(a.roleLabel) ? "Other" : a.roleLabel) : a.role.charAt(0).toUpperCase() + a.role.slice(1),
     cvLine: blank(a.cvLine) ? a.title : a.cvLine,
   };
 }

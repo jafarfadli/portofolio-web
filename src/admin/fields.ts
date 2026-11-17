@@ -17,6 +17,8 @@ export type Field = {
   optionLabels?: Readonly<Record<string, string>>;
   /** Rarely changed: the form tucks it into a closed "More options" group under the main fields. */
   more?: true;
+  /** Shown, and required, only while another field holds a value; otherwise it is saved empty. */
+  showWhen?: { field: string; is: string };
   /** Starts a new titled group in the form at this field. */
   section?: string;
   mediaKind?: MediaKind;
@@ -39,6 +41,10 @@ export function parseFields(fields: readonly Field[], form: FormData): Parsed {
   const values: Record<string, unknown> = {};
   const errors: Record<string, string> = {};
   for (const f of fields) {
+    if (f.showWhen && form.get(f.showWhen.field) !== f.showWhen.is) {
+      values[f.name] = f.empty === "null" ? null : "";
+      continue;
+    }
     const raw = form.get(f.name);
     const r = parseField(f, typeof raw === "string" ? raw : null);
     if ("error" in r) errors[f.name] = r.error;

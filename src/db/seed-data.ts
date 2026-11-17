@@ -147,7 +147,7 @@ export const defaultCvAchievementOrder = [
 ];
 
 type SeedActivity = {
-  title: string; subtitle: string; role: "speaker" | "exhibitor" | "organizer" | "mentor" | "volunteer"; roleLabel: string;
+  title: string; subtitle: string; role: "speaker" | "exhibitor" | "organizer" | "mentor" | "volunteer" | "bootcamp" | "course" | "certified" | "other"; roleLabel: string;
   year: string; photo: string; showInCv: boolean; cvLine: string;
 };
 
@@ -155,7 +155,7 @@ export const seedActivities: SeedActivity[] = [
   { title: "JakWeb Meetup #42", subtitle: "Talk: self-hosting Next.js on a Mac mini", role: "speaker", roleLabel: "Speaker", year: "2025", photo: "act-talk", showInCv: true, cvLine: "JakWeb Meetup #42" },
   { title: "Ruang Kode Hackathon", subtitle: "48 hours, 300 participants, 3 sponsor tracks", role: "organizer", roleLabel: "Organizer", year: "2024", photo: "act-hackathon", showInCv: true, cvLine: "Ruang Kode Hackathon (300 participants)" },
   { title: "Campus Code Camp", subtitle: "Mentored 18 first-year students through their first web app", role: "mentor", roleLabel: "Mentor", year: "2024", photo: "act-mentor", showInCv: true, cvLine: "Campus Code Camp" },
-  { title: "Open Source Saturday", subtitle: "Monthly session helping people land their first pull request", role: "organizer", roleLabel: "Host", year: "2023", photo: "act-workshop", showInCv: true, cvLine: "Open Source Saturday" },
+  { title: "Open Source Saturday", subtitle: "Monthly session helping people land their first pull request", role: "other", roleLabel: "Host", year: "2023", photo: "act-workshop", showInCv: true, cvLine: "Open Source Saturday" },
   { title: "DevDays Indonesia", subtitle: "Ran the registration desk and speaker room", role: "volunteer", roleLabel: "Volunteer", year: "2023", photo: "act-conf", showInCv: false, cvLine: "DevDays Indonesia" },
   { title: "HMIF Tech Talk", subtitle: "Hosted a 400-seat evening on careers in software", role: "organizer", roleLabel: "Organizer", year: "2022", photo: "act-stage", showInCv: false, cvLine: "HMIF Tech Talk" },
 ];

@@ -132,6 +132,28 @@ test("hiding an activity removes it from the public agenda; order buttons reorde
   await expect(titles.first()).toHaveText(first);
 });
 
+test("an activity tag prints its role; only Other asks for a word", async ({ page }) => {
+  await page.goto("/admin/activities");
+  await page.getByRole("link", { name: "JakWeb Meetup #42", exact: true }).click();
+  const role = page.getByLabel("Role", { exact: true });
+  const word = page.getByLabel("Tag word");
+  await expect(word).toBeHidden();
+  await role.selectOption("other");
+  await expect(word).toBeVisible();
+  await role.selectOption("bootcamp");
+  await expect(word).toBeHidden();
+  await page.getByRole("button", { name: "Save changes" }).click();
+  await expect(page.getByRole("status")).toHaveText("Saved.");
+
+  const pub = await page.context().newPage();
+  await pub.goto(`${PUBLIC}/`);
+  await expect(pub.locator('[data-agenda] .role[data-role="bootcamp"]')).toHaveText("Bootcamp");
+
+  await role.selectOption("speaker");
+  await page.getByRole("button", { name: "Save changes" }).click();
+  await expect(page.getByRole("status")).toHaveText("Saved.");
+});
+
 test("the profile saves and the list pages link to every editor", async ({ page }) => {
   await page.goto("/admin/profile");
   await expect(page.getByLabel("First name")).toHaveValue("Jafar");

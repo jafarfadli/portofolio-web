@@ -110,6 +110,14 @@ describe("parseFields, toFormValues, echoValues", () => {
     });
   });
 
+  it("a showWhen field is required while shown and saved empty otherwise", () => {
+    const cond: Field[] = [F("enum", { name: "role", options: ["speaker", "other"] }), F("text", { name: "roleLabel", showWhen: { field: "role", is: "other" } })];
+    const form = (role: string, roleLabel: string) => { const f = new FormData(); f.set("role", role); f.set("roleLabel", roleLabel); return f; };
+    expect(parseFields(cond, form("other", ""))).toEqual({ values: { role: "other" }, errors: { roleLabel: "Fill this in." } });
+    expect(parseFields(cond, form("other", "Host")).values).toEqual({ role: "other", roleLabel: "Host" });
+    expect(parseFields(cond, form("speaker", "Host")).values).toEqual({ role: "speaker", roleLabel: "" });
+  });
+
   it("turns a row into form strings, and echoes raw input back", () => {
     expect(toFormValues(fields, { name: "Ledgerly", tags: ["Go", "Redis"], featured: false, cvBullets: ["a", "b"] })).toEqual({
       name: "Ledgerly", tags: "Go, Redis", featured: "", cvBullets: "a\nb",

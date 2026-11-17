@@ -130,9 +130,10 @@ export const activities = sqliteTable("activities", {
   ...listCols(),
   title: text("title").notNull(),
   subtitle: text("subtitle").notNull(),
-  /** Shape of the role tag (state by form): speaker | exhibitor | organizer | mentor | volunteer. */
-  role: text("role", { enum: ["speaker", "exhibitor", "organizer", "mentor", "volunteer"] }).notNull(),
-  /** Printed word on the tag, e.g. "Host" uses the organizer shape. */
+  /** Shape of the role tag (state by form): speaker | exhibitor | organizer | mentor | volunteer | bootcamp | course | certified | other.
+   *  The tag prints the role word; only "other" prints role_label. */
+  role: text("role", { enum: ["speaker", "exhibitor", "organizer", "mentor", "volunteer", "bootcamp", "course", "certified", "other"] }).notNull(),
+  /** The word on the tag when the role is "other", e.g. "Host"; empty otherwise. */
   roleLabel: text("role_label").notNull(),
   year: text("year").notNull(),
   photoId: integer("photo_id").references(() => media.id),
