@@ -9,8 +9,8 @@
  *  about         several agents type the paragraph at once, a line each; one chip is made, then copied out in a burst
  *  work          big frames dragged out, screenshots swept in, leader lines drawn with the pen, result tags count up;
  *                two half-width cards side by side are built at the same time
- *  achievements  the strip stops; one pass is built and swung into its tilt on the strap, the rest are copies slid
- *                along it, their photos swapped and their words retyped; then the strip runs again
+ *  achievements  the strip stops; every pass in view is built at the same time, each swung into its tilt on the
+ *                strap; then the strip runs again
  *  activities    the agenda rule is drawn with the pen; the first row is built and copied down
  *  experience    the card is drawn, the first stop typed, the rest copied down
  *  closing       "Let's talk." grows a size at a time; buttons and links copied; the footer rule drawn with the pen
@@ -400,7 +400,8 @@ function achievements(P: Planner, s: HTMLElement): void {
     const r = li.getBoundingClientRect();
     return shown(li) && r.left < vw && r.right > 0;
   });
-  P.group(passes, []);
+  // every pass in view is built at once, each by its own hands, instead of one built and the rest copied from it
+  for (const li of passes) P.tree(li);
 }
 
 function activities(P: Planner, s: HTMLElement): void {

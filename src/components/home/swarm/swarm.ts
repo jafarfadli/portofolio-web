@@ -43,7 +43,7 @@ const BUILT = "swarm-built";
 /** the build runs a little faster than a person would work: the page is there to be read */
 const PACE = 1.6;
 /** sections with a lot of repeated work run faster still */
-const TEMPO: Record<string, number> = { about: 1.4, work: 1.5, achievements: 1.6 };
+const TEMPO: Record<string, number> = { about: 1.4, work: 1.5, achievements: 2.2 };
 /** how long a hand with nothing to do stays where it stopped, while its section is built, before it heads off (s) */
 const LINGER = 0.7;
 /** how far below the top of the screen work opens, in screens: a little more than the screen, so it is under way as it scrolls in */
