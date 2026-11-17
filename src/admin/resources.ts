@@ -61,7 +61,7 @@ export const RESOURCES: Record<ListKey, Resource> = {
       { name: "phoneShotId", label: "Phone screenshot", kind: "media", mediaKind: "screenshot", empty: "null", help: "A tall capture of the mobile view. The hero shows it on the phone sticker." },
       { name: "liveUrl", label: "Live site", kind: "url", empty: "null" },
       { name: "codeUrl", label: "Code", kind: "url", empty: "null" },
-      { name: "featured", label: "Feature in Selected work", kind: "bool", help: "Up to 4. They appear in this list's order." },
+      { name: "featured", label: "Feature in Selected work", kind: "bool", help: "Up to 5. They appear in this list's order." },
       ...FLAG_FIELDS,
       { name: "slug", label: "Slug", kind: "slug", empty: "blank", more: true, help: "Leave empty to make it from the name." },
       { name: "stickerCaption", label: "Hero sticker caption", kind: "text", max: 80, empty: "blank", more: true, help: "Shown when the hero sticker is hovered. Leave empty to show the name." },

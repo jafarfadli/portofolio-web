@@ -2,8 +2,8 @@ import type { HomeProject } from "@/content/home";
 import { ProjectCard } from "./ProjectCard";
 import { SectionHead } from "./SectionHead";
 
-/** DESIGN.md fixes the Selected work rhythm by position, whatever each row stores: wide, half, half, wide. */
-const LAYOUTS = ["wide", "half", "half", "wide"] as const;
+/** DESIGN.md fixes the Selected work rhythm by position, whatever each row stores: wide, half, half, wide, wide. */
+const LAYOUTS = ["wide", "half", "half", "wide", "wide"] as const;
 
 export function Work({ projects }: { projects: HomeProject[] }) {
   return (

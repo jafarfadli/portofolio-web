@@ -106,13 +106,16 @@ describe("first run", () => {
 });
 
 describe("home lists", () => {
-  it("shows at most four featured projects, in sort order", () => {
+  it("shows at most five featured projects, in sort order", () => {
     const db = seededDb();
     db.insert(projects).values({ ...minimalProject("extra"), featured: true, sortOrder: -1 }).run();
+    db.insert(projects).values({ ...minimalProject("extra-2"), featured: true, sortOrder: 99 }).run();
+    db.insert(projects).values({ ...minimalProject("extra-3"), featured: true, sortOrder: 100 }).run();
     db.insert(projects).values({ ...minimalProject("not-featured"), featured: false, sortOrder: -2 }).run();
     const list = getHomeContent(db)!.projects;
-    expect(list).toHaveLength(4);
+    expect(list).toHaveLength(5);
     expect(list[0].slug).toBe("extra");
+    expect(list.map((p) => p.slug)).not.toContain("extra-3");
     expect(list.map((p) => p.slug)).not.toContain("not-featured");
   });
 

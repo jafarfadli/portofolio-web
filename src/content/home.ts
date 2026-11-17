@@ -69,7 +69,7 @@ export function getHomeContent(db: Db): HomeContent | null {
     photo: ref(p.photoId),
     projects: onSite(db.select().from(projects).all())
       .filter((p) => p.featured)
-      .slice(0, 4)
+      .slice(0, 5)
       .map((p) => ({
         ...fillProject(p),
         screenshot: ref(p.screenshotId),

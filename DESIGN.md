@@ -706,7 +706,7 @@ CV tiers (`/cv`, set in pt and mm for print):
 - **Pointer parallax.** Fine pointers only. Each slot has a depth (`s-a` 1.3, `s-b` 0.7, `s-c` 1, `s-d` 0.55, seal 1.6, by slot class, not by list position, because a project without a screenshot renders no sticker). The pointer position across the viewport (not the hero) maps to -1..1 on each axis, against a viewport size read on resize rather than per move; the target offset is `16px * depth` on x and `11px * depth` on y, and each slot eases toward it by 0.08 per tick, so the deeper ones lean further. It starts after the entrance (see the slot layers). The ticker runs only while a slot is still travelling and removes itself at rest; leaving the hero eases every slot home, and back home at rest the slots drop the inline `--px` and `--py`.
 - **Right, the lanyard alone.** The pendulum pivots at `left: 77%; top: -40px`. Strap length is `strap-length`; the badge hangs 86px below the strap's end, width `clamp(280px, 23vw, 340px)`, aspect 360/510. Nothing else shares the right half.
 
-**Work grid.** 12 columns, gap `grid-gap`. Cards alternate full (span 12, field aspect 16/7.2) and half (span 6, field aspect 4/3.1). Card body is a two-column grid (text, links) aligned to the bottom; half cards stack it.
+**Work grid.** 12 columns, gap `grid-gap`. Up to five featured projects, laid out by position: full, half, half, full, full (full spans 12, field aspect 16/7.2; half spans 6, field aspect 4/3.1). The fifth slot was added for Edith (owner, 2026-11-17). Card body is a two-column grid (text, links) aligned to the bottom; half cards stack it.
 
 **Breakpoints.**
 - `max-width: 1100px`: the statement block is `60vw` wide, and `s-b` and the seal drop below the action row (see Stickers clear the action row).
