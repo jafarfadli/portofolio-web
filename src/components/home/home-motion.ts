@@ -442,15 +442,17 @@ export function initHomeMotion(doc: Document): () => void {
           gsap.set(pin, { opacity: 0, rotation: pin.classList.contains("points-r") ? 16 : -16 });
           count?.reset();
           gsap
-            .timeline({ scrollTrigger: { trigger: card, start: "top 72%", once: true } })
-            .fromTo(dot, { scale: 0 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" })
-            .to(path, { strokeDashoffset: 0, duration: 0.8, ease: "power2.inOut" }, 0.05)
-            .to(pin, { opacity: 1, duration: 0.25, ease: "power1.out" }, 0.62)
+            // starts as soon as the tag's top edge comes on screen, and the tag is up within 0.4s (the owner found
+            // the old start, the card's top at 72% of the screen plus a 0.62s lead-in, left it missing too long)
+            .timeline({ scrollTrigger: { trigger: pin, start: "top bottom", once: true } })
+            .fromTo(dot, { scale: 0 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" })
+            .to(path, { strokeDashoffset: 0, duration: 0.45, ease: "power2.inOut" }, 0.05)
+            .to(pin, { opacity: 1, duration: 0.2, ease: "power1.out" }, 0.2)
             .to(pin, {
               rotation: 0, duration: 1.5, ease: "elastic.out(1, 0.32)",
               onComplete: () => { gsap.set(pin, { clearProps: "transform" }); pin.classList.add("is-hung"); },
-            }, 0.62)
-            .add(() => count?.run(), 0.7);
+            }, 0.2)
+            .add(() => count?.run(), 0.25);
         }
         if (finePointer) {
           on(card, "pointerenter", () => {
