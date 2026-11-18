@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
+import { LEDGERLY_ARTICLE } from "@/content/article-example";
 import {
   echoValues, LONG_DASH_ERROR, parseCardArt, parseField, parseFields, toFormValues, type Field, type FieldKind,
 } from "@/admin/fields";
+import { imageIds } from "@/admin/images";
 
 const F = (kind: FieldKind, extra: Partial<Field> = {}): Field => ({ name: "x", label: "X", kind, ...extra });
 
@@ -127,5 +129,36 @@ describe("parseFields, toFormValues, echoValues", () => {
     form.set("name", "Best \u2014 app");
     form.set("featured", "on");
     expect(echoValues(fields, form)).toEqual({ name: "Best \u2014 app", tags: "", featured: "on", cvBullets: "" });
+  });
+});
+
+describe("article field", () => {
+  const f = { name: "article", label: "Article", kind: "article", empty: "null" } as const;
+  it("parses a valid article and shows it back as JSON", () => {
+    expect(parseField(f, JSON.stringify(LEDGERLY_ARTICLE))).toEqual({ value: LEDGERLY_ARTICLE });
+    expect(toFormValues([f], { article: LEDGERLY_ARTICLE }).article).toBe(JSON.stringify(LEDGERLY_ARTICLE, null, 2));
+    expect(parseField(f, "")).toEqual({ value: null });
+  });
+  it("names what is wrong, by place", () => {
+    expect(parseField(f, "{")).toEqual({ error: "This is not valid JSON." });
+    const bad = structuredClone(LEDGERLY_ARTICLE);
+    bad.results.stats[0].source = "";
+    const r = parseField(f, JSON.stringify(bad));
+    expect("error" in r && r.error).toBe("results.stats[0].source: Fill this in.");
+  });
+});
+
+describe("imageIds", () => {
+  const fields: Field[] = [
+    { name: "shot", label: "Shot", kind: "media", empty: "null" },
+    { name: "article", label: "Article", kind: "article", empty: "null" },
+  ];
+  it("includes the article's screenshots after the image fields", () => {
+    const row = { shot: 3, article: { shots: [{ mediaId: 7, alt: "a", caption: "A" }] } };
+    expect(imageIds(fields, row)).toEqual([3, 7]);
+  });
+  it("returns only the image fields when the article is empty", () => {
+    expect(imageIds(fields, { shot: 3, article: null })).toEqual([3]);
+    expect(imageIds(fields, null)).toEqual([]);
   });
 });

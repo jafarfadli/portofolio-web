@@ -20,3 +20,10 @@ test("cv", async ({ page }) => {
   await page.goto("/cv");
   await page.screenshot({ path: "test-results/visual/cv.png", fullPage: true });
 });
+
+test("article", async ({ page }) => {
+  await page.goto("/projects/ledgerly");
+  await page.screenshot({ path: "test-results/visual/article.png", fullPage: true });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.screenshot({ path: "test-results/visual/article-390.png", fullPage: true });
+});

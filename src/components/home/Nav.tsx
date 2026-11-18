@@ -9,18 +9,22 @@ export const SECTIONS = [
   { href: "#experience", label: "Experience" },
 ] as const;
 
-export function Nav({ name }: { name: string }) {
+export function Nav({ name, onHome = true }: { name: string; onHome?: boolean }) {
+  // Off the home page the section links lead back to it, the bar is solid from the start (the home page's script that
+  // turns it solid only runs there), and Work is the current section.
+  const home = withBase("/");
+  const sections = onHome ? SECTIONS : SECTIONS.map((s) => ({ ...s, href: `${home}${s.href}` }));
   return (
-    <header className="nav" data-nav>
-      <a className="brand" href="#top">{name}</a>
+    <header className={onHome ? "nav" : "nav is-solid"} data-nav>
+      <a className="brand" href={onHome ? "#top" : home}>{name}</a>
       <nav className="nav-links" aria-label="Sections">
-        {SECTIONS.map((s) => (
-          <a key={s.href} href={s.href}>{s.label}</a>
+        {sections.map((s) => (
+          <a key={s.href} href={s.href} aria-current={!onHome && s.label === "Work" ? "true" : undefined}>{s.label}</a>
         ))}
       </nav>
       <div className="nav-actions">
         <a className="btn btn-stock" href={withBase("/cv")}>Download CV <Icon name="download" /></a>
-        <MobileMenu sections={SECTIONS} />
+        <MobileMenu sections={sections} />
       </div>
     </header>
   );

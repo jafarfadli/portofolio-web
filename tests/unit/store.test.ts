@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { and, eq, getTableColumns } from "drizzle-orm";
 import { getResource, LIST_KEYS, PROFILE_FIELDS, RESOURCES } from "@/admin/resources";
 import { checkMedia, deleteItem, getItem, listItems, moveItem, saveItem, saveProfile, setFlag } from "@/admin/store";
+import { LEDGERLY_ARTICLE } from "@/content/article-example";
 import { achievements, cvProfileItems, media, profile, projects } from "@/db/schema";
 import { minimalProject, seededDb, testDb } from "./helpers";
 
@@ -127,5 +128,34 @@ describe("store", () => {
     const rows = db.select().from(profile).all();
     expect(rows).toHaveLength(1);
     expect(rows[0]).toMatchObject({ id: 1, firstName: "Dimas" });
+  });
+
+  it("refuses to publish a project that has no article", () => {
+    const db = seededDb();
+    const rute = listItems(db, "projects").find((p) => p.slug === "rute")!;
+    const r = saveItem(db, "projects", rute.id, { articlePublished: true, article: null });
+    expect(r).toEqual({ ok: false, errors: { articlePublished: "Import or write the article before publishing it." } });
+  });
+
+  it("refuses to publish when the payload has no article key and the stored article is null", () => {
+    const db = seededDb();
+    const rute = listItems(db, "projects").find((p) => p.slug === "rute")!;
+    const r = saveItem(db, "projects", rute.id, { articlePublished: true });
+    expect(r).toEqual({ ok: false, errors: { articlePublished: "Import or write the article before publishing it." } });
+  });
+
+  it("publishes when the stored article exists and the payload has no article key", () => {
+    const db = seededDb();
+    const rute = listItems(db, "projects").find((p) => p.slug === "rute")!;
+    db.update(projects).set({ article: LEDGERLY_ARTICLE }).where(eq(projects.id, rute.id)).run();
+    expect(saveItem(db, "projects", rute.id, { articlePublished: true })).toEqual({ ok: true, id: rute.id });
+    expect(getItem(db, "projects", rute.id)).toMatchObject({ articlePublished: true });
+  });
+
+  it("refuses an article screenshot that is not in the media list", () => {
+    const db = seededDb();
+    const rute = listItems(db, "projects").find((p) => p.slug === "rute")!;
+    const r = saveItem(db, "projects", rute.id, { article: { ...LEDGERLY_ARTICLE, shots: [{ mediaId: 99999, alt: "a", caption: "c" }] } });
+    expect(r).toEqual({ ok: false, errors: { article: "Screenshot 99999 is not in the media list. Pick another." } });
   });
 });

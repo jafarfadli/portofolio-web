@@ -5,6 +5,7 @@ import path from "node:path";
 import sharp from "sharp";
 import { eq } from "drizzle-orm";
 import { createMedia, deleteMedia, MAX_UPLOAD_BYTES, mediaUsage, processUpload } from "@/admin/media";
+import { LEDGERLY_ARTICLE } from "@/content/article-example";
 import { toMediaRef } from "@/content/home";
 import { achievements, media, profile, projects } from "@/db/schema";
 import { seededDb } from "./helpers";
@@ -137,5 +138,15 @@ describe("media rows", () => {
       variants: [], createdAt: new Date(), updatedAt: new Date(),
     });
     expect(seeded).toEqual({ url: "/media/photos/p.png", width: 800, height: 600, alt: "", srcSet: undefined });
+  });
+
+  it("counts a screenshot in an article as a use", () => {
+    const db = seededDb();
+    const shot = db.select({ id: media.id }).from(media).get()!;
+    db.update(projects)
+      .set({ article: { ...LEDGERLY_ARTICLE, shots: [{ mediaId: shot.id, alt: "a", caption: "c" }] } })
+      .where(eq(projects.slug, "rute"))
+      .run();
+    expect(mediaUsage(db, shot.id)).toContain("Rute, article");
   });
 });

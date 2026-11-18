@@ -31,6 +31,9 @@ export default async function EditPage({ params, searchParams }: Props) {
       <div className="adm-head">
         <h1>{row ? res.rowTitle(row) : `New ${res.singular}`}</h1>
         <Link className="btn btn-ink-line" href={`/admin/${res.key}`}>Back to {res.title.toLowerCase()}</Link>
+        {res.key === "projects" && row && (row as { article?: unknown }).article ? (
+          <Link className="btn btn-ink-line" href={`/admin/preview/${row.id}`} target="_blank">Preview article</Link>
+        ) : null}
       </div>
       <ResourceForm
         fields={res.fields}

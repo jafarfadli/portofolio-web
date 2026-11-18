@@ -55,14 +55,14 @@ export async function processUpload(input: Buffer, kind: MediaKind, uploadsDir: 
 
   const hash = crypto.createHash("sha256").update(master.data).digest("hex").slice(0, 12);
   const dir = KIND_DIRS[kind];
-  await ensurePlainDir(path.join(uploadsDir, dir));
+  await ensurePlainDir(path.join(/*turbopackIgnore: true*/ uploadsDir, dir));
   const rel = `${dir}/${hash}.webp`;
-  await writeNoFollow(path.join(uploadsDir, rel), master.data);
+  await writeNoFollow(path.join(/*turbopackIgnore: true*/ uploadsDir, rel), master.data);
 
   const variants: MediaVariant[] = [];
   for (const v of encoded) {
     const vrel = `${dir}/${hash}-${v.width}.webp`;
-    await writeNoFollow(path.join(uploadsDir, vrel), v.data);
+    await writeNoFollow(path.join(/*turbopackIgnore: true*/ uploadsDir, vrel), v.data);
     variants.push({ width: v.width, height: v.height, path: vrel });
   }
   return { path: rel, width: master.info.width, height: master.info.height, variants };
@@ -119,6 +119,12 @@ export function mediaUsage(db: Db, id: number): string[] {
       .all()
       .map((r) => r.name),
     ...db.select({ name: activities.title }).from(activities).where(eq(activities.photoId, id)).all().map((r) => r.name),
+    ...db
+      .select({ name: projects.name, article: projects.article })
+      .from(projects)
+      .all()
+      .filter((r) => r.article?.shots.some((s) => s.mediaId === id))
+      .map((r) => `${r.name}, article`),
   ];
 }
 

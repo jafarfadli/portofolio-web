@@ -131,3 +131,7 @@ textarea.adm-input { line-height: 1.5; resize: vertical; }
   .adm-table td { padding: 4px 0; border: 0; }
   .adm-order { justify-content: flex-start; }
 }
+
+/* the project editor's article: its words as fields, two columns when there is room */
+.adm-article-words { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; margin-bottom: 14px; }
+.adm-article-words .adm-field label { font-size: 13px; }

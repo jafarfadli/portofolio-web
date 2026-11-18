@@ -67,7 +67,15 @@ export async function dropUnused(db: Db, ids: Iterable<unknown>): Promise<void> 
   }
 }
 
-/** The image ids a row's image fields point at. */
+/** The image ids a row's image fields point at, the article's screenshots included. */
 export function imageIds(fields: readonly Field[], row: Record<string, unknown> | undefined | null): unknown[] {
-  return row ? fields.filter((f) => f.kind === "media").map((f) => row[f.name]) : [];
+  if (!row) return [];
+  return fields.flatMap((f) => {
+    if (f.kind === "media") return [row[f.name]];
+    if (f.kind === "article") {
+      const shots = (row[f.name] as { shots?: { mediaId?: unknown }[] } | null)?.shots;
+      return Array.isArray(shots) ? shots.map((s) => s?.mediaId) : [];
+    }
+    return [];
+  });
 }

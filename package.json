@@ -14,6 +14,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx --conditions=react-server src/db/migrate-cli.ts",
     "db:seed": "tsx --conditions=react-server src/db/seed-cli.ts",
+    "article:schema": "tsx scripts/article-schema.ts",
+    "article:import": "tsx --conditions=react-server src/article/import-cli.ts",
     "e2e:serve": "sh scripts/e2e-serve.sh"
   },
   "dependencies": {
@@ -27,7 +29,8 @@
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "server-only": "^0.0.1",
-    "sharp": "^0.35.5"
+    "sharp": "^0.35.5",
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",

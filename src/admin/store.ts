@@ -1,6 +1,7 @@
 import { and, asc, count, eq, ne, sql } from "drizzle-orm";
 import type { Db } from "@/db/client";
 import { cvProfileItems, media, profile, projects } from "@/db/schema";
+import type { Article } from "@/lib/article";
 import type { Field } from "./fields";
 import { RESOURCES, type Flag, type ListKey, type Resource } from "./resources";
 
@@ -116,6 +117,22 @@ function checkRules(db: Db, res: Resource, id: number | null, values: Record<str
     }
     if (values.featured === true && featuredOthers(db, id) >= MAX_FEATURED) {
       errors.featured = `Only ${MAX_FEATURED} projects can be featured. Unfeature another one first.`;
+    }
+    if (values.articlePublished === true) {
+      // A partial save keeps the stored article when the key is absent.
+      const stored =
+        "article" in values
+          ? values.article
+          : id === null
+            ? null
+            : db.select({ article: projects.article }).from(projects).where(eq(projects.id, id)).get()?.article;
+      if (stored == null) errors.articlePublished = "Import or write the article before publishing it.";
+    }
+    const article = values.article as Article | null | undefined;
+    for (const s of article?.shots ?? []) {
+      if (!db.select({ id: media.id }).from(media).where(eq(media.id, s.mediaId)).get()) {
+        errors.article = `Screenshot ${s.mediaId} is not in the media list. Pick another.`;
+      }
     }
   }
   return errors;

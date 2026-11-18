@@ -1,3 +1,5 @@
+import { LEDGERLY_ARTICLE } from "../content/article-example";
+import type { Article } from "../lib/article";
 import type { CardArt } from "./schema";
 
 type SeedMedia = {
@@ -185,3 +187,12 @@ export const seedSkills: { groupName: string; name: string; rot: number; showOnS
   { groupName: "Languages", name: "SQL", rot: 0, showOnSite: false },
   { groupName: "Languages", name: "Python", rot: 0, showOnSite: false },
 ];
+
+/** Ledgerly's article is live; Kanbo's is a draft (the e2e tests publish it in the editor). */
+export const seedArticles: Record<string, { article: Article; published: boolean }> = {
+  ledgerly: { article: LEDGERLY_ARTICLE, published: true },
+  kanbo: {
+    article: { ...LEDGERLY_ARTICLE, hook: "What if a team of thirty could plan on one board and _see each other think_ while they did?" },
+    published: false,
+  },
+};

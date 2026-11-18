@@ -6,7 +6,7 @@ import {
   achievements, activities, cvProfileItems, cvProfiles, education, experiences, media, profile, projects, skills,
 } from "./schema";
 import {
-  defaultCvAchievementOrder, seedAchievements, seedActivities, seedEducation, seedExperiences, seedMedia,
+  defaultCvAchievementOrder, seedAchievements, seedActivities, seedArticles, seedEducation, seedExperiences, seedMedia,
   seedProfile, seedProjects, seedSkills,
 } from "./seed-data";
 
@@ -63,6 +63,8 @@ export function seed(db: Db, opts: { assetsDir: string; uploadsDir: string }): v
         .values({
           ...rest, sortOrder: i + 1, featured: true, metricIsSample: true, screenshotId: mediaId(screenshot),
           phoneShotId: phoneShot ? mediaId(phoneShot) : null,
+          article: seedArticles[p.slug]?.article ?? null,
+          articlePublished: seedArticles[p.slug]?.published ?? false,
         })
         .run();
     });

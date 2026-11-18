@@ -18,6 +18,8 @@ export default defineConfig({
     { name: "chromium", testIgnore: /admin-.*\.spec\.ts/, use: desktop },
     // Admin specs edit content, so they run after the public specs have finished with the seeded data.
     { name: "admin-setup", testMatch: /admin-setup\.spec\.ts/, dependencies: ["chromium"], use: admin },
-    { name: "admin", testMatch: /admin-(?!setup).*\.spec\.ts/, dependencies: ["admin-setup"], use: admin },
+    { name: "admin", testMatch: /admin-(?!setup|article).*\.spec\.ts/, dependencies: ["admin-setup"], use: admin },
+    // It edits the projects the other admin specs edit (a saved form is the whole row), so it runs once they are done.
+    { name: "admin-article", testMatch: /admin-article\.spec\.ts/, dependencies: ["admin"], use: admin },
   ],
 });

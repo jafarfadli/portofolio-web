@@ -1,0 +1,368 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "number",
+      "const": 1
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "hook": {
+      "type": "string",
+      "minLength": 60,
+      "maxLength": 140
+    },
+    "facts": {
+      "type": "object",
+      "properties": {
+        "year": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "team": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        }
+      },
+      "required": [
+        "year",
+        "role",
+        "team"
+      ],
+      "additionalProperties": false
+    },
+    "problem": {
+      "type": "object",
+      "properties": {
+        "say": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 140
+        },
+        "points": {
+          "minItems": 2,
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          }
+        }
+      },
+      "required": [
+        "say",
+        "points"
+      ],
+      "additionalProperties": false
+    },
+    "approach": {
+      "type": "object",
+      "properties": {
+        "say": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 140
+        },
+        "calls": {
+          "minItems": 2,
+          "maxItems": 3,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              },
+              "body": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "gaveUp": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "required": [
+              "title",
+              "body",
+              "gaveUp"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "say",
+        "calls"
+      ],
+      "additionalProperties": false
+    },
+    "architecture": {
+      "type": "object",
+      "properties": {
+        "say": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 140
+        },
+        "zones": {
+          "minItems": 2,
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 28
+          }
+        },
+        "nodes": {
+          "minItems": 4,
+          "maxItems": 12,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]{0,23}$"
+              },
+              "zone": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 3
+              },
+              "row": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 3
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 32
+              },
+              "tech": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "person",
+                  "store",
+                  "ext"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "zone",
+              "row",
+              "name",
+              "tech",
+              "note"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "edges": {
+          "minItems": 1,
+          "maxItems": 20,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]{0,23}$"
+              },
+              "to": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]{0,23}$"
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 24
+              }
+            },
+            "required": [
+              "from",
+              "to",
+              "label"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "flows": {
+          "minItems": 1,
+          "maxItems": 3,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              },
+              "steps": {
+                "minItems": 2,
+                "maxItems": 5,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "at": {
+                      "minItems": 1,
+                      "maxItems": 12,
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 160
+                    }
+                  },
+                  "required": [
+                    "at",
+                    "text"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "title",
+              "steps"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "say",
+        "zones",
+        "nodes",
+        "edges",
+        "flows"
+      ],
+      "additionalProperties": false
+    },
+    "results": {
+      "type": "object",
+      "properties": {
+        "say": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 140
+        },
+        "stats": {
+          "minItems": 2,
+          "maxItems": 3,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 10
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              },
+              "source": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "sample": {
+                "default": false,
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "value",
+              "label",
+              "source"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "say",
+        "stats"
+      ],
+      "additionalProperties": false
+    },
+    "shots": {
+      "default": [],
+      "maxItems": 2,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "pattern": "^portfolio-article\\/[A-Za-z0-9._-]+\\.(png|jpe?g)$"
+          },
+          "alt": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "caption": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          }
+        },
+        "required": [
+          "file",
+          "alt",
+          "caption"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "version",
+    "slug",
+    "hook",
+    "facts",
+    "problem",
+    "approach",
+    "architecture",
+    "results"
+  ],
+  "additionalProperties": false
+}

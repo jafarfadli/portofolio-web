@@ -17,6 +17,8 @@ export type ProjectStep = { shot: MediaRef | null; feature: string };
 export type HomeProject = Project & {
   screenshot: MediaRef | null;
   phoneShot: MediaRef | null;
+  /** The project's article is published, so the card links to it. */
+  hasArticle: boolean;
   /** Screenshot n paired with feature n, for every n that has either. */
   steps: ProjectStep[];
 };
@@ -74,6 +76,7 @@ export function getHomeContent(db: Db): HomeContent | null {
         ...fillProject(p),
         screenshot: ref(p.screenshotId),
         phoneShot: ref(p.phoneShotId),
+        hasArticle: p.article !== null && p.articlePublished,
         steps: [p.screenshotId, p.shot2Id, p.shot3Id, p.shot4Id]
           .map((id, i) => ({ shot: ref(id), feature: p.features[i] ?? "" }))
           .filter((st) => st.shot || st.feature),

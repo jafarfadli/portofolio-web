@@ -1,8 +1,11 @@
 /** Field definitions for the editors, and the parser that turns submitted strings into column values. */
 import type { CardArt } from "@/db/schema";
+import { checkArticle } from "@/lib/article";
+import { LONG_DASH, LONG_DASH_ERROR } from "@/lib/long-dash";
+export { LONG_DASH, LONG_DASH_ERROR };
 
 export type FieldKind =
-  | "text" | "textarea" | "url" | "email" | "slug" | "color" | "number" | "bool" | "enum" | "tags" | "lines" | "media" | "cardArt";
+  | "text" | "textarea" | "url" | "email" | "slug" | "color" | "number" | "bool" | "enum" | "tags" | "lines" | "media" | "cardArt" | "article";
 export type MediaKind = "screenshot" | "photo" | "logo";
 
 export type Field = {
@@ -33,8 +36,6 @@ export type Field = {
 export type Parsed = { values: Record<string, unknown>; errors: Record<string, string> };
 type One = { value: unknown } | { error: string };
 
-export const LONG_DASH_ERROR = "Use a comma, colon or full stop instead of a long dash.";
-export const LONG_DASH = /[\u2013\u2014]/;
 const DEFAULT_MAX = { text: 200, textarea: 4000 } as const;
 
 export function parseFields(fields: readonly Field[], form: FormData): Parsed {
@@ -61,7 +62,7 @@ export function parseField(f: Field, raw: string | null): One {
     if (f.empty === "blank") return { value: f.kind === "tags" || f.kind === "lines" ? [] : "" };
     return { error: "Fill this in." };
   }
-  if (f.kind !== "cardArt" && LONG_DASH.test(s)) return { error: LONG_DASH_ERROR };
+  if (f.kind !== "cardArt" && f.kind !== "article" && LONG_DASH.test(s)) return { error: LONG_DASH_ERROR };
   switch (f.kind) {
     case "text":
     case "textarea": {
@@ -105,6 +106,18 @@ export function parseField(f: Field, raw: string | null): One {
       return /^\d+$/.test(s) ? { value: Number(s) } : { error: "Pick an image from the list." };
     case "cardArt":
       return parseCardArt(s);
+    case "article": {
+      let v: unknown;
+      try {
+        v = JSON.parse(s);
+      } catch {
+        return { error: "This is not valid JSON." };
+      }
+      const r = checkArticle(v);
+      if (r.ok) return { value: r.value };
+      const more = r.problems.length > 6 ? ` And ${r.problems.length - 6} more.` : "";
+      return { error: r.problems.slice(0, 6).join(" ") + more };
+    }
     default:
       return { error: "This field type is not supported." };
   }
@@ -189,7 +202,7 @@ export function toFormValues(fields: readonly Field[], row: Record<string, unkno
     else if (v === null || v === undefined) out[f.name] = "";
     else if (f.kind === "tags") out[f.name] = (v as string[]).join(", ");
     else if (f.kind === "lines") out[f.name] = (v as string[]).join("\n");
-    else if (f.kind === "cardArt") out[f.name] = JSON.stringify(v, null, 2);
+    else if (f.kind === "cardArt" || f.kind === "article") out[f.name] = JSON.stringify(v, null, 2);
     else out[f.name] = String(v);
   }
   return out;

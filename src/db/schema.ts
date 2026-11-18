@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import { index, integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import type { Article } from "../lib/article";
 
 const timestamps = () => ({
   createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
@@ -94,7 +95,10 @@ export const projects = sqliteTable("projects", {
   metricIsSample: integer("metric_is_sample", { mode: "boolean" }).notNull().default(false),
   liveUrl: text("live_url"),
   codeUrl: text("code_url"),
-  caseStudyMd: text("case_study_md").notNull().default(""),
+  /** The project's article (src/lib/article.ts), written by its agent and imported; null until there is one. */
+  article: text("article", { mode: "json" }).$type<Article>(),
+  /** The article shows at /projects/<slug>, and the card links to it, only while this is on. */
+  articlePublished: integer("article_published", { mode: "boolean" }).notNull().default(false),
   cvTitle: text("cv_title").notNull(),
   cvLine: text("cv_line").notNull(),
 });

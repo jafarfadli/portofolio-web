@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "slug": "clinky",
+  "hook": "What if every coding agent I run lived in _one room,_ and _called me_ when it got stuck?",
+  "facts": { "year": "2026", "role": "Solo, design to deploy", "team": "Just me" },
+  "problem": {
+    "say": "A session per project meant a dozen terminals, and _no way to see which one was waiting on me._",
+    "points": [
+      "Every project ran its own Claude session in its own terminal tab, **on one Mac mini at home**.",
+      "Away from the desk, a session that stopped to ask a question **sat there for hours**.",
+      "Family members wanted to use the same agents, **without touching my terminal**."
+    ]
+  },
+  "approach": {
+    "say": "Keep the sessions on the Mac, and make the browser _a window onto them_, not a copy.",
+    "calls": [
+      { "title": "One server owns every session.", "body": "The browser can close and come back; the agent never notices.", "gaveUp": "running agents on the phone itself." },
+      { "title": "One folder per project, enforced.", "body": "An agent can read the machine but write only inside its own project.", "gaveUp": "agents that fix things across projects." },
+      { "title": "The tailnet is the login.", "body": "No passwords to manage; a guest gets a shared session with narrower rights.", "gaveUp": "access from outside the tailnet." }
+    ]
+  },
+  "architecture": {
+    "say": "The page is only a window. A server at home owns every session, _so nothing stops when you close the tab._",
+    "zones": ["Your devices", "Mac mini, at home", "The agents", "Outside"],
+    "nodes": [
+      { "id": "phone", "zone": 0, "row": 0, "name": "Phone", "tech": "PWA, push on", "note": "Where most answers come from", "kind": "person" },
+      { "id": "desk", "zone": 0, "row": 2, "name": "Laptop", "tech": "Any browser", "note": "The 3D room lives here", "kind": "person" },
+      { "id": "ts", "zone": 1, "row": 0, "name": "Tailscale serve", "tech": "HTTPS, tailnet only", "note": "The login: who you are on the tailnet" },
+      { "id": "srv", "zone": 1, "row": 1, "name": "Session server", "tech": "Node, Fastify", "note": "Owns every session; the page is only a window" },
+      { "id": "db", "zone": 1, "row": 2, "name": "Session store", "tech": "SQLite, WAL", "note": "Chats, states, who may see what", "kind": "store" },
+      { "id": "mcp", "zone": 2, "row": 0, "name": "House tools", "tech": "MCP servers", "note": "Screen, files, passwords: by role" },
+      { "id": "run", "zone": 2, "row": 1, "name": "Agent runner", "tech": "Claude Agent SDK", "note": "One agent per project folder" },
+      { "id": "fs", "zone": 2, "row": 2, "name": "Project folders", "tech": "git, one per agent", "note": "An agent writes only in its own", "kind": "store" },
+      { "id": "push", "zone": 3, "row": 0, "name": "Web Push", "tech": "Apple, Google", "note": "Wakes the phone when an agent waits", "kind": "ext" },
+      { "id": "api", "zone": 3, "row": 1, "name": "Claude API", "tech": "Anthropic", "note": "The model behind every agent", "kind": "ext" }
+    ],
+    "edges": [
+      { "from": "phone", "to": "ts", "label": "HTTPS" },
+      { "from": "desk", "to": "ts", "label": "HTTPS" },
+      { "from": "ts", "to": "srv", "label": "proxy" },
+      { "from": "srv", "to": "db", "label": "read, write" },
+      { "from": "srv", "to": "run", "label": "SSE events" },
+      { "from": "run", "to": "api", "label": "messages" },
+      { "from": "run", "to": "mcp", "label": "tool calls" },
+      { "from": "run", "to": "fs", "label": "edits, git" },
+      { "from": "srv", "to": "push", "label": "notify" },
+      { "from": "push", "to": "phone", "label": "needs you" }
+    ],
+    "flows": [
+      {
+        "title": "You send a message",
+        "steps": [
+          { "at": ["phone", "phone>ts", "ts"], "text": "The message leaves the phone over HTTPS; Tailscale says who sent it." },
+          { "at": ["ts>srv", "srv", "srv>db", "db"], "text": "The server checks that this person may use this project, and saves the message." },
+          { "at": ["srv>run", "run"], "text": "It hands the message to the project's agent, which keeps working if you close the page." },
+          { "at": ["run>api", "api", "run>fs", "fs"], "text": "The agent thinks with the Claude API and edits only its own folder." }
+        ]
+      },
+      {
+        "title": "An agent gets stuck",
+        "steps": [
+          { "at": ["run", "srv>run", "srv"], "text": "The agent asks for permission; the server marks the session as needing you." },
+          { "at": ["srv>push", "push", "push>phone", "phone"], "text": "A push wakes the phone, even with the page closed." },
+          { "at": ["phone", "phone>ts", "ts>srv", "srv>run", "run"], "text": "One tap answers it, and the agent carries on where it stopped." }
+        ]
+      }
+    ]
+  },
+  "results": {
+    "say": "It replaced the terminal for _everyday work._",
+    "stats": [
+      { "value": "12", "label": "projects running side by side", "source": "Sample: the agent replaces it with the count of projects in Clinky.", "sample": true },
+      { "value": "3", "label": "people in the house use it", "source": "Sample: the agent replaces it with the count of signed-in users.", "sample": true },
+      { "value": "0", "label": "terminal tabs left open", "source": "Sample: the owner's own count on a working day.", "sample": true }
+    ]
+  },
+  "shots": [
+    { "file": "portfolio-article/session.png", "alt": "A Clinky session open: the agent's chat with its tool calls on the right of the 3D room", "caption": "A session open: the agent's question, and the answer box under it." }
+  ]
+}

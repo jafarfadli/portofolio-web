@@ -22,9 +22,9 @@ The agent that works on each project in clinky writes the article content, becau
 
 | # | Band | Content |
 |---|------|---------|
-| 1 | navy | "← All work"; the **hook**: one question at `clamp(40px, 6.2vw, 104px)`, weight 800, with `*phrases*` set at weight 250 and wdth 125. A dashed stitch line, then the **name marquee**: the name repeated with ✦, 900 weight, wdth 125, alternating solid and outlined, scrolling at 26s per loop. The `h1` is the name (the marquee copies are `aria-hidden`); under reduced motion the marquee is still. |
+| 1 | navy | "← All work"; the **hook**: one question at `clamp(40px, 6.2vw, 104px)`, weight 800, with `_phrases_` set at weight 250 and wdth 125. A dashed stitch line, then the **name marquee**: the name repeated with ✦, 900 weight, wdth 125, alternating solid and outlined, scrolling at 26s per loop. The `h1` is the name (the marquee copies are `aria-hidden`); under reduced motion the marquee is still. |
 | 2 | field colour | **The room**: the project's Blender scene (`DEVICE_SCENES[slug]`) full-bleed, with the live screens and the same screenshot rotation as the work card. A project without a scene shows its main screenshot as a full-width print. |
-| 3 | concrete | **PROBLEM (01)**. Left column: the label, then the facts (Year, Role, Team, Stack chips). Right column: the statement (`clamp(32px, 4.2vw, 64px)`, 800, with `*em*` at 300 and wdth 125), then 2 to 4 points with `**bold**` key phrases. |
+| 3 | concrete | **PROBLEM (01)**. Left column: the label, then the facts (Year, Role, Team, Stack chips). Right column: the statement (`clamp(32px, 4.2vw, 64px)`, 800, with `_em_` at 300 and wdth 125), then 2 to 4 points with `**bold**` key phrases. |
 | 4 | navy | **Screen**: an extra screenshot, full width, with a caption. Shown only when the article has a first shot. |
 | 5 | concrete | **APPROACH (02)**: the statement, then 2 or 3 numbered decisions, each with a title, a body and "Gave up: …". |
 | 6 | navy | **ARCHITECTURE (03)**: the statement, then the diagram and its scenarios (section 4). |
@@ -109,7 +109,7 @@ Each project's agent writes `portfolio-article.json` at the root of its own repo
 {
   "version": 1,
   "slug": "clinky",
-  "hook": "What if every coding agent I run lived in *one room,* and *called me* when it got stuck?",
+  "hook": "What if every coding agent I run lived in _one room,_ and _called me_ when it got stuck?",
   "facts": { "year": "2026", "role": "Solo, design to deploy", "team": "Just me" },
   "problem": { "say": "...", "points": ["... **key phrase** ..."] },
   "approach": { "say": "...", "calls": [{ "title": "...", "body": "...", "gaveUp": "..." }] },
@@ -121,7 +121,7 @@ Each project's agent writes `portfolio-article.json` at the root of its own repo
 
 ### Rules
 
-- **Inline markup:** only `*em*` (the thin wide style) and `**bold**`. No links, no HTML.
+- **Inline markup:** only `_em_` (the thin wide style) and `**bold**`, the site's existing parser (`src/lib/inline.ts`). No links, no HTML.
 - **Lengths:**
   - hook: 60 to 140 characters.
   - each `say`: at most 140 characters.
@@ -154,10 +154,11 @@ One zod schema in `src/lib/article.ts` is used by the importer, the admin and th
 
 ### Storage
 
-Migration `0007`:
-- Drops `projects.case_study_md`, which is unused and always empty.
-- Adds `projects.article` (JSON, nullable) and `projects.article_published` (boolean, default false).
+Migrations `0007` and `0008`:
+- `0007` drops `projects.case_study_md`, which is unused and always empty.
+- `0008` adds `projects.article` (JSON, nullable) and `projects.article_published` (boolean, default false).
 - Article shots are rows in `media`; the article stores their ids.
+- Article screenshots count as media uses (`mediaUsage`), so the media list never deletes one an article shows.
 
 ### Importer
 
@@ -166,18 +167,20 @@ Migration `0007`:
 - Validates it.
 - Turns the shots into media variants through the existing `sharp` pipeline.
 - Writes the article to the project with that slug, leaving it unpublished.
+- Refuses screenshots under 1440px wide, symlinks, and files that are not readable images.
 - Prints what it changed.
 
 Re-importing replaces the article, and an article that was published stays published. On any error it writes nothing and prints each problem with its JSON path.
 
 ### Admin
 
-The project editor gets an **Article** panel:
-- Fields per section for every piece of text: hook, facts, statements, points, calls, stats with their source and sample flag, part names, tech, notes, wire labels, scenario titles and step texts.
-- Shot alt text and captions, and the shot pickers.
-- The diagram's structure (zones, rows, ids, edges and the ids in each step) in a validated JSON field, since it comes from the agent and rarely changes.
-- A **Published** switch.
-- A **Preview** link to `/admin/projects/<id>/article`, which renders the same page component in the admin role, published or not.
+The project editor gets an **Article** section after the flags:
+- **Publish the article**, a switch. Publishing a project that has no article is refused, whatever the payload.
+- **Words and structure**:
+  - a word field for every piece of text: hook, facts, statements, points, calls, stats with their source and sample flag, part names, tech, notes, wire labels, scenario titles and step texts;
+  - shot alt text and captions, and the shot pickers;
+  - a **Structure** JSON box for the diagram's structure (zones, rows, ids, edges and the ids in each step), since it comes from the agent and rarely changes. Zones are labelled "Area" in the editor.
+- A **Preview** link to `/admin/preview/<id>`, which renders the same page component in the admin role, published or not.
 
 Saving runs the same zod schema and shows errors next to the fields.
 
@@ -188,7 +191,7 @@ Saving runs the same zod schema and shows errors next to the fields.
 - Metadata:
   - title: `"<Name>: <hook without markup>"`
   - description: the Problem statement
-  - canonical path set
+  - No canonical link: the app sets no `metadataBase`.
 - The OpenGraph image stays out of scope, as before.
 
 ## 7. Motion

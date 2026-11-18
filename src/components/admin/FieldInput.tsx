@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Field } from "@/admin/fields";
 import type { MediaOption, MediaOptions } from "@/admin/media-options";
+import { ArticleEditor } from "./ArticleEditor";
 import { formatBytes, shrinkImage } from "./shrink-image";
 
 type Props = { field: Field; value: string; error?: string; media: MediaOptions };
@@ -28,7 +29,9 @@ export function FieldInput({ field: f, value, error, media }: Props) {
   }
 
   let control: React.ReactNode;
-  if (f.kind === "textarea" || f.kind === "lines" || f.kind === "cardArt") {
+  if (f.kind === "article") {
+    control = <ArticleEditor value={value} a11y={a11y} rows={f.rows} error={error} />;
+  } else if (f.kind === "textarea" || f.kind === "lines" || f.kind === "cardArt") {
     control = (
       <textarea
         className={`adm-input${f.kind === "cardArt" ? " is-code" : ""}`}
