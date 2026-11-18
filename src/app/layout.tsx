@@ -11,6 +11,13 @@ const archivo = localFont({
   display: "swap",
   declarations: [{ prop: "font-stretch", value: "62% 125%" }],
 });
+/** Doto (OFL, by Óliver Lalan): a dot-matrix face, for one look of the skill chips only. */
+const doto = localFont({
+  src: "../fonts/doto-latin-variable.woff2",
+  variable: "--font-doto",
+  weight: "100 900",
+  display: "swap",
+});
 
 /**
  * Runs before first paint. On "/" with motion allowed, marks the page so site.css can hold the entrance start state
@@ -30,7 +37,7 @@ export const viewport: Viewport = { themeColor: "#1d2640" };
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const nonce = (await headers()).get("x-nonce") ?? undefined;
   return (
-    <html lang="en" className={archivo.variable} style={TEXTURE_VARS} suppressHydrationWarning>
+    <html lang="en" className={`${archivo.variable} ${doto.variable}`} style={TEXTURE_VARS} suppressHydrationWarning>
       <head>
         <script nonce={nonce} suppressHydrationWarning dangerouslySetInnerHTML={{ __html: MOTION_PENDING }} />
       </head>

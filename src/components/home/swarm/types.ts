@@ -151,6 +151,9 @@ export type Section = {
   done: boolean;
   onStart?: () => void;
   onDone?: () => void;
+  /** when it started (the swarm's clock) and who worked on it, for the agents' log */
+  t0?: number;
+  hands?: Set<string>;
 };
 
 /** One of a set of alike parts (chips, tags, rows, passes, cards): the master is built, the rest are copied. */

@@ -3,9 +3,9 @@
  *
  *  nav           not built: it is there from the start
  *  hero          first and alone, the headline's lead line ("AI integrations") is typed small and grown; then it is
- *                copied into the lines above and below it and each copy retyped. Meanwhile the screens are dropped
- *                in as image boxes and turned into their tilt, and one button is built and the other copied from it.
- *                The badge is not built: it drops in on its lanyard by itself (home-motion)
+ *                copied into the lines above and below it and each copy retyped. Meanwhile the showcase stickers
+ *                are dropped in as image boxes and turned into their tilt. The badge is not built: it drops in on its
+ *                lanyard by itself (home-motion), and on a phone the build waits for it to land
  *  about         several agents type the paragraph at once, a line each; the skill chips are not built, they pop in
  *                by themselves as they scroll in
  *  work          the heading only; the cards are there from the start
@@ -332,14 +332,16 @@ function hero(P: Planner, s: HTMLElement): void {
   let first: Task[] = [];
   if (lead) {
     const g = P.group([lead, ...lines.filter((l) => l !== lead)], [], headings);
-    // the headline goes before anything else the hero's crew could do (on a phone the badge sits above it)
+    // the headline goes before anything else the hero's crew could do
     g.all.forEach((t) => { t.data.first = true; });
     first = g.master;
     P.sw.lead = g.ready;
   }
-  const btns = $$(s, ".statement .hero-actions .btn").filter(shown);
-  P.group(btns, first);
+  // the showcase stickers are dropped in as image boxes and turned into their tilt once the lead line is in
   $$(s, ".stickers .sticker").filter(shown).forEach((st) => P.tree(st, first));
+  // the agents' log follows the build itself: it is not built
+  const log = $(s, ".hero-log");
+  if (log) P.skip(log);
   // the badge on its lanyard is not built: it drops in on its own (home-motion)
   const pend = $(s, "[data-pendulum]");
   if (pend) P.skip(pend);

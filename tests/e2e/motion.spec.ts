@@ -82,7 +82,7 @@ test.describe("with the build skipped, the page shows at once", () => {
     await page.goto("/");
     await expect(page.locator("html")).not.toHaveClass(/motion-pending/);
     const slots = page.locator("[data-stickers] .slot-li");
-    await expect(slots).toHaveCount(5);
+    await expect(slots).toHaveCount(3);
     // The entrance is over once every slot has dropped its inline transform.
     await expect
       .poll(() => page.evaluate(() => [...document.querySelectorAll<HTMLElement>(".stickers .slot-li")].every((li) => !li.style.transform)))
@@ -96,39 +96,66 @@ test.describe("with the build skipped, the page shows at once", () => {
     }
   });
 
-  // The reverse of the test above: lifted over the statement, no sticker may cover the action row, which is sized in px
-  // while the phone and the seal are placed in lede ems. A narrow desktop and a short laptop are where the two meet.
-  for (const [width, height] of [[900, 800], [1366, 600]]) {
-    test(`hero stickers never cover the action row at ${width}x${height}`, async ({ page }) => {
+  // The headline shrinks to end above the stickers, and the stickers keep left of the badge: check a short laptop and
+  // a narrow desktop as well as the usual size.
+  for (const [width, height] of [[1440, 900], [1280, 720], [1024, 768]]) {
+    test(`hero stickers clear the headline and the badge at ${width}x${height}`, async ({ page }) => {
       await page.setViewportSize({ width, height });
       await page.goto("/");
-      await expect(page.locator("html")).not.toHaveClass(/motion-pending/);
-      await expect(page.locator("[data-stickers] .slot-li")).toHaveCount(5);
-      // The entrance is over once every slot has dropped its inline transform and the buttons are fully shown.
       await expect
-        .poll(() =>
-          page.evaluate(
-            () =>
-              [...document.querySelectorAll<HTMLElement>(".stickers .slot-li")].every((li) => !li.style.transform) &&
-              [...document.querySelectorAll(".statement .hero-actions .btn")].every((b) => getComputedStyle(b).opacity === "1"),
-          ),
-        )
+        .poll(() => page.evaluate(() => [...document.querySelectorAll<HTMLElement>(".stickers .slot-li")].every((li) => !li.style.transform)))
         .toBe(true);
-      const covered = () =>
-        page.evaluate(() => {
-          const row = [...document.querySelectorAll(".statement .hero-actions a, .statement .hero-actions button")].map((el) => el.getBoundingClientRect());
-          return [...document.querySelectorAll(".slot-li .sticker")].flatMap((s) => {
-            const r = s.getBoundingClientRect();
-            return row.some((b) => r.left < b.right && b.left < r.right && r.top < b.bottom && b.top < r.bottom) ? [s.closest(".slot-li")!.className] : [];
-          });
+      await page.evaluate(() => document.fonts.ready);
+      // the badge swings after its drop: measure it at rest
+      await expect
+        .poll(() => page.evaluate(() => {
+          const m = /rotate\((-?[\d.]+)deg\)/.exec(document.querySelector<HTMLElement>("[data-pendulum]")!.style.transform);
+          return !!m && Math.abs(Number(m[1])) < 0.05;
+        }), { timeout: 15_000 })
+        .toBe(true);
+      const clash = await page.evaluate(() => {
+        const box = (el: Element) => el.getBoundingClientRect();
+        const lede = box(document.querySelector("[data-lede]")!);
+        const badge = box(document.querySelector(".badge")!);
+        return [...document.querySelectorAll(".slot-li")].flatMap((li) => {
+          const r = box(li);
+          const out: string[] = [];
+          if (r.top < lede.bottom) out.push(`${li.className} under the headline`);
+          if (r.right > badge.left) out.push(`${li.className} into the badge`);
+          return out;
         });
-      // The stickers keep floating: sample a stretch of the drift, not one frame.
-      for (let i = 0; i < 6; i++) {
-        expect(await covered()).toEqual([]);
-        await page.waitForTimeout(300);
-      }
+      });
+      expect(clash).toEqual([]);
     });
   }
+
+  test("on a fine pointer the stickers lean toward the cursor, and ease home when it leaves the hero", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+    const slot = page.locator(".slot-li.s-1");
+    const offset = (prop: string) => slot.evaluate((el, p) => el.style.getPropertyValue(p), prop);
+    // The lean starts once the entrance is over: keep the pointer moving over the hero's lower right until it does.
+    let n = 0;
+    await expect
+      .poll(async () => { await page.mouse.move(1360 + (n++ % 2) * 20, 840); return offset("--px"); }, { timeout: 8000 })
+      .not.toBe("");
+    // Toward the lower right, so this slot (depth 1.3) leans right and down.
+    await expect.poll(async () => parseFloat(await offset("--px"))).toBeGreaterThan(5);
+    expect(parseFloat(await offset("--py"))).toBeGreaterThan(0);
+    // Onto the nav, out of the hero: the slot eases home, then drops both inline offsets.
+    await page.mouse.move(720, 36);
+    await expect.poll(() => offset("--px"), { timeout: 5000 }).toBe("");
+    expect(await offset("--py")).toBe("");
+  });
+
+  test("the lead line's switch turns on after the entrance, and a click flips it", async ({ page }) => {
+    await page.goto("/");
+    const sw = page.locator("[data-switch]");
+    await expect(sw).toHaveCount(1);
+    await expect(sw).toHaveClass(/is-on/, { timeout: 5000 });
+    await sw.click();
+    await expect(sw).not.toHaveClass(/is-on/);
+  });
 
   test("the agenda preview opens at the cursor on every pointer entry, not only the first", async ({ page }) => {
     await page.goto("/");
@@ -184,25 +211,6 @@ test.describe("with the build skipped, the page shows at once", () => {
     expect(moved).toBe(true);
   });
 
-  test("on a fine pointer the stickers lean toward the cursor, and ease home when it leaves the hero", async ({ page }) => {
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/");
-    const slot = page.locator(".slot-li.s-a");
-    const offset = (prop: string) => slot.evaluate((el, p) => el.style.getPropertyValue(p), prop);
-    // The lean starts once the entrance is over: keep the pointer moving over the hero's lower right until it does.
-    let n = 0;
-    await expect
-      .poll(async () => { await page.mouse.move(1360 + (n++ % 2) * 20, 840); return offset("--px"); }, { timeout: 8000 })
-      .not.toBe("");
-    // Toward the lower right, so this slot (depth 1.3) leans right and down.
-    await expect.poll(async () => parseFloat(await offset("--px"))).toBeGreaterThan(5);
-    expect(parseFloat(await offset("--py"))).toBeGreaterThan(0);
-    // Onto the nav, out of the hero: the slot eases home, then drops both inline offsets.
-    await page.mouse.move(720, 36);
-    await expect.poll(() => offset("--px"), { timeout: 5000 }).toBe("");
-    expect(await offset("--py")).toBe("");
-  });
-
   test("entrance releases the pre-paint hold and ends with the hero visible", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator("html")).not.toHaveClass(/motion-pending/);
@@ -221,7 +229,8 @@ test.describe("first visit: AI agents build the page", () => {
     // The held page hands over to the swarm: its parts hidden in place, agents on the page wearing initials.
     await expect(page.locator("html")).not.toHaveClass(/swarm-pending/);
     await expect(page.locator(".sw-hide").first()).toBeAttached();
-    await expect.poll(() => page.locator(".sw-layer .sw-cur").count()).toBeGreaterThan(3);
+    // the crew comes in as its work opens, and the headline's lead line goes first, alone: give it time to come
+    await expect.poll(() => page.locator(".sw-layer .sw-cur").count(), { timeout: 15_000 }).toBeGreaterThan(3);
     await expect(page.locator(".sw-cur .sw-name").first()).toHaveText(/^[A-Z]{2}$/);
     const names = await page.locator(".sw-cur .sw-name").allTextContents();
     expect(new Set(names).size).toBe(names.length);
@@ -252,9 +261,32 @@ test.describe("first visit: AI agents build the page", () => {
     expect(await page.evaluate(() => sessionStorage.getItem("swarm-built"))).toBeNull();
   });
 
+  test("on a phone the badge lands before the agents start on the headline", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    // Frame by frame from the first one: when the badge lands (the pendulum takes its first swing, an inline rotate)
+    // and when the first headline line shows during the build.
+    await page.addInitScript(() => {
+      const w = window as unknown as { __land?: number; __line?: number };
+      const tick = () => {
+        const pend = document.querySelector<HTMLElement>("[data-pendulum]");
+        if (w.__land === undefined && pend?.style.transform.includes("rotate")) w.__land = performance.now();
+        const building = document.documentElement.classList.contains("sw-building");
+        const shown = [...document.querySelectorAll(".lede .line > span")].some((el) => !el.classList.contains("sw-hide"));
+        if (w.__line === undefined && building && shown) w.__line = performance.now();
+        if (w.__land === undefined || w.__line === undefined) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+    await page.goto("/");
+    const times = () => page.evaluate(() => { const w = window as unknown as { __land?: number; __line?: number }; return { __land: w.__land, __line: w.__line }; });
+    await expect.poll(async () => { const t = await times(); return t.__land !== undefined && t.__line !== undefined; }, { timeout: 15_000 }).toBe(true);
+    const { __land, __line } = await times();
+    expect(__line!).toBeGreaterThanOrEqual(__land!);
+  });
+
   test("a reload in the same tab builds the page again", async ({ page }) => {
     await page.goto("/");
-    await expect.poll(() => page.locator(".sw-cur").count()).toBeGreaterThan(3);
+    await expect.poll(() => page.locator(".sw-cur").count(), { timeout: 15_000 }).toBeGreaterThan(3);
     await page.keyboard.press("Escape");
     await expect(page.locator(".sw-hide")).toHaveCount(0);
     await page.reload();

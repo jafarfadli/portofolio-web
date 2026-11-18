@@ -5,7 +5,10 @@ test.use({ reducedMotion: "reduce" });
 test("home renders every section from the database", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Jafar\s+Fadli/);
-  await expect(page.locator("[data-stickers] .slot-li")).toHaveCount(5);
+  // the hero: the headline, three project stickers and the badge; no buttons (owner, 2026-11-18)
+  await expect(page.locator("[data-stickers] .slot-li")).toHaveCount(3);
+  await expect(page.locator(".hero .hero-actions")).toHaveCount(0);
+  await expect(page.locator("[data-hero-log]")).toContainText("Built live by AI agents");
   await expect(page.locator("article.project")).toHaveCount(4);
   await expect(page.locator("article.project").first()).toContainText("Ledgerly");
   await expect(page.locator(".pin").first()).toContainText("(sample)");
@@ -16,7 +19,6 @@ test("home renders every section from the database", async ({ page }) => {
   await expect(page.locator(".badge-photo")).toHaveAttribute("alt", "Portrait of Muhammad Jafar Fadli in a navy suit");
   await expect(page.locator(".badge-head")).toContainText("jafarfadli.example");
   await expect(page.locator("section.theme-dark, section.theme-light")).toHaveCount(7);
-  await expect(page.locator(".sticker.is-resting")).toHaveCount(0);
   await expect(page.locator(".hw-ring, .hw-tab, .hw-clasp")).toHaveCount(3);
   await expect(page.locator("[data-agenda] .row")).toHaveCount(6);
   await expect(page.getByRole("heading", { name: "Experience and education" })).toBeVisible();
@@ -45,6 +47,29 @@ test("owner copy renders icon stickers, statement lines and the closing wave", a
   await expect(page.locator(".about-text .ico-stk")).toHaveCount(4);
   await expect(page.locator("#contact-h .ico-stk.is-wave")).toHaveCount(1);
   await expect(page.getByRole("heading", { name: "Let's talk.", exact: true })).toHaveCount(1);
+});
+
+test("the headline is a poster: tall, black, outline and black lines, each set to the column's width", async ({ page }) => {
+  await page.goto("/");
+  const lede = page.locator("[data-lede]");
+  await expect(lede.locator(".line").nth(0)).toHaveClass(/is-tall/);
+  await expect(lede.locator(".line").nth(2)).toHaveClass(/is-outline/);
+  await page.evaluate(() => document.fonts.ready);
+  // no line runs past the column (it would be clipped), and none is left at the size it had before the fit
+  const fit = await lede.evaluate((p) => ({ w: p.clientWidth, lines: [...p.querySelectorAll<HTMLElement>("[data-fit-line]")].map((l) => [l.offsetWidth, l.style.fontSize]) }));
+  for (const [w, size] of fit.lines) {
+    expect(w as number).toBeLessThanOrEqual(fit.w + 1);
+    expect(w as number).toBeGreaterThan(fit.w * 0.5);
+    expect(size).toMatch(/px$/);
+  }
+});
+
+test("the skill chips are set in mixed print, no two alike side by side", async ({ page }) => {
+  await page.goto("/");
+  const chips = page.locator("[data-chips] .chip");
+  const looks = await chips.evaluateAll((els) => els.map((e) => [...e.classList].find((c) => /^is-(ink|line|dot|navy|thin|caps|sticker)$/.test(c))));
+  expect(looks.every(Boolean)).toBe(true);
+  for (let i = 1; i < looks.length; i++) expect(looks[i]).not.toBe(looks[i - 1]);
 });
 
 test("copy has no em or en dashes", async ({ page }) => {

@@ -17,6 +17,7 @@ const PLACE = {
   "dont-call-me": { pin: { x: 59, y: 6, side: "l" }, edge: "top", t: 0.4 },
 };
 const r = (v, n = 2) => +v.toFixed(n);
+const poses = (p) => Object.fromEntries(Object.entries(p.screens).map(([k, v]) => [k, { w: v.w, h: v.h, t: v.t, m: v.m }]));
 (async () => {
   fs.mkdirSync(path.join(repo, "public/devices"), { recursive: true });
   const out = {};
@@ -34,20 +35,28 @@ const r = (v, n = 2) => +v.toFixed(n);
     const dot = { x: r(a[0] + (b[0] - a[0]) * t, 1), y: r(a[1] + (b[1] - a[1]) * t, 1) };
     const dx = pin.x - dot.x;
     const d = `M ${dot.x} ${dot.y} C ${r(dot.x + dx * 0.45, 1)} ${dot.y}, ${r(dot.x + dx * 0.55, 1)} ${pin.y}, ${pin.x} ${pin.y}`;
-    const screens = {};
-    for (const [k, v] of Object.entries(p.screens)) screens[k] = { w: v.w, h: v.h, t: v.t, m: v.m };
-    out[slug] = { width: W, height: S[slug].h, perspective: p.perspective, screens, pin, dot, leader: d };
+    out[slug] = { width: W, height: S[slug].h, perspective: p.perspective, screens: poses(p), pin, dot, leader: d };
+    // the phone frame: the same room in the frame a phone card shows (a scene without one shows its own frame there)
+    const M = S[slug].mobile;
+    if (M) {
+      const pm = JSON.parse(fs.readFileSync(path.join(renders, slug + "-m.json")));
+      for (const w of [M.w, M.w / 2]) {
+        await sharp(path.join(renders, slug + "-m.png")).resize({ width: w }).webp({ quality: 80, effort: 6 }).toFile(path.join(repo, "public/devices", `${slug}-m-${w}.webp`));
+      }
+      out[slug].mobile = { width: M.w, height: M.h, perspective: pm.perspective, screens: poses(pm) };
+    }
   }
   const ts = `// Generated from the Blender scenes (see DESIGN.md, "Device scenes"). Do not edit by hand: run scripts/devices/render.sh.
 /** A rendered room for a work card: a picture of the devices with black screens, and each screen's pose, so the
  *  page can lay the real screenshots onto them. Poses are CSS: the scene is 100cqw wide, seen with perspective
  *  \`perspective\` cqw from its centre; a screen box of w x h cqw sits at its centre, moved by t (cqw), turned by m. */
 export type DeviceScreen = { w: number; h: number; t: [number, number, number]; m: number[] };
-export type DeviceScene = {
-  width: number; height: number; perspective: number;
-  screens: { laptop: DeviceScreen; phone?: DeviceScreen };
+export type DeviceFrame = { width: number; height: number; perspective: number; screens: { laptop: DeviceScreen; phone?: DeviceScreen } };
+export type DeviceScene = DeviceFrame & {
   /** % of the field */
   pin: { x: number; y: number; side: "l" | "r" }; dot: { x: number; y: number }; leader: string;
+  /** the frame a phone card shows (public/devices/<slug>-m-<w>.webp); without it the phone card shows this frame */
+  mobile?: DeviceFrame;
 };
 
 export const DEVICE_SCENES: Record<string, DeviceScene> = ${JSON.stringify(out, null, 2)};

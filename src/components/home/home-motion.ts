@@ -6,7 +6,7 @@ import { Swarm } from "./swarm/swarm";
 type Ticker = (time: number, deltaTime: number) => void;
 
 /**
- * Port of mockup/main.js. Motion grammar is physical: the badge is a damped pendulum, stickers slap down,
+ * Port of mockup/main.js. Motion grammar is physical: the badge is a damped pendulum, tags slap down,
  * leader lines draw to the result they explain. Under reduced motion everything renders in its final state.
  * Returns a cleanup that undoes every listener, ticker, timer, observer, frame loop, tween, ScrollTrigger, and Lenis.
  */
@@ -53,8 +53,83 @@ export function initHomeMotion(doc: Document): () => void {
       });
     fit();
     on(win, "resize", fit);
-    // Archivo swaps in after first paint (display: swap); the fitted size must be measured with the real face.
-    doc.fonts?.ready.then(() => { if (!ac.signal.aborted) fit(); });
+
+    /* ---------- Set each headline line to the column's width (a poster: a short line prints large) ---------- */
+    const fitLede = () => {
+      const lede = doc.querySelector<HTMLElement>("[data-lede]");
+      if (!lede) return;
+      const lines = [...lede.querySelectorAll<HTMLElement>("[data-fit-line]")];
+      const W = lede.clientWidth;
+      if (!lines.length || !W) return;
+      // no transitions while it measures (reduced motion gives every property of every element a 1ms one, the icons and
+      // the switch inside a line included), so a width read is of the size just set
+      lede.classList.add("is-fitting");
+      lines.forEach((l) => { l.style.fontSize = "100px"; });
+      // A line's width and height scale with its size: measure both once, at 100px.
+      const fill = lines.map((l) => (100 * W) / Math.max(1, l.offsetWidth));
+      const tall = lines.map((l) => (l.parentElement ?? l).offsetHeight / 100);
+      const smallest = Math.min(...fill);
+      // On a desk the hero is one screen: the lines must end clear of the stickers below them. On a phone there is no
+      // such limit.
+      const statement = lede.closest<HTMLElement>(".statement");
+      const heroEl = lede.closest<HTMLElement>(".hero");
+      let room = Infinity;
+      if (statement && heroEl && win.getComputedStyle(statement).position === "absolute") {
+        const tops = [...heroEl.querySelectorAll<HTMLElement>(".stickers .slot-li")].map((li) => li.offsetTop).filter((t) => t > 0);
+        room = (tops.length ? Math.min(...tops) - 28 : heroEl.clientHeight * 0.9) - statement.offsetTop;
+      }
+      // Each line fills the column, but none goes past `cap` times the size of the smallest; when they are too tall
+      // for the room, they shrink together (k). The largest cap (2.4 down to 1.6) whose lines shrink by 6% at most
+      // wins; failing that, the one that keeps them largest. So a tall window lets a short line print large, and on a
+      // short one that line gives way before the rest shrink.
+      const options = [2.4, 2.2, 2, 1.8, 1.6].map((cap) => {
+        const px = fill.map((v) => Math.min(v, smallest * cap));
+        const k = Math.min(1, room / Math.max(1, px.reduce((n, v, i) => n + v * tall[i], 0)));
+        return { k, px: px.map((v) => v * k) };
+      });
+      const best = options.find((o) => o.k >= 0.94) ?? options.reduce((a, b) => (b.k > a.k ? b : a));
+      lines.forEach((l, i) => { l.style.fontSize = `${best.px[i].toFixed(2)}px`; });
+      void lede.offsetWidth;
+      lede.classList.remove("is-fitting");
+    };
+    fitLede();
+    on(win, "resize", fitLede);
+
+    /* ---------- The lead line's switch turns on once the line is in; a click flips it ---------- */
+    const heroSwitch = doc.querySelector<HTMLElement>("[data-switch]");
+    const switchOn = (delay: number) => {
+      if (!heroSwitch) return;
+      if (reduce || !delay) { heroSwitch.classList.add("is-on"); return; }
+      timeouts.push(win.setTimeout(() => heroSwitch.classList.add("is-on"), delay));
+    };
+    if (heroSwitch) on(heroSwitch, "click", () => heroSwitch.classList.toggle("is-on"));
+    if (reduce) switchOn(0);
+    else if (!building) switchOn(1900);
+
+    /* ---------- The agents' log: follows the build of the hero (owner: the top only) ---------- */
+    const log = doc.querySelector<HTMLElement>("[data-hero-log]");
+    const logLines = log?.querySelector<HTMLElement>("[data-log-lines]");
+    const logLine = (html: string, now = false) => {
+      if (!logLines) return;
+      logLines.querySelector(".is-now")?.remove();
+      const li = doc.createElement("li");
+      li.innerHTML = html;
+      if (now) li.className = "is-now";
+      logLines.append(li);
+      while (logLines.children.length > 2) logLines.firstElementChild!.remove();
+    };
+    if (building && logLines) {
+      logLines.textContent = "";
+      log!.classList.add("is-live");
+      logLine("agents are building the headline", true);
+    }
+    // Archivo swaps in after first paint (display: swap); the fitted sizes must be measured with the real faces.
+    doc.fonts?.ready.then(() => {
+      if (ac.signal.aborted) return;
+      fit();
+      fitLede();
+      swarm?.remeasure();
+    });
 
     /* ---------- Smooth scroll + in-page anchors ---------- */
     if (!reduce) {
@@ -192,8 +267,9 @@ export function initHomeMotion(doc: Document): () => void {
     /* ---------- Stickers: peel one, the rest step back ---------- */
     const stickerList = doc.querySelector<HTMLElement>("[data-stickers]");
     stickerList?.querySelectorAll<HTMLElement>(".sticker").forEach((s) => {
-      const peek = () => { stickerList.classList.add("is-peeking"); s.classList.add("is-peeled"); };
-      const unpeek = () => { stickerList.classList.remove("is-peeking"); s.classList.remove("is-peeled"); };
+      const li = s.closest<HTMLElement>(".slot-li");
+      const peek = () => { stickerList.classList.add("is-peeking"); s.classList.add("is-peeled"); li?.classList.add("is-peeled"); };
+      const unpeek = () => { stickerList.classList.remove("is-peeking"); s.classList.remove("is-peeled"); li?.classList.remove("is-peeled"); };
       on(s, "pointerenter", peek);
       on(s, "pointerleave", unpeek);
       on(s, "focus", peek);
@@ -209,11 +285,14 @@ export function initHomeMotion(doc: Document): () => void {
     // When the swarm builds the page, it is the entrance: none of the authored ones run.
     let entered = building;
     let onEntered = () => {};
-    // the swarm leaves the badge alone: it drops in on its lanyard by itself
+    // The swarm leaves the badge alone: it drops in on its lanyard by itself. On a phone the badge hangs under the
+    // headline and falls past it, so there the swarm holds the headline until the badge has landed (owner, 2026-11-18).
+    const phoneHero = win.matchMedia("(max-width: 860px)").matches;
+    let landed = !(building && phoneHero);
     if (!reduce && building && pendulum) {
       gsap.from(pendulum, {
         y: () => -win.innerHeight * 0.95, duration: 0.78, ease: "power3.in", delay: 0.4,
-        onComplete: () => { gsap.set(pendulum, { clearProps: "y" }); render(); kick(58); },
+        onComplete: () => { gsap.set(pendulum, { clearProps: "y" }); render(); kick(58); landed = true; swarm?.release(); },
       });
     }
     if (!reduce && !building) {
@@ -228,11 +307,10 @@ export function initHomeMotion(doc: Document): () => void {
           },
           0.05,
         )
-        .from(".lede .line > span", { yPercent: 108, duration: 0.9, stagger: 0.09 }, 0.78)
-        .from(".statement .hero-actions .btn", { opacity: 0, y: 14, duration: 0.6, stagger: 0.07 }, 1.0);
+        .from(".lede .line > span", { yPercent: 108, duration: 0.9, stagger: 0.09 }, 0.78);
       // On a phone the stickers are not shown (each project is a full card below).
       const slots = gsap.utils.toArray<HTMLElement>(".stickers .slot-li").filter((el) => el.getClientRects().length > 0);
-      if (slots.length) intro.from(slots, { opacity: 0, scale: 1.22, rotation: 9, duration: 0.5, ease: "back.out(1.5)", stagger: 0.075, clearProps: "transform" }, 0.62);
+      if (slots.length) intro.from(slots, { opacity: 0, scale: 1.22, rotation: 9, duration: 0.5, ease: "back.out(1.5)", stagger: 0.075, clearProps: "transform" }, 1.1);
     }
     // the skill chips pop in as they scroll in, whether or not the swarm builds the page
     if (!reduce) {
@@ -243,11 +321,10 @@ export function initHomeMotion(doc: Document): () => void {
     }
 
     /* ---------- Hero: stickers lean with the mouse ---------- */
-    // Each sticker sits at its own depth: the deeper it is, the further it leans toward the cursor. The depth goes
-    // by slot, not by position in the list, since a project without a screenshot renders no sticker.
+    // Each sticker sits at its own depth: the deeper it is, the further it leans toward the cursor.
     const hero = doc.querySelector<HTMLElement>(".hero");
     if (!reduce && finePointer && hero && stickerList) {
-      const DEPTH: [string, number][] = [["s-a", 1.3], ["s-b", 0.7], ["s-c", 1], ["s-d", 0.55], ["s-award", 1.6]];
+      const DEPTH: [string, number][] = [["s-1", 1.3], ["s-2", 1], ["s-3", 0.7]];
       const items = [...stickerList.querySelectorAll<HTMLElement>(".slot-li")].map((el) => ({
         el, depth: DEPTH.find(([c]) => el.classList.contains(c))?.[1] ?? 1, x: 0, y: 0,
       }));
@@ -686,8 +763,20 @@ export function initHomeMotion(doc: Document): () => void {
         } else if (el.matches(".pin > span")) hang(el.closest<HTMLElement>(".pin")!);
         // the badge swings once the last of it is in place, as if let go on its lanyard
         else if (el.closest(".pendulum") && swarm?.isBuilt(pendulum)) kick(46);
+        // the lead line's switch turns on once the line is typed in
+        else if (heroSwitch && el.contains(heroSwitch)) switchOn(350);
       };
-      swarm = new Swarm(doc, { built: swarmBuilt });
+      const secs = (v: number) => `${v.toFixed(1)}s`;
+      swarm = new Swarm(doc, {
+        built: swarmBuilt,
+        section: (key, hands, t) => {
+          if (key !== "hero") return;
+          switchOn(350);
+          logLine(hands ? `<span class="ok">✓</span> headline built: ${hands} agent${hands === 1 ? "" : "s"}, ${secs(t)}` : `<span class="ok">✓</span> headline built`);
+          log?.classList.remove("is-live");
+        },
+      });
+      if (!landed) swarm.hold();
       swarm.start(swarmStart);
     }
   };

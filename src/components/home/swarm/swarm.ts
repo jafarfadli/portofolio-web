@@ -31,6 +31,8 @@ import type { Act, Agent, Crew, Group, Look, Member, Ov, Part, Piece, PieceKind,
 export type SwarmHooks = {
   /** a part of the page is in place */
   built: (el: HTMLElement) => void;
+  /** a section is built: its key, how many agents worked on it, and how long it took (s) */
+  section?: (key: string, hands: number, secs: number) => void;
 };
 
 export type SwarmStart = "build" | "idle";
@@ -67,6 +69,7 @@ export class Swarm {
   sections: Section[] = [];
   /** the first thing built, alone: the rest of the page waits for it */
   lead: Task | null = null;
+  private held = false;
   mode: Mode = "off";
   tempo = 1;
   sx = 0;
@@ -198,9 +201,14 @@ export class Swarm {
     this.live.textContent = "AI agents are building this page. Press Escape to show it all now.";
   }
 
+  /** Holds the build: no section starts until release() (a phone's hero waits for its badge to land). */
+  hold(): void { this.held = true; }
+  release(): void { this.held = false; }
+
   skip(): void {
     if (this.mode !== "build") return;
-    this.agents.forEach((a) => { this.setJob(a, null); a.task = null; a.ov = null; a.caret = null; a.shape = "arrow"; });
+    // an agent already on its way off the screen keeps going: with its exit taken away it would stand there for good
+    this.agents.forEach((a) => { if (a.leaving) return; this.setJob(a, null); a.task = null; a.ov = null; a.caret = null; a.shape = "arrow"; });
     this.finishAll();
     this.finale();
   }
@@ -210,8 +218,14 @@ export class Swarm {
     this.pieces.forEach((p) => { if (!p.done) this.pieceDone(p); });
     this.ghosts.forEach((g) => g.remove());
     this.ghosts.clear();
-    this.sections.forEach((s) => { if (!s.done) { s.done = true; s.onDone?.(); } });
+    this.sections.forEach((s) => { if (!s.done) this.sectionDone(s); });
     this.flush();
+  }
+
+  private sectionDone(s: Section): void {
+    s.done = true;
+    s.onDone?.();
+    this.hooks.section?.(s.key, s.hands?.size ?? 0, s.t0 === undefined ? 0 : this.clock - s.t0);
   }
 
   /** Built: the chord, and every crew settles into its corner. */
@@ -295,12 +309,14 @@ export class Swarm {
 
   /** Which tasks can start, how big each crew should be, and who in it does what. */
   private schedule(): void {
+    if (this.held) return;
     const { sy, vh } = this;
     // nothing else starts until the lead is built
     const lead = this.lead && this.lead.state !== "done" ? this.lead : null;
     for (const s of this.sections) {
       if (!s.started && s.top < sy + vh * 1.15 && (!lead || lead.sec === s)) {
         s.started = true;
+        s.t0 = this.clock;
         s.onStart?.();
         const c = this.crewBySec.get(s);
         if (c) c.started = true;
@@ -343,8 +359,7 @@ export class Swarm {
     }
     for (const s of this.sections) {
       if (s.started && !s.done && s.tasks.every((t) => t.state === "done")) {
-        s.done = true;
-        s.onDone?.();
+        this.sectionDone(s);
       }
     }
     for (const c of this.crews) {
@@ -399,6 +414,7 @@ export class Swarm {
         list.splice(list.indexOf(t), 1);
         if (t.act === "dup") copying.set(t.data.group as Group, (copying.get(t.data.group as Group) ?? 0) + 1);
         t.state = "busy";
+        (t.sec.hands ??= new Set()).add(a.name);
         a.task = t;
         a.idle = false;
         this.setJob(a, this.run(a, t));
@@ -503,7 +519,8 @@ export class Swarm {
     });
   }
 
-  private remeasure(): void {
+  /** Measures every piece again (the page changed size, or a face loaded and set its type anew). */
+  remeasure(): void {
     if (!this.pieces.size) return;
     this.readView();
     this.measureAll();

@@ -2,29 +2,50 @@ import { Icon } from "@/components/Icon";
 import { Inline } from "@/components/Inline";
 import type { HomeContent } from "@/content/home";
 import { iconCount } from "@/lib/inline";
-import { statementLines } from "@/lib/statement";
+import { statementLines, switchAt } from "@/lib/statement";
 import { displayUrl } from "@/lib/url";
 import { withBase } from "@/lib/base-path";
 
-/** Three landscape screens float in a row along the hero's bottom edge, so their captions open above them. */
-const SCREEN_SLOTS = ["s-a", "s-c", "s-d"] as const;
+/** The hero's showcase (owner, 2026-11-18): three projects as stickers in a row under the headline, each with the
+ *  screenshot of the step named here (0 is the main one; Clinky shows its 2D board, not the 3D room). Without these
+ *  projects among the featured ones, the first three featured projects with a screenshot stand in. */
+const SHOWCASE: { slug: string; step: number }[] = [
+  { slug: "debt-report", step: 0 },
+  { slug: "c-sat", step: 0 },
+  { slug: "clinky", step: 1 },
+];
+const SLOTS = ["s-1", "s-2", "s-3"] as const;
 
-/** The seal prints its caption on two lines: everything before the last word, then the last word (the year). */
-function SealCaption({ text }: { text: string | null }) {
-  if (!text) return null;
-  const cut = text.lastIndexOf(" ");
-  if (cut < 0) return <>{text}</>;
-  return <>{text.slice(0, cut)}<br />{text.slice(cut + 1)}</>;
+/** The headline's line looks, in turn: tall condensed, expanded black, outline, expanded black. */
+const LINE_LOOKS = ["is-tall", "", "is-outline", ""] as const;
+
+/** The lead line (the one about AI) prints one "o" as a switch that turns on (owner, 2026-11-18, after
+ *  whyramachandran.design's toggle in "PRODUCT"). The letter stays in the text for readers and the swarm. */
+function Switched({ text, tiltFrom }: { text: string; tiltFrom: number }) {
+  const k = switchAt(text);
+  if (k < 0) return <Inline text={text} icons tiltFrom={tiltFrom} />;
+  const before = text.slice(0, k);
+  return (
+    <>
+      <Inline text={before} icons tiltFrom={tiltFrom} />
+      <span className="switch-o">{text[k]}</span>
+      <span className="hero-switch" data-switch aria-hidden="true"><i /></span>
+      <Inline text={text.slice(k + 1)} icons tiltFrom={tiltFrom + iconCount(before)} />
+    </>
+  );
 }
 
 export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: string }) {
-  const { profile: p, photo, projects, achievements } = content;
-  const seal = achievements.find((a) => a.sealText);
-  // The first featured project with a phone capture gets the slot beside the action row (s-b), shown landscape with
-  // its desktop screenshot. It then leaves the screen row, and the first three other featured projects with a desktop
-  // screenshot fill that row in order.
-  const phone = projects.find((pr) => pr.phoneShot);
-  const screens = projects.filter((pr) => pr !== phone && pr.screenshot).slice(0, SCREEN_SLOTS.length);
+  const { profile: p, photo, projects } = content;
+  const named = SHOWCASE.flatMap(({ slug, step }) => {
+    const pr = projects.find((x) => x.slug === slug);
+    const shot = pr?.steps[step]?.shot ?? pr?.screenshot;
+    return pr && shot ? [{ pr, shot }] : [];
+  });
+  const showcase = (named.length ? named : projects.flatMap((pr) => (pr.screenshot ? [{ pr, shot: pr.screenshot }] : []))).slice(0, SLOTS.length);
+  const lines = statementLines(p.statementLine1, p.statementLine2);
+  const lead = Math.max(0, lines.findIndex((l) => /\bAI\b/.test(l)));
+  const tiltAt = (i: number) => lines.slice(0, i).reduce((n, l) => n + iconCount(l), 0);
   const name = `${p.firstName} ${p.lastName}`.toUpperCase();
   // The mockup's " &nbsp; " (space, no-break space, space), so the gap between repeats survives white-space collapsing.
   const strap = Array.from({ length: 3 }, () => name).join(" \u00a0 ");
@@ -129,48 +150,37 @@ export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: 
         </div>
 
         <ul className="stickers" data-stickers aria-label="Projects">
-          {screens.map((pr, i) => (
-            <li key={pr.id} className={`slot-li ${SCREEN_SLOTS[i]}`}>
+          {showcase.map(({ pr, shot }, i) => (
+            <li key={pr.id} className={`slot-li ${SLOTS[i]}`}>
               <span className="float">
                 <a className="sticker" href={`#p-${pr.slug}`}>
-                  <img src={pr.screenshot!.url} srcSet={pr.screenshot!.srcSet} sizes="(max-width: 860px) 60vw, 330px" alt={pr.screenshot!.alt} width={pr.screenshot!.width} height={pr.screenshot!.height} loading={i < 1 ? undefined : "lazy"} />
+                  <img src={shot.url} srcSet={shot.srcSet} sizes="(max-width: 860px) 60vw, 270px" alt={shot.alt} width={shot.width} height={shot.height} loading={i < 1 ? undefined : "lazy"} />
                   <span className="sticker-cap cap-top">{pr.stickerCaption} <Icon name="arrow-ur" /></span>
                 </a>
               </span>
             </li>
           ))}
-          {phone?.screenshot ? (
-            <li className="slot-li s-b">
-              <span className="float">
-                <a className="sticker" href={`#p-${phone.slug}`}>
-                  <img src={phone.screenshot.url} srcSet={phone.screenshot.srcSet} sizes="(max-width: 860px) 60vw, 220px" alt={phone.screenshot.alt} width={phone.screenshot.width} height={phone.screenshot.height} />
-                  <span className="sticker-cap">{phone.stickerCaption} <Icon name="arrow-ur" /></span>
-                </a>
-              </span>
-            </li>
-          ) : null}
-          {seal ? (
-            <li className="slot-li s-award">
-              <span className="float">
-                <a className="sticker" href="#achievements">
-                  <span className="seal"><span><b>{seal.sealText}</b><small><SealCaption text={seal.sealCaption} /></small></span></span>
-                  <span className="sticker-cap">{seal.caption} <Icon name="arrow-ur" /></span>
-                </a>
-              </span>
-            </li>
-          ) : null}
         </ul>
       </div>
 
       <div className="statement">
+        {/* a poster: the lines alternate a tall condensed cut, the expanded black and an outline, and home-motion.ts
+            sets each one to the column's width (data-fit-line), so a short line prints large */}
         <p className="lede" data-lede>
-          {statementLines(p.statementLine1, p.statementLine2).map((line, i, lines) => (
-            <span key={i} className="line"><span><Inline text={line} icons tiltFrom={lines.slice(0, i).reduce((n, l) => n + iconCount(l), 0)} /></span></span>
+          {lines.map((line, i) => (
+            <span key={i} className={["line", LINE_LOOKS[i % LINE_LOOKS.length]].filter(Boolean).join(" ")}>
+              <span data-fit-line>
+                {i === lead ? <Switched text={line} tiltFrom={tiltAt(i)} /> : <Inline text={line} icons tiltFrom={tiltAt(i)} />}
+              </span>
+            </span>
           ))}
         </p>
-        <div className="hero-actions">
-          <a className="btn btn-stock" href="#work">See the work <Icon name="arrow-ur" /></a>
-          <a className="btn btn-line" href={withBase("/cv")}>Download CV <Icon name="download" /></a>
+        {/* the agents' log: a printed slip that follows the build (home-motion.ts writes it; this is its resting text) */}
+        <div className="hero-log" data-hero-log aria-hidden="true">
+          <p className="log-head"><span className="log-dot" />Agent log</p>
+          <ol className="log-lines" data-log-lines>
+            <li>Built live by AI agents, on every visit</li>
+          </ol>
         </div>
       </div>
     </section>
