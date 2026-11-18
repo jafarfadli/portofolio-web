@@ -91,6 +91,8 @@
 
 @media (max-width: 860px) {
   .cv-stage { padding: 16px 0 48px; overflow-x: auto; }
+  /* the whole sheet fits the screen, like a page preview (CvFit sets the zoom; pinch to read closer) */
+  .cv-sheet { zoom: var(--cv-zoom, 1); }
   .cv-bar .note { display: none; }
 }
 @page { size: A4; margin: 0; }
@@ -98,7 +100,7 @@
   body, .cv-page { background: #fff; min-height: 0; }
   .cv-bar { display: none; }
   .cv-stage { padding: 0; }
-  .cv-sheet { box-shadow: none; margin: 0; width: auto; min-height: 296.4mm; } /* a hair under A4, so rounding never spills a blank page */
+  .cv-sheet { box-shadow: none; margin: 0; width: auto; min-height: 296.4mm; zoom: 1; } /* a hair under A4, so rounding never spills a blank page */
   .cv-sheet a { text-decoration: none; }
   .cv-sec, .cv-entry { break-inside: avoid; }
 }

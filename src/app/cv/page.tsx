@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CvDocument } from "@/components/cv/CvDocument";
+import { CvFit } from "@/components/cv/CvFit";
 import { PrintButton } from "@/components/cv/PrintButton";
 import { Icon } from "@/components/Icon";
 import { getCvContent } from "@/content/cv";
@@ -27,6 +28,7 @@ export default function CvPage() {
         <PrintButton />
       </div>
       <main className="cv-stage">
+        <CvFit />
         <CvDocument cv={cv} />
       </main>
     </div>

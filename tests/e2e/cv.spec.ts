@@ -33,3 +33,17 @@ test("CV lists sections in order, ranks achievements, and prints to one A4 page"
   const pages = (pdf.toString("latin1").match(/\/Type\s*\/Page[^s]/g) ?? []).length;
   expect(pages).toBe(1);
 });
+
+test("on a phone the whole CV sheet fits the screen, with no sideways scroll", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/cv");
+  const sheet = page.locator(".cv-sheet");
+  await expect.poll(() => sheet.evaluate((el) => el.getBoundingClientRect().width)).toBeLessThanOrEqual(390 - 20);
+  const box = await sheet.evaluate((el) => { const r = el.getBoundingClientRect(); return { left: r.left, right: r.right }; });
+  expect(box.left).toBeGreaterThanOrEqual(8);
+  expect(box.right).toBeLessThanOrEqual(390 - 8);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+  // the sheet keeps its print layout, only smaller: still one A4 page when printed
+  const pdf = await page.pdf({ format: "A4", preferCSSPageSize: true, printBackground: true });
+  expect((pdf.toString("latin1").match(/\/Type\s*\/Page[^s]/g) ?? []).length).toBe(1);
+});
