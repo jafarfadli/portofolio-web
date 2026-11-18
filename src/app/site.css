@@ -388,8 +388,41 @@ button.feat-tag { cursor: pointer; }
   55% { transform: translate(2px, -2px) rotate(2deg) scale(1.02); opacity: 1; }
   100% { transform: none; opacity: 1; }
 }
-.project:has(.print:hover) .feat-tag, .project:has(:focus-visible) .feat-tag { animation-play-state: paused; }
+.project:has(.print:hover) .feat-tag, .scene:hover ~ .scene-tag .feat-tag, .project:has(:focus-visible) .feat-tag { animation-play-state: paused; }
 .project:hover .print { transform: rotate(0deg) translateY(-6px); }
+
+/* Device scenes (owner, 2026-11-18, after whyramachandran.design): the field is a rendered photo of the project's
+   devices on concrete blocks in a room painted the field colour (Blender, see DESIGN.md). Its screens are black;
+   the screenshots lie on them in the photo's own perspective (device-scenes.ts), so they turn like the print's. The
+   field takes the photo's proportions at every width. The card lets its tags hang over its edges: the feature tag
+   is stuck on the photo's lower left corner, and some result tags (device-scenes.ts) reach a little past the card. */
+.project.has-scene { overflow: visible; }
+.project-field.has-scene { aspect-ratio: var(--scene-ar); overflow: visible; border-radius: var(--r-card) var(--r-card) 0 0; }
+.project-field.has-scene::before { display: none; }
+.scene { position: absolute; inset: 0; container-type: inline-size; overflow: hidden; border-radius: inherit; }
+.scene-photo, .scene-view { position: absolute; inset: 0; transition: transform 1200ms var(--ease-out); }
+.scene-photo { display: block; width: 100%; height: 100%; }
+.project:hover .scene-photo, .project:hover .scene-view { transform: scale(1.03); }
+.scene-screen { position: absolute; left: 50%; top: 50%; margin: 0; transform-origin: 0 0; overflow: hidden; background: #000; }
+.scene-screen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top left; }
+.scene-screen.has-stack img { opacity: 0; transition: opacity 560ms var(--ease-out); }
+.scene-screen.has-stack img.is-on { opacity: 1; z-index: 1; }
+.scene-screen.has-stack img.is-out { opacity: 0; transition-duration: 700ms; }
+.scene-screen::after { /* the glass: a soft sheen across the top left */
+  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: linear-gradient(118deg, rgba(255, 255, 255, 0.11) 0%, rgba(255, 255, 255, 0.04) 34%, transparent 34.2%);
+}
+.scene-screen.is-laptop::before { /* the camera notch */
+  content: ""; position: absolute; z-index: 3; left: 50%; top: 0; width: 10.2%; height: 3.2%; translate: -50% 0;
+  background: #050506; border-radius: 0 0 22% 22% / 0 0 45% 45%;
+}
+.scene-screen.is-phone { border-radius: 13% / 6%; }
+.scene-screen.is-phone::before { /* the island */
+  content: ""; position: absolute; z-index: 3; left: 50%; top: 1.6%; width: 31%; height: 4%; translate: -50% 0; border-radius: 999px; background: #050506;
+}
+.scene-tag { position: absolute; z-index: 4; left: -14px; bottom: 18px; max-width: 40%; }
+.project.is-half .scene-tag { max-width: 60%; }
+.project-field.has-scene .scene-tag .feat-tag { position: relative; left: 0; top: auto; bottom: auto; max-width: none; }
 .leader { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; overflow: visible; }
 .leader path { fill: none; stroke: var(--stock); stroke-width: 2.5; vector-effect: non-scaling-stroke; stroke-linecap: round; }
 .lead-dot { position: absolute; z-index: 4; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: var(--stock); border: 3px solid var(--ink); }
@@ -735,6 +768,11 @@ html.swarm-pending main > section > *:not(.hero-dust) { visibility: hidden; anim
   .print.has-stack .print-win { box-shadow: 6px 6px 0 -1px #ecece8, 11px 11px 0 -2px #dcdcd6, 0 22px 40px -18px rgba(0, 0, 0, 0.55); }
   .feat-tag, .project.is-half .feat-tag { position: relative; left: -6px; top: auto; bottom: auto; order: 1; align-self: flex-start; max-width: 92%; margin-bottom: 12px; }
   .pin, .pin.points-r, .project.is-half .pin { position: relative; right: auto; bottom: auto; align-self: flex-end; max-width: 88%; margin-top: 18px; }
+  /* a scene card: the tag, then the photo with its devices, then the pin */
+  .project-field.has-scene { aspect-ratio: auto; }
+  .scene { position: relative; inset: auto; order: 2; flex: none; width: 100%; aspect-ratio: var(--scene-ar); border-radius: var(--r-sticker); box-shadow: 0 22px 40px -18px rgba(0, 0, 0, 0.55); }
+  .scene-tag, .project.is-half .scene-tag { position: relative; left: auto; bottom: auto; order: 1; align-self: flex-start; max-width: 92%; margin: 0 0 12px -6px; }
+  .pin { order: 3; }
   .project.is-half .pin b { font-size: 26px; }
 }
 

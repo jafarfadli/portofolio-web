@@ -1,14 +1,27 @@
 import type { CSSProperties } from "react";
 import { Icon } from "@/components/Icon";
 import { Inline } from "@/components/Inline";
-import type { HomeProject } from "@/content/home";
+import type { HomeProject, MediaRef } from "@/content/home";
+import { DEVICE_SCENES, type DeviceScene, type DeviceScreen } from "@/content/device-scenes";
+import { withBase } from "@/lib/base-path";
+
+type Shot = { shot: MediaRef; i: number };
 
 export function ProjectCard({ project: pr, layout }: { project: HomeProject; layout: "wide" | "half" }) {
-  const { print, leader, pin } = pr.cardArt;
   // Steps with a screenshot make the show. A step's feature rides on the print as a tag; a feature without its
   // screenshot is not shown.
   const shots = pr.steps.flatMap((st, i) => (st.shot ? [{ shot: st.shot, i }] : []));
   const hasTags = shots.some(({ i }) => pr.steps[i].feature);
+  const tag = hasTags ? (
+    // One tag; it reads the feature of the screenshot on top. With more than one screenshot it is a button that
+    // turns to the next one.
+    <FeatureTag shots={shots.map(({ i }) => ({ i, text: pr.steps[i].feature }))} many={shots.length > 1} name={pr.name} />
+  ) : null;
+  // A project with a rendered room shows its screenshots on the devices in it; any other keeps the print.
+  const scene = shots.length > 0 ? DEVICE_SCENES[pr.slug] : undefined;
+  const { print, pin: artPin, leader: artLeader } = pr.cardArt;
+  const pin = scene ? { ...artPin, ...scene.pin } : artPin;
+  const leader = scene ? { ...artLeader, d: scene.leader, dot: scene.dot } : artLeader;
   const pinClass = ["pin", pin.big && "is-big", pin.ink && "is-ink", pin.side === "r" && "points-r"].filter(Boolean).join(" ");
   const printStyle = {
     left: `${print.left}%`, top: `${print.top}%`, width: `${print.width}%`, height: `${print.height}%`, "--rot": `${print.rot}deg`,
@@ -17,35 +30,22 @@ export function ProjectCard({ project: pr, layout }: { project: HomeProject; lay
   return (
     <article
       // is-offscreen holds the show until home-motion.ts sees the card; without scripts it never runs.
-      className={`project${layout === "half" ? " is-half" : ""}${shots.length > 1 ? " is-offscreen" : ""}`}
+      className={`project${layout === "half" ? " is-half" : ""}${scene ? " has-scene" : ""}${shots.length > 1 ? " is-offscreen" : ""}`}
       id={`p-${pr.slug}`}
       style={{ "--field": pr.fieldColor } as CSSProperties}
     >
-      <div className="project-field">
-        {shots.length > 0 ? (
+      <div className={scene ? "project-field has-scene" : "project-field"} style={scene ? ({ "--scene-ar": `${scene.width} / ${scene.height}` } as CSSProperties) : undefined}>
+        {scene ? (
+          <>
+            <Scene scene={scene} slug={pr.slug} layout={layout} shots={shots} phoneShot={pr.phoneShot} />
+            {tag ? <div className="scene-tag">{tag}</div> : null}
+          </>
+        ) : shots.length > 0 ? (
           <figure className={shots.length > 1 ? "print has-stack" : "print"} style={printStyle} data-show>
             <span className="print-win">
-            {shots.map(({ shot, i }, n) => (
-              <img
-                key={i}
-                className={n === 0 ? "is-on" : undefined}
-                data-step={i}
-                src={shot.url}
-                srcSet={shot.srcSet}
-                sizes="(max-width: 860px) 90vw, 760px"
-                alt={shot.alt}
-                width={shot.width}
-                height={shot.height}
-                loading="lazy"
-                style={print.objectPosition ? { objectPosition: print.objectPosition } : undefined}
-              />
-            ))}
+              <Shots shots={shots} sizes="(max-width: 860px) 90vw, 760px" objectPosition={print.objectPosition} />
             </span>
-            {hasTags ? (
-              // One tag stuck on the print's corner; it reads the feature of the screenshot on top. With more than one
-              // screenshot it is a button that turns to the next one.
-              <FeatureTag shots={shots.map(({ i }) => ({ i, text: pr.steps[i].feature }))} many={shots.length > 1} name={pr.name} />
-            ) : null}
+            {tag}
           </figure>
         ) : null}
         <svg className="leader" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
@@ -72,6 +72,59 @@ export function ProjectCard({ project: pr, layout }: { project: HomeProject; lay
         </div>
       </div>
     </article>
+  );
+}
+
+function Shots({ shots, sizes, objectPosition }: { shots: Shot[]; sizes: string; objectPosition?: string }) {
+  return shots.map(({ shot, i }, n) => (
+    <img
+      key={i}
+      className={n === 0 ? "is-on" : undefined}
+      data-step={i}
+      src={shot.url}
+      srcSet={shot.srcSet}
+      sizes={sizes}
+      alt={shot.alt}
+      width={shot.width}
+      height={shot.height}
+      loading="lazy"
+      style={objectPosition ? { objectPosition } : undefined}
+    />
+  ));
+}
+
+/** A rendered photo of the devices with black screens; the screenshots lie on the screens in the photo's own
+ *  perspective (see device-scenes.ts), so they keep turning like the print's. */
+function Scene({ scene, slug, layout, shots, phoneShot }: { scene: DeviceScene; slug: string; layout: "wide" | "half"; shots: Shot[]; phoneShot: MediaRef | null }) {
+  const w = scene.width;
+  const pose = (s: DeviceScreen) =>
+    ({
+      width: `${s.w}cqw`, height: `${s.h}cqw`,
+      transform: `translate3d(${s.t.map((v) => `${v}cqw`).join(", ")}) matrix3d(${s.m.join(", ")})`,
+    }) as CSSProperties;
+  return (
+    <div className="scene">
+      <img
+        className="scene-photo"
+        src={withBase(`/devices/${slug}-${w}.webp`)}
+        srcSet={`${withBase(`/devices/${slug}-${w / 2}.webp`)} ${w / 2}w, ${withBase(`/devices/${slug}-${w}.webp`)} ${w}w`}
+        sizes={layout === "half" ? "(max-width: 860px) 100vw, 640px" : "(max-width: 860px) 100vw, 1280px"}
+        alt=""
+        width={w}
+        height={scene.height}
+        loading="lazy"
+      />
+      <div className="scene-view" style={{ perspective: `${scene.perspective}cqw` }}>
+        <figure className={shots.length > 1 ? "scene-screen is-laptop has-stack" : "scene-screen is-laptop"} style={pose(scene.screens.laptop)} data-show>
+          <Shots shots={shots} sizes="(max-width: 860px) 70vw, 720px" />
+        </figure>
+        {scene.screens.phone && phoneShot ? (
+          <figure className="scene-screen is-phone" style={pose(scene.screens.phone)} aria-hidden="true">
+            <img src={phoneShot.url} srcSet={phoneShot.srcSet} sizes="200px" alt="" width={phoneShot.width} height={phoneShot.height} loading="lazy" />
+          </figure>
+        ) : null}
+      </div>
+    </div>
   );
 }
 
