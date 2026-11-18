@@ -149,6 +149,15 @@ export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: 
           </div>
         </div>
 
+        {/* the agents' log: a printed slip beside the lanyard's strap that follows the hero's build (home-motion.ts writes
+            it; this is its resting text) */}
+        <div className="hero-log" data-hero-log aria-hidden="true">
+          <p className="log-head"><span className="log-dot" />Agent log</p>
+          <ol className="log-lines" data-log-lines>
+            <li>Built live by AI agents, on every visit</li>
+          </ol>
+        </div>
+
         <ul className="stickers" data-stickers aria-label="Projects">
           {showcase.map(({ pr, shot }, i) => (
             <li key={pr.id} className={`slot-li ${SLOTS[i]}`}>
@@ -175,13 +184,6 @@ export function Hero({ content, qrDataUrl }: { content: HomeContent; qrDataUrl: 
             </span>
           ))}
         </p>
-        {/* the agents' log: a printed slip that follows the build (home-motion.ts writes it; this is its resting text) */}
-        <div className="hero-log" data-hero-log aria-hidden="true">
-          <p className="log-head"><span className="log-dot" />Agent log</p>
-          <ol className="log-lines" data-log-lines>
-            <li>Built live by AI agents, on every visit</li>
-          </ol>
-        </div>
       </div>
     </section>
   );
