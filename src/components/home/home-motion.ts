@@ -95,6 +95,33 @@ export function initHomeMotion(doc: Document): () => void {
     fitLede();
     on(win, "resize", fitLede);
 
+    /* ---------- Phone: the pass is scaled to hang whole on the first screen (owner, 2026-11-18) ---------- */
+    // The stage sets --pend-s, and site.css scales the pendulum (strap, ring, clasp and card together) and the
+    // stage's height by it. Below the card the screen keeps room for the browser's own bar. Only a change of width
+    // refits: a phone browser changes the height as its bar hides on scroll, and the pass must not grow then.
+    const stageEl = doc.querySelector<HTMLElement>(".hero-stage");
+    const phone = win.matchMedia("(max-width: 860px)");
+    let fitW = -1;
+    const fitPass = (force = false) => {
+      if (!stageEl) return;
+      if (!phone.matches) { stageEl.style.removeProperty("--pend-s"); fitW = -1; return; }
+      if (!force && win.innerWidth === fitW) return;
+      fitW = win.innerWidth;
+      const pend = stageEl.querySelector<HTMLElement>(".pendulum");
+      const card = pend?.querySelector<HTMLElement>(".badge");
+      if (!pend || !card) return;
+      stageEl.style.setProperty("--pend-s", "1");
+      // the card's lowest edge below the pivot at full size (offsets ignore the swing, the drop and the scale); the
+      // scale is taken about the pivot, which sits pend.offsetTop below the stage's top
+      const reach = card.offsetTop + card.offsetHeight;
+      const top = stageEl.getBoundingClientRect().top + win.scrollY;
+      const room = win.innerHeight - 84 - top - pend.offsetTop;
+      const s = Math.min(1, Math.max(0.68, room / Math.max(1, reach)));
+      stageEl.style.setProperty("--pend-s", s.toFixed(3));
+    };
+    fitPass(true);
+    on(win, "resize", () => fitPass());
+
     /* ---------- The lead line's switch turns on once the line is in; a click flips it ---------- */
     const heroSwitch = doc.querySelector<HTMLElement>("[data-switch]");
     const switchOn = (delay: number) => {
@@ -128,6 +155,7 @@ export function initHomeMotion(doc: Document): () => void {
       if (ac.signal.aborted) return;
       fit();
       fitLede();
+      fitPass(true);
       swarm?.remeasure();
     });
 
@@ -752,6 +780,26 @@ export function initHomeMotion(doc: Document): () => void {
       ScrollTrigger.create({ trigger: agenda, start: "top bottom", end: "bottom top", onUpdate: recheck, onLeave: hide, onLeaveBack: hide });
     }
 
+    /* ---------- "Let's talk." waves once it is built: a pointer's hover played it, a phone has none (owner) ---------- */
+    const hand = doc.querySelector<HTMLElement>(".closing .ico-stk.is-wave");
+    const wave = () => {
+      if (!hand || reduce) return;
+      hand.classList.remove("is-waving");
+      void hand.offsetWidth;
+      hand.classList.add("is-waving");
+    };
+    if (hand) on(hand, "animationend", () => hand.classList.remove("is-waving"));
+    // without a build, it waves the first time it comes on screen
+    if (hand && !building && !reduce) {
+      const io = new IntersectionObserver((entries) => {
+        if (!entries.at(-1)!.isIntersecting) return;
+        io.disconnect();
+        wave();
+      }, { threshold: 1 });
+      io.observe(hand);
+      ac.signal.addEventListener("abort", () => io.disconnect());
+    }
+
     /* ---------- The agent swarm: builds the page on the first visit, then its crew stays ---------- */
     if (swarmStart) {
       const swarmBuilt = (el: HTMLElement) => {
@@ -770,6 +818,7 @@ export function initHomeMotion(doc: Document): () => void {
       swarm = new Swarm(doc, {
         built: swarmBuilt,
         section: (key, hands, t) => {
+          if (key === "closing") wave();
           if (key !== "hero") return;
           switchOn(350);
           logLine(hands ? `<span class="ok">✓</span> headline built: ${hands} agent${hands === 1 ? "" : "s"}, ${secs(t)}` : `<span class="ok">✓</span> headline built`);

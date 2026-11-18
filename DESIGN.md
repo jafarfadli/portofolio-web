@@ -720,13 +720,15 @@ CV tiers (`/cv`, set in pt and mm for print):
 
 **Breakpoints.**
 - `max-width: 860px` (JS mirrors this as `min-width: 861px` for "wide"): see responsive rules below.
-- `max-width: 420px`: the strap shortens to 110px, the badge to 260px, and the stage to 560px, so the statement reaches the first screen.
+- `max-width: 420px`: the strap shortens to 110px, the badge to 260px, and the stage to `540px * --pend-s + 20px`, so the statement reaches the first screen.
+- **The whole pass on the first screen** (owner, 2026-11-18: the card was cut off and needed a scroll). Under 860px `home-motion` sets `--pend-s` on the stage: the scale at which the card's bottom edge sits 84px above the bottom of the screen (room for the browser's own bar), between 0.68 and 1. The pendulum takes it as `scale` about its pivot, so strap, ring, clasp and card shrink together and the swing is unchanged, and the stage's height follows it. It refits on a change of width only, after the headline fit and again once the fonts load; a phone's bar hiding on scroll changes the height and must not resize the pass.
 
 **Responsive rules under 860px.**
 - Nav keeps only the brand and the Download CV pill; section links are hidden.
 - Hero becomes a column: padding `96px gutter-right 64px gutter-left`, the statement first (its lines fitted to the column), then a 640px-tall stage holding only the lanyard. The dust canvas still lies behind it (it covers the whole hero). On a first visit the badge drops in first and the agents start on the headline only once it has landed, so the two never cross (owner, 2026-11-18).
 - Pendulum centres (`left: 50%; top: -20px`); strap length 150px, its top starting 16px above the pivot so it emerges under the nav and the brand stays readable, and the strap tops fade out through a 44px mask instead of ending square; badge `--badge-w: 290px`.
 - Both gutters are 22px (the wider left gutter only clears the cord, which phones do not show; owner, 2026-11-18: the page read as shifted right).
+- Every `.section` clips its own sides (`overflow-x: clip`): the body's clip is passed to the viewport, where a phone still widens the page for content past the edge (a skill chip popping in at 1.3x did), and the page could then be panned sideways.
 - The hero stickers are not shown: every project is one scroll away as a full card.
 - The achievements strip carries a plain length of its strap (navy, webbing, both stitches) as its own background, fixed to its box, so the strap runs edge to edge at either end of the scroll and through a bounce past it; the first pass's strap and stitch reach the left edge.
 - The work cards run nearly to the screen's edges (12px each side, past the gutters), 40px apart.
@@ -871,7 +873,7 @@ The showcase (owner, 2026-11-18: back after a day without it, three only): Debt 
 - **On concrete:** the scrap is white with the shadow `0 0.035em 0.08em rgba(17,18,22,.22)`.
 - **Tilt cycle:** each icon takes the next tilt in turn from -7, 5, -4, 6, -5, 7 degrees (the `rotate` property, set as `--r`); the statement counts across its lines, so the turn continues from one line to the next instead of restarting.
 - **About variant:** `0.9em` square, `vertical-align: -0.02em`; inside the softer emphasised half of the sentence the glyph stays full-strength `webbing-navy`.
-- **Closing wave:** the `wave` icon (tilt -8deg) follows "Let's talk." in the closing headline. When the closing panel is hovered it rocks once from its wrist (`transform-origin: 70% 90%`, 1.2s `ease-out`, keyframes 14deg, -8deg, 10deg, -3deg at 20/40/60/80%). It uses `transform`, so it does not disturb the tilt, which is on `rotate`.
+- **Closing wave:** the `wave` icon (tilt -8deg) follows "Let's talk." in the closing headline. It rocks once when the agents finish building the page (the closing section's hook; the build pauses it until the build ends), on later visits the first time it is wholly on screen, and whenever the closing panel is hovered. Each time it rocks once from its wrist (`transform-origin: 70% 90%`, 1.2s `ease-out`, keyframes 14deg, -8deg, 10deg, -3deg at 20/40/60/80%). It uses `transform`, so it does not disturb the tilt, which is on `rotate`.
 
 ### Metric pins + leader lines
 - One pin per project, carrying one real metric (metric role) and a one-line explanation. Stock pin by default; **ink pin** on light fields (its leader stroke switches to ink and the explanation to metal). **Big** pins for full-width cards.

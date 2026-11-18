@@ -166,6 +166,9 @@ html { scroll-padding-top: 88px; }
 /* ---------- Layout ---------- */
 main { position: relative; z-index: 1; }
 .section { position: relative; padding: clamp(88px, 10vw, 150px) var(--gutter-r) clamp(88px, 10vw, 150px) var(--gutter); } /* each panel is its own piece of webbing */
+/* a chip popping in at 1.3x or a leaning sticker must not widen the page: the body's clip passes to the viewport, where
+   a phone still lets the page pan sideways, so each panel clips its own sides */
+.section { overflow-x: clip; }
 .section-head { position: relative; margin-bottom: clamp(36px, 5vw, 64px); }
 .section-head h2 {
   font-size: clamp(44px, 6.6vw, 96px); line-height: 0.95; font-weight: 850;
@@ -349,7 +352,7 @@ main { position: relative; z-index: 1; }
 .about-text .ico-stk { width: 0.9em; height: 0.9em; vertical-align: -0.02em; }
 /* the closing wave: the hand rocks from its wrist when the panel is hovered */
 .ico-stk.is-wave { transform-origin: 70% 90%; }
-.closing:hover .ico-stk.is-wave { animation: wave 1.2s var(--ease-out) 1; }
+.closing:hover .ico-stk.is-wave, .ico-stk.is-wave.is-waving { animation: wave 1.2s var(--ease-out) 1; }
 @keyframes wave { 20% { transform: rotate(14deg); } 40% { transform: rotate(-8deg); } 60% { transform: rotate(10deg); } 80% { transform: rotate(-3deg); } }
 .lede .line > span { display: block; width: max-content; white-space: nowrap; }
 .lede.is-fitting, .lede.is-fitting * { transition: none !important; } /* while home-motion.ts measures the lines */
@@ -627,8 +630,9 @@ button.feat-tag { cursor: pointer; }
 @media (max-width: 860px) {
   .nav-links { display: none; }
   .hero { height: auto; max-height: none; min-height: 0; padding: 96px var(--gutter-r) 64px; display: flex; flex-direction: column; }
-  .hero-stage { position: relative; height: 640px; margin: 0 calc(-1 * var(--gutter-r)); }
-  .pendulum { left: 50%; top: -20px; --strap-l: 150px; }
+  /* home-motion sets --pend-s so the whole pass hangs on the first screen; the pendulum scales about its pivot */
+  .hero-stage { position: relative; height: calc(620px * var(--pend-s, 1) + 20px); margin: 0 calc(-1 * var(--gutter-r)); }
+  .pendulum { left: 50%; top: -20px; --strap-l: 150px; scale: var(--pend-s, 1); }
   /* starts under the nav so the brand stays readable; the cut top fades out instead of ending square */
   .strap { top: -16px; height: calc(var(--strap-l) - 20px); -webkit-mask-image: linear-gradient(transparent, #000 44px); mask-image: linear-gradient(transparent, #000 44px); }
   .badge { --badge-w: 290px; }
@@ -785,7 +789,7 @@ html.swarm-pending main > section > *:not(.hero-dust) { visibility: hidden; anim
   /* the statement opens the phone hero and the pass hangs under it */
   .hero .statement { display: contents; }
   /* the strap's top rises about 36px above the stage: the gap under the statement keeps it clear of the type */
-  .hero .statement > * { order: -1; position: relative; z-index: 2; margin-bottom: 48px; }
+  .hero .statement > * { order: -1; position: relative; z-index: 2; margin-bottom: 36px; }
   /* the agents' log hangs beside the strap, right of it, at the top of the stage */
   .hero-log { left: calc(50% + 46px); top: 4px; max-width: calc(50% - 46px - var(--gutter-r)); padding: 10px 12px 11px; font-size: 13px; }
   .project-field, .project.is-half .project-field { aspect-ratio: auto; display: flex; flex-direction: column; padding: 40px 16px 18px; }
@@ -822,7 +826,7 @@ html.swarm-pending main > section > *:not(.hero-dust) { visibility: hidden; anim
 @media (max-width: 420px) {
   .pendulum { --strap-l: 110px; }
   .badge { --badge-w: 260px; }
-  .hero-stage { height: 560px; }
+  .hero-stage { height: calc(540px * var(--pend-s, 1) + 20px); }
 }
 
 /* ---------- Mobile menu (spec section 5) ---------- */
