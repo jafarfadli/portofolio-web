@@ -6,12 +6,21 @@ import { fillProfile } from "@/content/derive";
 import { getHomeContent, getProfile } from "@/content/home";
 import { getDb } from "@/db/client";
 import { fullName } from "@/lib/name";
+import { siteBase } from "@/lib/site-base";
 
 export const dynamic = "force-dynamic";
 
 export function generateMetadata(): Metadata {
   const p = getProfile(getDb());
-  return p ? { title: `${fullName(p)}, ${p.role}`, description: fillProfile(p).cvSummary } : { title: "Portfolio" };
+  if (!p) return { title: "Portfolio" };
+  const title = `${fullName(p)}, ${p.role}`;
+  const description = fillProfile(p).cvSummary;
+  return {
+    title,
+    description,
+    ...siteBase(p.siteUrl),
+    openGraph: { type: "website", url: "/", siteName: fullName(p), title, description },
+  };
 }
 
 export default async function Page() {
